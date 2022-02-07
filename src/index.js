@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import store from "./app/store";
 import GlobalStyle from "./common/components/GlobalStyle";
+import Ui from "./common/components/Ui";
 import Process from "./features/sidebar/Process";
 import Sidebar from "./features/sidebar/Sidebar";
 
@@ -24,6 +25,7 @@ ReactDOM.render(
           <Route path="/chats/:id" />
           <Route path="/reviews/edit" />
           <Route path="/users/:id" />
+          <Route path="/ui" element={<Ui />} />
         </Routes>
       </BrowserRouter>
     </Provider>
