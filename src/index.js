@@ -5,6 +5,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import store from "./app/store";
 import GlobalStyle from "./common/components/GlobalStyle";
+import Ui from "./common/components/Ui";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -20,6 +21,7 @@ ReactDOM.render(
           <Route path="/chats/:id" />
           <Route path="/reviews/edit" />
           <Route path="/users/:id" />
+          <Route path="/ui" element={<Ui />} />
         </Routes>
       </BrowserRouter>
     </Provider>
