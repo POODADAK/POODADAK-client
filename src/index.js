@@ -5,6 +5,8 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import store from "./app/store";
 import GlobalStyle from "./common/components/GlobalStyle";
+import Process from "./features/sidebar/Process";
+import Sidebar from "./features/sidebar/Sidebar";
 
 ReactDOM.render(
   <React.StrictMode>
@@ -13,7 +15,9 @@ ReactDOM.render(
       <BrowserRouter>
         <Routes>
           <Route path="/" />
-          <Route path="/signin" />
+          <Route path="/signin" element={<Sidebar />}>
+            <Route path="process" element={<Process />} />
+          </Route>
           <Route path="/toilets" />
           <Route path="/toilets/:id" />
           <Route path="/chats" />
