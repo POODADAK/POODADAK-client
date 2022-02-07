@@ -3,10 +3,11 @@ import React from "react";
 import styled from "styled-components";
 
 const StyledButtonSmall = styled.button`
+  width: fit-content;
   display: flex;
   flex-direction: row;
   align-items: center;
-  width: fit-content;
+  font-size: small;
   color: #bc955c;
   background-color: #4c4c4c;
   padding: 4px 8px;
