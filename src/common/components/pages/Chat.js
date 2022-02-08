@@ -1,0 +1,24 @@
+import React from "react";
+// import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+
+import HeaderChat from "../headers/HeaderChat";
+
+const StyledChat = styled.div`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  background-color: black;
+`;
+
+function Chat() {
+  // const navigate = useNavigate();
+
+  return (
+    <StyledChat>
+      <HeaderChat />
+    </StyledChat>
+  );
+}
+
+export default Chat;

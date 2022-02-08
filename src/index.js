@@ -5,6 +5,14 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import store from "./app/store";
 import GlobalStyle from "./common/components/GlobalStyle";
+import Chat from "./common/components/pages/Chat";
+import Chats from "./common/components/pages/Chats";
+import Main from "./common/components/pages/Main";
+import Profile from "./common/components/pages/Profile";
+import ProfileEdit from "./common/components/pages/ProfileEdit";
+import ReviewEdit from "./common/components/pages/ReviewEdit";
+import Toilet from "./common/components/pages/Toilet";
+import Toilets from "./common/components/pages/Toilets";
 import Ui from "./common/components/Ui";
 
 ReactDOM.render(
@@ -13,14 +21,14 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" />
-          <Route path="/signin" />
-          <Route path="/toilets" />
-          <Route path="/toilets/:id" />
-          <Route path="/chats" />
-          <Route path="/chats/:id" />
-          <Route path="/reviews/edit" />
-          <Route path="/users/:id" />
+          <Route path="/" element={<Main />} />
+          <Route path="/toilets" element={<Toilets />} />
+          <Route path="/toilets/:toilet_id" element={<Toilet />} />
+          <Route path="/chats" element={<Chats />} />
+          <Route path="/chats/:chat_id" element={<Chat />} />
+          <Route path="/editReview/:review_id" element={<ReviewEdit />} />
+          <Route path="/users/:user_id" element={<Profile />} />
+          <Route path="/editProfile/:user_id" element={<ProfileEdit />} />
           <Route path="/ui" element={<Ui />} />
         </Routes>
       </BrowserRouter>
