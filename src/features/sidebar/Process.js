@@ -13,7 +13,7 @@ function Process() {
       if (!state) {
         // eslint-disable-next-line no-unused-vars
         const response = await axios.post(
-          process.env.REACT_APP_BACKEND_URL,
+          "auth/kakao",
           { token: code },
           { withCredentials: true }
         );
