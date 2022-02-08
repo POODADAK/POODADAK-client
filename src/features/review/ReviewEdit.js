@@ -2,23 +2,23 @@ import React from "react";
 // import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import HeaderSub from "../headers/HeaderSub";
+import HeaderSub from "../../common/components/headers/HeaderSub";
 
-const StyledProfileEdit = styled.div`
+const StyledReviewEdit = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   background-color: black;
 `;
 
-function ProfileEdit() {
+function ReviewEdit() {
   // const navigate = useNavigate();
 
   return (
-    <StyledProfileEdit>
+    <StyledReviewEdit>
       <HeaderSub />
-    </StyledProfileEdit>
+    </StyledReviewEdit>
   );
 }
 
-export default ProfileEdit;
+export default ReviewEdit;

@@ -2,23 +2,23 @@ import React from "react";
 // import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import HeaderSub from "../headers/HeaderSub";
+import HeaderSub from "../../common/components/headers/HeaderSub";
 
-const StyledReviewEdit = styled.div`
+const StyledToilets = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   background-color: black;
 `;
 
-function ReviewEdit() {
+function Toilets() {
   // const navigate = useNavigate();
 
   return (
-    <StyledReviewEdit>
+    <StyledToilets>
       <HeaderSub />
-    </StyledReviewEdit>
+    </StyledToilets>
   );
 }
 
-export default ReviewEdit;
+export default Toilets;

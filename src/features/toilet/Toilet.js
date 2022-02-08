@@ -2,23 +2,23 @@ import React from "react";
 // import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import HeaderSub from "../headers/HeaderSub";
+import HeaderSub from "../../common/components/headers/HeaderSub";
 
-const StyledChats = styled.div`
+const StyledToilet = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   background-color: black;
 `;
 
-function Chats() {
+function Toilet() {
   // const navigate = useNavigate();
 
   return (
-    <StyledChats>
+    <StyledToilet>
       <HeaderSub />
-    </StyledChats>
+    </StyledToilet>
   );
 }
 
-export default Chats;
+export default Toilet;

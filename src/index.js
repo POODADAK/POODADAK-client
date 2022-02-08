@@ -5,15 +5,15 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 
 import store from "./app/store";
 import GlobalStyle from "./common/components/GlobalStyle";
-import Chat from "./common/components/pages/Chat";
-import Chats from "./common/components/pages/Chats";
-import Main from "./common/components/pages/Main";
-import Profile from "./common/components/pages/Profile";
-import ProfileEdit from "./common/components/pages/ProfileEdit";
-import ReviewEdit from "./common/components/pages/ReviewEdit";
-import Toilet from "./common/components/pages/Toilet";
-import Toilets from "./common/components/pages/Toilets";
 import Ui from "./common/components/Ui";
+import Chat from "./features/chat/Chat";
+import Chats from "./features/chat/Chats";
+import Main from "./features/main/Main";
+import Profile from "./features/profile/Profile";
+import ProfileEdit from "./features/profile/ProfileEdit";
+import ReviewEdit from "./features/review/ReviewEdit";
+import Toilet from "./features/toilet/Toilet";
+import Toilets from "./features/toilet/Toilets";
 
 ReactDOM.render(
   <React.StrictMode>

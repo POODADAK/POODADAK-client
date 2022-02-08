@@ -2,8 +2,8 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import ButtonSmall from "../buttons/ButtonSmall";
-import HeaderMain from "../headers/HeaderMain";
+import ButtonSmall from "../../common/components/buttons/ButtonSmall";
+import HeaderMain from "../../common/components/headers/HeaderMain";
 
 const StyledMain = styled.div`
   width: 100%;

@@ -2,23 +2,23 @@ import React from "react";
 // import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import HeaderChat from "../headers/HeaderChat";
+import HeaderSub from "../../common/components/headers/HeaderSub";
 
-const StyledChat = styled.div`
+const StyledChats = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   background-color: black;
 `;
 
-function Chat() {
+function Chats() {
   // const navigate = useNavigate();
 
   return (
-    <StyledChat>
-      <HeaderChat />
-    </StyledChat>
+    <StyledChats>
+      <HeaderSub />
+    </StyledChats>
   );
 }
 
-export default Chat;
+export default Chats;

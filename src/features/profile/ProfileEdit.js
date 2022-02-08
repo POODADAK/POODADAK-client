@@ -2,23 +2,23 @@ import React from "react";
 // import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import HeaderSub from "../headers/HeaderSub";
+import HeaderSub from "../../common/components/headers/HeaderSub";
 
-const StyledToilets = styled.div`
+const StyledProfileEdit = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   background-color: black;
 `;
 
-function Toilets() {
+function ProfileEdit() {
   // const navigate = useNavigate();
 
   return (
-    <StyledToilets>
+    <StyledProfileEdit>
       <HeaderSub />
-    </StyledToilets>
+    </StyledProfileEdit>
   );
 }
 
-export default Toilets;
+export default ProfileEdit;
