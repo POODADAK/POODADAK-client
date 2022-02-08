@@ -15,7 +15,7 @@ ReactDOM.render(
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
-          <Route path="/" />
+          <Route path="/" element={<Sidebar />} />
           <Route path="/signin" element={<Sidebar />}>
             <Route path="process" element={<Process />} />
           </Route>
