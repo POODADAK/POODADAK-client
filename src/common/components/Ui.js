@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 
+import check from "../../assets/icon-check-full.png";
 import help from "../../assets/icon-help-fluid.png";
 import ButtonDefault from "./buttons/ButtonDefault";
 import ButtonFluid from "./buttons/ButtonFluid";
@@ -14,7 +15,7 @@ import InputChat from "./inputs/InputChat";
 
 const StyledUi = styled.div`
   width: 100%;
-  height: 95vh;
+  height: 97vh;
   color: beige;
   background-color: gray;
   border: 1rem 0;
@@ -26,13 +27,13 @@ const StyledUi = styled.div`
 const chatR = {
   message:
     "받은 메시지 예시 입니다. 길게 쓰면 이렇게 떨어지죠. 길게 쓰면 이렇게 됩니다.",
-  date: "2022.01.01",
+  date: "2022.01.01 12:30",
 };
 
 const chatS = {
   message:
     "보낸 메시지 예시 입니다. 길게 쓰면 이렇게 떨어지죠. 길게 쓰면 이렇게 됩니다.",
-  date: "2022.01.01",
+  date: "2022.01.01 12:30",
 };
 
 function Ui() {
@@ -41,7 +42,7 @@ function Ui() {
       <h3>Buttons</h3>
       <ButtonSmall>ButtonSmall</ButtonSmall>
       <ButtonDefault moveTo="left">ButtonDefault</ButtonDefault>
-      <ButtonFull>ButtonFull</ButtonFull>
+      <ButtonFull icon={check}>ButtonFull</ButtonFull>
       <ButtonFluid icon={help} color="#EB5757">
         ButtonFluid
       </ButtonFluid>

@@ -13,15 +13,19 @@ const StyledButtonFull = styled.button`
   color: #bc955c;
   background-color: black;
   .icon {
-    width: 30px;
-    height: 30px;
+    margin-top: 2px;
+    margin-right: 0.5rem;
   }
 `;
 
 function ButtonFull({ type, onClick, icon, disabled, children }) {
   return (
     <StyledButtonFull type={type} onClick={onClick} disabled={disabled}>
-      {icon && <div className="icon">{icon}</div>}
+      {icon && (
+        <div className="icon">
+          <img src={icon} alt="아이콘" />
+        </div>
+      )}
       {children}
     </StyledButtonFull>
   );
