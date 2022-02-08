@@ -10,21 +10,26 @@ function Process() {
       const code = new URL(window.location.href).searchParams.get("code");
       const state = new URL(window.location.href).searchParams.get("state");
 
-      // eslint-disable-next-line no-unused-vars
-      const result = await axios.post(
-        "/auth/naver",
-        {
-          code,
-          state,
-        },
-        { withCredentials: true }
-      );
+      if (!state) {
+        // eslint-disable-next-line no-unused-vars
+        const response = await axios.post(
+          process.env.REACT_APP_BACKEND_URL,
+          { token: code },
+          { withCredentials: true }
+        );
+      } else {
+        // eslint-disable-next-line no-unused-vars
+        const response = await axios.post(
+          "/auth/naver",
+          { code, state },
+          { withCredentials: true }
+        );
+      }
     }
-    login();
 
+    login();
     navigate("/");
   }, []);
-
   return <div>로그인 처리중</div>;
 }
 

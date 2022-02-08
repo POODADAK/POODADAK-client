@@ -2,6 +2,7 @@ import React from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 
+import Kakao from "./Kakao";
 import Naver from "./Naver";
 
 const StyledDiv = styled.div`
@@ -14,6 +15,7 @@ function Sidebar() {
   return (
     <StyledDiv>
       <Naver />
+      <Kakao />
       <Outlet />
     </StyledDiv>
   );
