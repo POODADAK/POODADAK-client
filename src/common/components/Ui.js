@@ -19,6 +19,7 @@ import List2Lines from "./lists/List2Lines";
 import ListCheck from "./lists/ListCheck";
 import ListDefault from "./lists/ListDefault";
 import ListNavi from "./lists/ListNavi";
+import Sidebar from "./Sidebar";
 import Title from "./Title";
 
 const StyledUi = styled.div`
@@ -75,6 +76,8 @@ function Ui() {
       <ListNavi label="label" secondary="secondary" />
       <h3>Title</h3>
       <Title title="Title" description="description" />
+      <h3>Sidebar</h3>
+      <Sidebar />
     </StyledUi>
   );
 }
