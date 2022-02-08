@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -57,20 +57,22 @@ const StyledSidebar = styled.div`
 
 function Sidebar() {
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {});
 
   function handleKeyDown() {}
 
   function kakaoLogin() {
-    setIsLogin(true);
+    setIsLoggedIn(true);
   }
 
   function naverLogin() {
-    setIsLogin(true);
+    setIsLoggedIn(true);
   }
 
   function logout() {
-    setIsLogin(false);
+    setIsLoggedIn(false);
   }
 
   return (
@@ -85,7 +87,7 @@ function Sidebar() {
         <img src={close} alt="닫기" />
         닫기
       </div>
-      {!isLogin && (
+      {!isLoggedIn && (
         <>
           <div className="description">
             리뷰를 남기거나 SOS를 보내려면 로그인 하셔야 합니다.
@@ -110,7 +112,7 @@ function Sidebar() {
           </div>
         </>
       )}
-      {isLogin && (
+      {isLoggedIn && (
         <>
           <div
             className="list"
