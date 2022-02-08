@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -16,6 +17,8 @@ import Process from "./features/sidebar/Process";
 import Sidebar from "./features/sidebar/Sidebar";
 import Toilet from "./features/toilet/Toilet";
 import Toilets from "./features/toilet/Toilets";
+
+axios.defaults.baseURL = process.env.REACT_APP_AXIOS_BASE_URL;
 
 ReactDOM.render(
   <React.StrictMode>
