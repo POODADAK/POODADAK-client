@@ -12,6 +12,7 @@ const StyledButtonSmall = styled.button`
   background-color: #4c4c4c;
   padding: 4px 8px;
   border-radius: 3px;
+  cursor: pointer;
 `;
 
 function ButtonSmall({ type, onClick, disabled, children }) {

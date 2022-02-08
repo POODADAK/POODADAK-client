@@ -5,43 +5,69 @@ import styled from "styled-components";
 import left from "../../../assets/icon-left.png";
 import right from "../../../assets/icon-right.png";
 
-const StyledButtonDefault = styled.button`
+const StyledButtonDefault = styled.div`
   width: fit-content;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
   font-size: medium;
   color: #bc955c;
   background-color: black;
-  padding: 10px 25px;
   border-radius: 3px;
+  padding: 4px 10px;
+  cursor: pointer;
+  .button {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  .icon {
+    background-color: black;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 `;
 
-function ButtonDefault({ type, onClick, moveTo, disabled, children }) {
+function ButtonDefault({ onClick, moveTo, icon, children }) {
+  function handleKeyDown() {}
+
   return (
-    <StyledButtonDefault
-      type={type}
-      onClick={onClick}
-      moveTo={moveTo}
-      disabled={disabled}
-    >
-      {moveTo === "left" && <img src={left} alt="뒤로가기" />}
-      {children}
-      {moveTo === "right" && <img src={right} alt="앞으로가기" />}
+    <StyledButtonDefault>
+      <div
+        className="button"
+        role="button"
+        tabIndex={0}
+        onClick={onClick}
+        onKeyDown={handleKeyDown}
+        moveTo={moveTo}
+      >
+        {moveTo === "left" && <img src={left} alt="뒤로가기" />}
+        {icon && (
+          <div className="icon">
+            <img src={icon} alt="아이콘" />
+          </div>
+        )}
+        {children && children}
+        {moveTo === "right" && <img src={right} alt="앞으로가기" />}
+      </div>
     </StyledButtonDefault>
   );
 }
 
 ButtonDefault.propTypes = {
-  type: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   moveTo: PropTypes.string,
-  disabled: PropTypes.bool.isRequired,
-  children: PropTypes.string.isRequired,
+  icon: PropTypes.element,
+  children: PropTypes.string,
 };
 
 ButtonDefault.defaultProps = {
   moveTo: "none",
+  icon: null,
+  children: null,
 };
 
 export default ButtonDefault;
