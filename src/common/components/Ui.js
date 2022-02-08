@@ -10,18 +10,28 @@ import ButtonSmall from "./buttons/ButtonSmall";
 import ChatBubbleReceive from "./chats/ChatBubbleReceive";
 import ChatBubbleSend from "./chats/ChatBubbleSend";
 import ChatMsg from "./chats/ChatMsg";
+import HeaderChat from "./headers/HeaderChat";
+import HeaderMain from "./headers/HeaderMain";
+import HeaderSub from "./headers/HeaderSub";
 import Input from "./inputs/Input";
 import InputChat from "./inputs/InputChat";
+import List2Lines from "./lists/List2Lines";
+import ListCheck from "./lists/ListCheck";
+import ListDefault from "./lists/ListDefault";
+import ListNavi from "./lists/ListNavi";
+import Title from "./Title";
 
 const StyledUi = styled.div`
   width: 100%;
-  height: 97vh;
   color: beige;
   background-color: gray;
   border: 1rem 0;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+  gap: 1.5rem;
+  h3 {
+    margin-bottom: -10px;
+  }
 `;
 
 const chatR = {
@@ -54,6 +64,17 @@ function Ui() {
       <ChatMsg type="important" message="중요한 메시지 입니다." />
       <ChatBubbleReceive chat={chatR} />
       <ChatBubbleSend chat={chatS} />
+      <h3>Headers</h3>
+      <HeaderMain />
+      <HeaderSub />
+      <HeaderChat />
+      <h3>Lists</h3>
+      <ListDefault label="label" />
+      <ListCheck label="label" />
+      <List2Lines label="label" secondary="secondary" />
+      <ListNavi label="label" secondary="secondary" />
+      <h3>Title</h3>
+      <Title title="Title" description="description" />
     </StyledUi>
   );
 }
