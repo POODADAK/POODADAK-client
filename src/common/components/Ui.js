@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import check from "../../assets/icon-check-full.png";
 import help from "../../assets/icon-help-fluid.png";
+import ToiletCard from "../../features/toilet/ToiletCard";
 import ButtonDefault from "./buttons/ButtonDefault";
 import ButtonFluid from "./buttons/ButtonFluid";
 import ButtonFull from "./buttons/ButtonFull";
@@ -78,6 +79,7 @@ function Ui() {
       <Title title="Title" description="description" />
       <h3>Sidebar</h3>
       <Sidebar />
+      <ToiletCard />
     </StyledUi>
   );
 }
