@@ -9,12 +9,11 @@ import GlobalStyle from "./common/components/GlobalStyle";
 import Ui from "./common/components/Ui";
 import Chat from "./features/chat/Chat";
 import Chats from "./features/chat/Chats";
+import Login from "./features/login/Login";
 import Main from "./features/main/Main";
 import Profile from "./features/profile/Profile";
 import ProfileEdit from "./features/profile/ProfileEdit";
 import ReviewEdit from "./features/review/ReviewEdit";
-import Process from "./features/sidebar/Process";
-import Sidebar from "./features/sidebar/Sidebar";
 import Toilet from "./features/toilet/Toilet";
 import Toilets from "./features/toilet/Toilets";
 
@@ -35,9 +34,7 @@ ReactDOM.render(
           <Route path="/users/:user_id" element={<Profile />} />
           <Route path="/editProfile/:user_id" element={<ProfileEdit />} />
           <Route path="/ui" element={<Ui />} />
-          <Route path="/signin" element={<Sidebar />}>
-            <Route path="process" element={<Process />} />
-          </Route>
+          <Route path="/login/process" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </Provider>
