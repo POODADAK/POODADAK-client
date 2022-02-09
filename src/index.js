@@ -34,7 +34,7 @@ ReactDOM.render(
           <Route path="/users/:user_id" element={<Profile />} />
           <Route path="/editProfile/:user_id" element={<ProfileEdit />} />
           <Route path="/ui" element={<Ui />} />
-          <Route path="/signin/process" element={<Login />} />
+          <Route path="/login/process" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </Provider>

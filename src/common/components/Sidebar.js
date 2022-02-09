@@ -7,7 +7,7 @@ import close from "../../assets/icon-close-black.png";
 import right from "../../assets/icon-right-black.png";
 import kakao from "../../assets/kakao.png";
 import naver from "../../assets/naver.png";
-import { logout } from "../../features/login/loginSlice";
+import { eraseToken } from "../../features/login/loginSlice";
 
 const StyledSidebar = styled.div`
   width: 280px;
@@ -66,16 +66,14 @@ function Sidebar() {
 
   function kakaoLogin() {
     window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_KAKAO_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_REST_API_REDIRECT_URL}`;
-    // setIsLoggedIn(true);
   }
 
   function naverLogin() {
     window.location.href = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${process.env.REACT_APP_NAVER_CLIENT_ID}&state=${process.env.REACT_APP_NAVER_STATE}&redirect_uri=${process.env.REACT_APP_NAVER_CALLBACK_URL}`;
-    // setIsLoggedIn(true);
   }
 
   function handleLogoutClick() {
-    dispatch(logout());
+    dispatch(eraseToken);
   }
 
   return (

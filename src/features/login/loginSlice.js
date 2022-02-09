@@ -18,12 +18,14 @@ export const loginSlice = createSlice({
 
 export async function eraseToken(dispatch) {
   try {
-    await axios.get("/auth/token-elimination");
-    dispatch(loginSlice.actions.logout());
+    await axios.post("/auth/token-elimination", {}, { withCredentials: true });
   } catch (error) {
+    // 차후 에러처리 필요.
     // eslint-disable-next-line no-console
     console.log(error);
   }
+
+  dispatch({ type: "login/logout" });
 }
 
 export const { login, logout } = loginSlice.actions;
