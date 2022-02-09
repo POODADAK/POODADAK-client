@@ -1,3 +1,4 @@
+import axios from "axios";
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
@@ -9,12 +10,17 @@ import Ui from "./common/components/Ui";
 import Chat from "./features/chat/Chat";
 import Chats from "./features/chat/Chats";
 import ErrorPage from "./features/error/ErrorPage";
+import Login from "./features/login/Login";
+import { checkToken } from "./features/login/loginSlice";
 import Main from "./features/main/Main";
 import Profile from "./features/profile/Profile";
 import ProfileEdit from "./features/profile/ProfileEdit";
 import ReviewEdit from "./features/review/ReviewEdit";
 import Toilet from "./features/toilet/Toilet";
 import Toilets from "./features/toilet/Toilets";
+
+axios.defaults.baseURL = process.env.REACT_APP_AXIOS_BASE_URL;
+store.dispatch(checkToken);
 
 ReactDOM.render(
   <React.StrictMode>
@@ -32,6 +38,7 @@ ReactDOM.render(
           <Route path="/editProfile/:user_id" element={<ProfileEdit />} />
           <Route path="/error" element={<ErrorPage />} />
           <Route path="/ui" element={<Ui />} />
+          <Route path="/login/process" element={<Login />} />
         </Routes>
       </BrowserRouter>
     </Provider>

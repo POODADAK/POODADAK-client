@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import check from "../../assets/icon-check-full.png";
 import help from "../../assets/icon-help-fluid.png";
+import ToiletCard from "../../features/toilet/ToiletCard";
 import ButtonDefault from "./buttons/ButtonDefault";
 import ButtonFluid from "./buttons/ButtonFluid";
 import ButtonFull from "./buttons/ButtonFull";
@@ -138,6 +139,7 @@ function Ui() {
       >
         프로필 닉네임 편집
       </ButtonSmall>
+      <ToiletCard />
     </StyledUi>
   );
 }

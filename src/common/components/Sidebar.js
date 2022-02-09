@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -7,6 +8,7 @@ import close from "../../assets/icon-close-black.png";
 import right from "../../assets/icon-right-black.png";
 import kakao from "../../assets/kakao.svg";
 import naver from "../../assets/naver.svg";
+import { eraseToken } from "../../features/login/loginSlice";
 
 const StyledSidebar = styled.div`
   width: 280px;
@@ -58,18 +60,19 @@ const StyledSidebar = styled.div`
 
 function Sidebar({ onClick }) {
   const navigate = useNavigate();
-  const [isLogin, setIsLogin] = useState(false);
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+  const dispatch = useDispatch();
 
   function kakaoLogin() {
-    setIsLogin(true);
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_KAKAO_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_REST_API_REDIRECT_URL}`;
   }
 
   function naverLogin() {
-    setIsLogin(true);
+    window.location.href = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${process.env.REACT_APP_NAVER_CLIENT_ID}&state=${process.env.REACT_APP_NAVER_STATE}&redirect_uri=${process.env.REACT_APP_NAVER_CALLBACK_URL}`;
   }
 
-  function logout() {
-    setIsLogin(false);
+  function handleLogoutClick() {
+    dispatch(eraseToken);
   }
 
   return (
@@ -88,7 +91,7 @@ function Sidebar({ onClick }) {
         <img src={close} alt="닫기" />
         닫기
       </div>
-      {!isLogin && (
+      {!isLoggedIn && (
         <>
           <div className="description">
             리뷰를 남기거나 SOS를 보내려면 로그인 하셔야 합니다.
@@ -113,7 +116,7 @@ function Sidebar({ onClick }) {
           </div>
         </>
       )}
-      {isLogin && (
+      {isLoggedIn && (
         <>
           <div
             className="list"
@@ -131,9 +134,9 @@ function Sidebar({ onClick }) {
           <div
             className="list"
             role="button"
-            onClick={logout}
+            onClick={handleLogoutClick}
             tabIndex={0}
-            onKeyDown={logout}
+            onKeyDown={handleLogoutClick}
           >
             <hr className="line" />
             <div className="list-content">
