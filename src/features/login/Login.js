@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import { login } from "./loginSlice";
+import { userLoggedIn } from "./loginSlice";
 
 const LoginProcessContainer = styled.div`
   width: inherit;
@@ -54,7 +54,7 @@ function Login() {
           );
         }
 
-        dispatch(login());
+        dispatch(userLoggedIn());
         navigate("/ui");
       } catch (error) {
         const fetchedErrorMessage = error.response.data.errMessage

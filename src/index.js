@@ -10,6 +10,7 @@ import Ui from "./common/components/Ui";
 import Chat from "./features/chat/Chat";
 import Chats from "./features/chat/Chats";
 import Login from "./features/login/Login";
+import { checkToken } from "./features/login/loginSlice";
 import Main from "./features/main/Main";
 import Profile from "./features/profile/Profile";
 import ProfileEdit from "./features/profile/ProfileEdit";
@@ -18,6 +19,7 @@ import Toilet from "./features/toilet/Toilet";
 import Toilets from "./features/toilet/Toilets";
 
 axios.defaults.baseURL = process.env.REACT_APP_AXIOS_BASE_URL;
+store.dispatch(checkToken);
 
 ReactDOM.render(
   <React.StrictMode>

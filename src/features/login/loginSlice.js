@@ -7,10 +7,10 @@ export const loginSlice = createSlice({
     isLoggedIn: false,
   },
   reducers: {
-    login: (state) => {
+    userLoggedIn: (state) => {
       state.isLoggedIn = true;
     },
-    logout: (state) => {
+    userLoggedOut: (state) => {
       state.isLoggedIn = false;
     },
   },
@@ -25,9 +25,29 @@ export async function eraseToken(dispatch) {
     console.log(error);
   }
 
-  dispatch({ type: "login/logout" });
+  dispatch({ type: "login/userLoggedOut" });
 }
 
-export const { login, logout } = loginSlice.actions;
+export async function checkToken(dispatch) {
+  try {
+    const response = await axios.post(
+      "/auth/token-verification",
+      {},
+      { withCredentials: true }
+    );
+
+    if (response.data.result === "verified") {
+      dispatch({ type: "login/userLoggedIn" });
+    }
+  } catch (error) {
+    // 차후 에러처리 필요.
+    // eslint-disable-next-line no-console
+    console.log(error);
+
+    dispatch({ type: "login/userLoggedOut" });
+  }
+}
+
+export const { userLoggedIn, userLoggedOut } = loginSlice.actions;
 
 export default loginSlice.reducer;
