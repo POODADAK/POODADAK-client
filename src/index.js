@@ -8,6 +8,7 @@ import GlobalStyle from "./common/components/GlobalStyle";
 import Ui from "./common/components/Ui";
 import Chat from "./features/chat/Chat";
 import Chats from "./features/chat/Chats";
+import ErrorPage from "./features/error/ErrorPage";
 import Main from "./features/main/Main";
 import Profile from "./features/profile/Profile";
 import ProfileEdit from "./features/profile/ProfileEdit";
@@ -29,6 +30,7 @@ ReactDOM.render(
           <Route path="/editReview/:review_id" element={<ReviewEdit />} />
           <Route path="/users/:user_id" element={<Profile />} />
           <Route path="/editProfile/:user_id" element={<ProfileEdit />} />
+          <Route path="/error" element={<ErrorPage />} />
           <Route path="/ui" element={<Ui />} />
         </Routes>
       </BrowserRouter>
