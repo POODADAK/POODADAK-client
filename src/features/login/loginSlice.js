@@ -7,10 +7,10 @@ export const loginSlice = createSlice({
     isLoggedIn: false,
   },
   reducers: {
-    login: (state) => {
+    userLoggedIn: (state) => {
       state.isLoggedIn = true;
     },
-    logout: (state) => {
+    userLoggedOut: (state) => {
       state.isLoggedIn = false;
     },
   },
@@ -25,7 +25,7 @@ export async function eraseToken(dispatch) {
     console.log(error);
   }
 
-  dispatch({ type: "login/logout" });
+  dispatch({ type: "login/userLoggedOut" });
 }
 
 export async function checkToken(dispatch) {
