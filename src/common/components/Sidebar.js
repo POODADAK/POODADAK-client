@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -6,6 +7,7 @@ import close from "../../assets/icon-close-black.png";
 import right from "../../assets/icon-right-black.png";
 import kakao from "../../assets/kakao.png";
 import naver from "../../assets/naver.png";
+import { logout } from "../../features/login/loginSlice";
 
 const StyledSidebar = styled.div`
   width: 280px;
@@ -57,22 +59,23 @@ const StyledSidebar = styled.div`
 
 function Sidebar() {
   const navigate = useNavigate();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {});
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+  const dispatch = useDispatch();
 
   function handleKeyDown() {}
 
   function kakaoLogin() {
-    setIsLoggedIn(true);
+    window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_KAKAO_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_REST_API_REDIRECT_URL}`;
+    // setIsLoggedIn(true);
   }
 
   function naverLogin() {
-    setIsLoggedIn(true);
+    window.location.href = `https://nid.naver.com/oauth2.0/authorize?response_type=code&client_id=${process.env.REACT_APP_NAVER_CLIENT_ID}&state=${process.env.REACT_APP_NAVER_STATE}&redirect_uri=${process.env.REACT_APP_NAVER_CALLBACK_URL}`;
+    // setIsLoggedIn(true);
   }
 
-  function logout() {
-    setIsLoggedIn(false);
+  function handleLogoutClick() {
+    dispatch(logout());
   }
 
   return (
@@ -130,9 +133,9 @@ function Sidebar() {
           <div
             className="list"
             role="button"
-            onClick={logout}
+            onClick={handleLogoutClick}
             tabIndex={0}
-            onKeyDown={logout}
+            onKeyDown={handleLogoutClick}
           >
             <hr className="line" />
             <div className="list-content">
