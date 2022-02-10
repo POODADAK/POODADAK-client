@@ -23,10 +23,14 @@ function ButtonSmall({ type, onClick, disabled, children }) {
   );
 }
 
+ButtonSmall.defaultProps = {
+  disabled: false,
+};
+
 ButtonSmall.propTypes = {
   type: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
-  disabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
   children: PropTypes.string.isRequired,
 };
 
