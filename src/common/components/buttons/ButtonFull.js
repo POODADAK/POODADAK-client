@@ -36,11 +36,12 @@ ButtonFull.propTypes = {
   type: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
   icon: PropTypes.element,
-  disabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
   children: PropTypes.string.isRequired,
 };
 
 ButtonFull.defaultProps = {
+  disabled: false,
   icon: null,
 };
 
