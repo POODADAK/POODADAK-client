@@ -1,9 +1,9 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import check from "../../assets/icon-check-full.png";
 import help from "../../assets/icon-help-fluid.png";
+import ToiletCard from "../../features/toilet/ToiletCard";
 import ButtonDefault from "./buttons/ButtonDefault";
 import ButtonFluid from "./buttons/ButtonFluid";
 import ButtonFull from "./buttons/ButtonFull";
@@ -49,8 +49,6 @@ const chatS = {
 };
 
 function Ui() {
-  const navigate = useNavigate();
-
   return (
     <StyledUi>
       <h3>Buttons</h3>
@@ -81,63 +79,7 @@ function Ui() {
       <Title title="Title" description="description" />
       <h3>Sidebar</h3>
       <Sidebar />
-      <h3>Routes</h3>
-      <ButtonSmall
-        onClick={() => {
-          navigate("/");
-        }}
-      >
-        메인
-      </ButtonSmall>
-      <ButtonSmall
-        onClick={() => {
-          navigate("/toilets");
-        }}
-      >
-        화장실 리스트
-      </ButtonSmall>
-      <ButtonSmall
-        onClick={() => {
-          navigate("/toilets/:toilet_id");
-        }}
-      >
-        화장실 개별 페이지
-      </ButtonSmall>
-      <ButtonSmall
-        onClick={() => {
-          navigate("/chats");
-        }}
-      >
-        채팅 리스트
-      </ButtonSmall>
-      <ButtonSmall
-        onClick={() => {
-          navigate("/chats/:chat_id");
-        }}
-      >
-        채팅방
-      </ButtonSmall>
-      <ButtonSmall
-        onClick={() => {
-          navigate("/editReview/:review_id");
-        }}
-      >
-        리뷰작성 및 수정
-      </ButtonSmall>
-      <ButtonSmall
-        onClick={() => {
-          navigate("/users/:user_id");
-        }}
-      >
-        프로필(내 리뷰 포함)
-      </ButtonSmall>
-      <ButtonSmall
-        onClick={() => {
-          navigate("/editProfile/:user_id");
-        }}
-      >
-        프로필 닉네임 편집
-      </ButtonSmall>
+      <ToiletCard />
     </StyledUi>
   );
 }
