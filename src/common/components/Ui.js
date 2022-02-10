@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 import check from "../../assets/icon-check-full.png";
 import help from "../../assets/icon-help-fluid.png";
+import toiletSample from "../../assets/toilet-sample.jpeg";
 import ToiletCard from "../../features/toilet/ToiletCard";
 import ButtonDefault from "./buttons/ButtonDefault";
 import ButtonFluid from "./buttons/ButtonFluid";
@@ -20,7 +21,9 @@ import List2Lines from "./lists/List2Lines";
 import ListCheck from "./lists/ListCheck";
 import ListDefault from "./lists/ListDefault";
 import ListNavi from "./lists/ListNavi";
+import ReviewCard from "./reviewCard/ReviewCard";
 import Sidebar from "./Sidebar";
+import StarContainer from "./starContainer/StarContainer";
 import Title from "./Title";
 
 const StyledUi = styled.div`
@@ -79,7 +82,21 @@ function Ui() {
       <Title title="Title" description="description" />
       <h3>Sidebar</h3>
       <Sidebar />
+      <h3>ToiletCard</h3>
       <ToiletCard />
+      <h3>ReviewCard</h3>
+      <ReviewCard
+        username="test"
+        level="GOLD"
+        updatedAt="2022.02.09"
+        image={toiletSample}
+        description="예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰"
+        rating="4"
+        // eslint-disable-next-line react/jsx-boolean-value
+        isMyReview={true}
+      />
+      <h3>StarContainer</h3>
+      <StarContainer rating={4} />
     </StyledUi>
   );
 }

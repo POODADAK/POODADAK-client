@@ -43,13 +43,14 @@ ButtonFluid.propTypes = {
   onClick: PropTypes.func.isRequired,
   icon: PropTypes.element,
   color: PropTypes.string,
-  disabled: PropTypes.bool.isRequired,
+  disabled: PropTypes.bool,
   children: PropTypes.string.isRequired,
 };
 
 ButtonFluid.defaultProps = {
   icon: null,
   color: "gray",
+  disabled: false,
 };
 
 export default ButtonFluid;
