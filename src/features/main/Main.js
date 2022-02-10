@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { Route } from "react-router-dom";
+import React, { useEffect, useState, useCallback } from "react";
+import { Route, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import pinCurrent from "../../assets/pin-current-small.gif";
+import ButtonFull from "../../common/components/buttons/ButtonFull";
 import HeaderMain from "../../common/components/headers/HeaderMain";
 import Sidebar from "../../common/components/Sidebar";
 import ErrorPage from "../error/ErrorPage";
@@ -22,6 +23,9 @@ const StyledMain = styled.div`
     height: 100%;
     min-height: 568px;
     background-color: green;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
   }
   .start,
   .sidebar {
@@ -39,6 +43,7 @@ const StyledMain = styled.div`
 const { Tmapv2 } = window;
 
 function Main() {
+  const navigate = useNavigate();
   const defaultLocation = [127.0016985, 37.5642135];
 
   const [currentLocation, setCurrentLocation] = useState(defaultLocation);
@@ -51,14 +56,18 @@ function Main() {
 
   const adjMap = map;
   const adjCurrentMarker = currentMarker;
+  const forceSetMapCenter = useCallback(
+    async (center) => {
+      const newLocation = new Tmapv2.LatLng(center[1], center[0]);
+      await adjMap.setCenter(newLocation);
+    },
+    [adjMap]
+  );
 
   useEffect(() => {
-    const lat = defaultLocation[1];
-    const lng = defaultLocation[0];
-
     setMap(
       new Tmapv2.Map("TMapApp", {
-        center: new Tmapv2.LatLng(lat, lng),
+        center: new Tmapv2.LatLng(defaultLocation[1], defaultLocation[0]),
         width: "100%",
         height: "100%",
         zoom: 16,
@@ -68,31 +77,20 @@ function Main() {
   }, []);
 
   useEffect(() => {
-    const lat = defaultLocation[1];
-    const lng = defaultLocation[0];
-
     setCurrentMarker(
       new Tmapv2.Marker({
-        position: new Tmapv2.LatLng(lat, lng),
+        position: new Tmapv2.LatLng(defaultLocation[1], defaultLocation[0]),
         icon: pinCurrent,
         map: adjMap,
       })
     );
-    async function forceSetMapCenter(center) {
-      const newLocation = new Tmapv2.LatLng(center[1], center[0]);
-      await adjMap.setCenter(newLocation);
-    }
-    forceSetMapCenter(lat, lng);
+    forceSetMapCenter(defaultLocation[1], defaultLocation[0]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [adjMap]);
+  }, [adjMap, forceSetMapCenter]);
 
   useEffect(() => {
-    async function forceSetMapCenter(center) {
-      const newLocation = new Tmapv2.LatLng(center[1], center[0]);
-      await adjMap.setCenter(newLocation);
-    }
     forceSetMapCenter(mapCenter);
-  }, [mapCenter, adjMap]);
+  }, [mapCenter, forceSetMapCenter]);
 
   useEffect(() => {
     async function checkCurrentMarker(location) {
@@ -143,7 +141,12 @@ function Main() {
   return (
     <StyledMain>
       <HeaderMain onClick={toggleSidebar} />
-      <div id="TMapApp" className="map-container" />
+      <div className="map-container">
+        <div id="TMapApp" />
+        <ButtonFull onClick={() => navigate("/toilets")}>
+          리스트 보기
+        </ButtonFull>
+      </div>
       {isStart && (
         <div className="start">
           <Start onClick={getLocation} />
