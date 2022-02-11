@@ -56,20 +56,45 @@ const StyledToiletCard = styled.div`
 `;
 
 function ToiletCard({
-  showToiletPath,
-  toiletID,
   distance,
-  isSOS,
+  toiletID,
+  showToiletPath,
   toiletName,
   roadNameAddress,
+  inUnisexToilet,
   menToiletBowlNumber,
+  menHandicapToiletBowlNumber,
+  menChildrenToiletBowlNumber,
   ladiesToiletBowlNumber,
+  ladiesHandicapToiletBowlNumber,
+  ladiesChildrenToiletBowlNumber,
+  openTime,
+  latestToiletPaperInfo,
+  isSOS,
+  chatRoomList,
 }) {
   const navigate = useNavigate();
 
   function moveToiletDetail(e) {
     e.stopPropagation();
-    navigate(`/toilets/${toiletID}`);
+    navigate(`/toilets/${toiletID}`, {
+      state: {
+        showToiletPath,
+        toiletName,
+        roadNameAddress,
+        inUnisexToilet,
+        menToiletBowlNumber,
+        menHandicapToiletBowlNumber,
+        menChildrenToiletBowlNumber,
+        ladiesToiletBowlNumber,
+        ladiesHandicapToiletBowlNumber,
+        ladiesChildrenToiletBowlNumber,
+        openTime,
+        latestToiletPaperInfo,
+        isSOS,
+        chatRoomList,
+      },
+    });
   }
 
   return (
@@ -96,14 +121,33 @@ function ToiletCard({
 }
 
 ToiletCard.propTypes = {
-  showToiletPath: PropTypes.func.isRequired,
-  toiletID: PropTypes.string.isRequired,
   distance: PropTypes.number.isRequired,
-  isSOS: PropTypes.bool.isRequired,
+  toiletID: PropTypes.string.isRequired,
+  showToiletPath: PropTypes.func.isRequired,
   toiletName: PropTypes.string.isRequired,
   roadNameAddress: PropTypes.string.isRequired,
+  inUnisexToilet: PropTypes.bool.isRequired,
   menToiletBowlNumber: PropTypes.number.isRequired,
+  menHandicapToiletBowlNumber: PropTypes.number.isRequired,
+  menChildrenToiletBowlNumber: PropTypes.number.isRequired,
   ladiesToiletBowlNumber: PropTypes.number.isRequired,
+  ladiesHandicapToiletBowlNumber: PropTypes.number.isRequired,
+  ladiesChildrenToiletBowlNumber: PropTypes.number.isRequired,
+  openTime: PropTypes.string.isRequired,
+  latestToiletPaperInfo: PropTypes.shape({
+    lastDate: PropTypes.string,
+    isToiletPaper: PropTypes.bool,
+  }),
+  isSOS: PropTypes.bool.isRequired,
+  chatRoomList: PropTypes.arrayOf(PropTypes.string),
+};
+
+ToiletCard.defaultProps = {
+  chatRoomList: [],
+  latestToiletPaperInfo: {
+    lastDate: "없 음",
+    isToiletPaper: false,
+  },
 };
 
 export default ToiletCard;

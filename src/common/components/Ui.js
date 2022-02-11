@@ -4,7 +4,6 @@ import styled from "styled-components";
 import check from "../../assets/icon-check-full.png";
 import help from "../../assets/icon-help-fluid.png";
 import toiletSample from "../../assets/toilet-sample.jpeg";
-// import Toilet from "../../features/toilet/Toilet";
 import ToiletCard from "../../features/toilet/ToiletCard";
 import ButtonDefault from "./buttons/ButtonDefault";
 import ButtonFluid from "./buttons/ButtonFluid";
@@ -98,24 +97,6 @@ function Ui() {
       />
       <h3>StarContainer</h3>
       <StarContainer rating={4} />
-      {/* <h3>Toilet</h3>
-      <Toilet
-        toiletName="홍우빌딩"
-        roadNameAddress="테헤란로 522"
-        inUnisexToilet={false}
-        menToiletBowlNumber={2}
-        menHandicapToiletBowlNumber={0}
-        menChildrenToiletBowlNumber={0}
-        ladiesToiletBowlNumber={2}
-        ladiesHandicapToiletBowlNumber={0}
-        ladiesChildrenToiletBowlNumber={0}
-        openTime="09:00~18:00"
-        latestToiletPaperInfo={{
-          lastDate: "2022.02.10",
-          isToiletPaper: true,
-        }}
-        IsSOS={false}
-      /> */}
     </StyledUi>
   );
 }
