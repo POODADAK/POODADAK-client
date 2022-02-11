@@ -9,6 +9,7 @@ import close from "../../assets/icon-close-black.png";
 import right from "../../assets/icon-right-black.png";
 import kakao from "../../assets/kakao.svg";
 import naver from "../../assets/naver.svg";
+// import { eraseToken } from "../../features/login/loginSlice";
 
 const StyledSidebar = styled.div`
   width: 280px;
