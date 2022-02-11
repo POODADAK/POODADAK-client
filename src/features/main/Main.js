@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
+import Sidebar from "../../common/components/Sidebar";
 
 const StyledMain = styled.div`
   width: 100%;
@@ -74,6 +75,7 @@ function Main() {
       >
         프로필 닉네임 편집
       </ButtonSmall>
+      <Sidebar />
     </StyledMain>
   );
 }

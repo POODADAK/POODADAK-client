@@ -15,6 +15,7 @@ const StyledButtonFluid = styled.button`
   background-color: ${(props) => props.color};
   border-radius: 8px;
   cursor: pointer;
+
   .icon {
     margin-right: 0.5rem;
   }

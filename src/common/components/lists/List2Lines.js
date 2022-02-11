@@ -11,23 +11,27 @@ const StyledList2Lines = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: black;
+
   .description {
     margin-left: 20px;
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
+
   .label {
     font-size: medium;
     font-weight: 600;
     color: #bc955c;
     margin-bottom: -8px;
   }
+
   .secondary {
     font-size: medium;
     font-weight: 100;
     color: white;
   }
+
   .btns {
     margin-right: 20px;
     display: flex;

@@ -9,6 +9,7 @@ const StyledListCheck = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: black;
+
   .label {
     font-size: large;
     font-weight: 600;
@@ -17,11 +18,13 @@ const StyledListCheck = styled.div`
     display: flex;
     align-items: center;
   }
+
   .btns {
     margin-right: 20px;
     display: flex;
     align-items: center;
   }
+
   .checkbox {
     width: 20px;
     height: 20px;

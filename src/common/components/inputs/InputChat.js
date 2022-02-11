@@ -10,12 +10,14 @@ const StyledInputChat = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
+
   .form {
     width: 94%;
     display: flex;
     align-items: center;
     padding: 4px 10px;
   }
+
   input {
     width: 100%;
     height: 36px;
@@ -23,12 +25,14 @@ const StyledInputChat = styled.form`
     border: none;
     border-radius: none;
     outline: none;
+
     ::placeholder {
       font-size: medium;
       color: gray;
       padding-left: 0.5rem;
     }
   }
+
   .btn {
     margin-left: -65px;
   }

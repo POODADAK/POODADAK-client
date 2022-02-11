@@ -10,6 +10,7 @@ const StyledInput = styled.form`
   flex-direction: column;
   font-size: large;
   margin-bottom: 10px;
+
   label {
     width: auto;
     font-size: large;
