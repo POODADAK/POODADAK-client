@@ -13,6 +13,7 @@ import ButtonFull from "../../common/components/buttons/ButtonFull";
 import HeaderSub from "../../common/components/headers/HeaderSub";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import { COLOR } from "../../common/util/constants";
+// import PhotoTest from "./PhotoTest";
 
 const StyledDiv = styled.div`
   position: relative;
@@ -28,7 +29,8 @@ const StyledDiv = styled.div`
 `;
 
 const StyledMain = styled.main`
-  overflow: scroll;
+  overflow-y: scroll;
+  overflow-x: hidden;
   height: 95%;
   padding: 0 5%;
 
@@ -112,8 +114,12 @@ function ReviewEdit({ toiletId }) {
     setEnteredToiletPaper((state) => !state);
   }
 
-  function handleSubmitClick() {
-    axios.post(
+  function handleTextAreaInput(event) {
+    setEnteredText(event.target.value);
+  }
+
+  async function handleSubmitClick() {
+    await axios.post(
       "/review",
       {
         toilet: toiletId,
@@ -128,6 +134,7 @@ function ReviewEdit({ toiletId }) {
 
   return (
     <StyledDiv>
+      <input type="file" name="myImage" />
       <HeaderSub />
       <StyledMain>
         <h1 className="title">리뷰남기기</h1>
@@ -165,7 +172,10 @@ function ReviewEdit({ toiletId }) {
           </ButtonFluid>
           <p>이미지는 1개만 업로드 할 수 있습니다.</p>
         </div>
-        <textarea placeholder="이 화장실에 대한 리뷰를 남겨주세요.">
+        <textarea
+          placeholder="이 화장실에 대한 리뷰를 남겨주세요."
+          onChange={handleTextAreaInput}
+        >
           {enteredText}
         </textarea>
         <ButtonFull icon={submitIcon} onClick={handleSubmitClick}>
