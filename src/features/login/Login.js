@@ -55,7 +55,7 @@ function Login() {
         }
 
         dispatch(userLoggedIn());
-        navigate("/ui");
+        navigate("/");
       } catch (error) {
         const fetchedErrorMessage = error.response.data.errMessage
           ? error.response.data.errMessage
