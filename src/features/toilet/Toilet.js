@@ -2,6 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable camelcase */
 import axios from "axios";
+import haversine from "haversine-distance";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
@@ -12,10 +13,13 @@ import helpIcon from "../../assets/icon-help-fluid.png";
 import squaredSOS from "../../assets/icon-squaredsos.svg";
 import viewFinder from "../../assets/icon-viewfinder.svg";
 import waitIcon from "../../assets/icon-wait-fluid.png";
+import getMyLongLat from "../../common/api/getMyLongLat";
 import ButtonDefault from "../../common/components/buttons/ButtonDefault";
 import ButtonFluid from "../../common/components/buttons/ButtonFluid";
+import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderSub from "../../common/components/headers/HeaderSub";
 import ListDefault from "../../common/components/lists/ListDefault";
+import Modal from "../../common/components/modal/Modal";
 import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
@@ -74,7 +78,9 @@ function Toilet() {
     latestToiletPaperInfo,
     isSOS,
     chatRoomList,
-  } = location.state;
+    toiletLongitude,
+    toiletLatitude,
+  } = location.state.toilet;
 
   const userClickedSOSButton = useSelector(
     (state) => state.currnetToiletInfo.byIds[toilet_id]?.userClickedSOSButton
@@ -82,10 +88,13 @@ function Toilet() {
   const isSOSCurrnetToilet = useSelector(
     (state) => state.currnetToiletInfo.byIds[toilet_id]?.isSOSCurrnetToilet
   );
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
 
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
   const [userSOSButton, setUserSOSButton] = useState(userClickedSOSButton);
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
 
   useEffect(() => {
     dispatch(toiletInfoUpated({ toilet_id, isSOS, userSOSButton }));
@@ -121,6 +130,32 @@ function Toilet() {
   }, [reviews]);
 
   function onClickSOSButton() {
+    if (!isLoggedIn) {
+      // eslint-disable-next-line no-use-before-define
+      setContentAndShowModal(
+        <>
+          <div>로그인이 필요합니다!</div>
+          <ButtonSmall type="button" onClick={() => navigate("/")}>
+            메인페이지로
+          </ButtonSmall>
+        </>
+      );
+
+      return;
+    }
+
+    const [lon, lat] = getMyLongLat();
+    const isDistanceWithin100m =
+      haversine({ lon, lat }, { lon: toiletLongitude, lat: toiletLatitude }) <
+      101;
+
+    if (!isDistanceWithin100m) {
+      // eslint-disable-next-line no-use-before-define
+      setContentAndShowModal(<p>현재 위치가 해당 화장실 근처가 아닙니다!</p>);
+
+      return;
+    }
+
     setUserSOSButton(true);
 
     async function emitSOS() {
@@ -145,8 +180,21 @@ function Toilet() {
     navigate("/editReview/", { toilet_id });
   }
 
+  function handleModalCloseClick() {
+    setModalContent("");
+    setShowModal(false);
+  }
+
+  function setContentAndShowModal(content) {
+    setModalContent(content);
+    setShowModal(true);
+  }
+
   return (
     <StyledToilet>
+      {showModal && (
+        <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
+      )}
       <HeaderSub onClick={onClickWaitingSavior} />
 
       <div className="titleContainer">
