@@ -13,6 +13,10 @@
   "rules": {
     "semi": 2,
     "react/jsx-filename-extension": [1, { "extensions": [".js", ".jsx"] }],
+    "jsx-a11y/label-has-associated-control": [
+      2,
+      {"assert": "htmlFor"}
+    ],
     "prettier/prettier": [
       2,
       {
@@ -30,7 +34,6 @@
         "newlines-between": "always"
       }
     ],
-
     "no-promise-executor-return": 0,
     "no-param-reassign": 0,
     "no-console": 2,

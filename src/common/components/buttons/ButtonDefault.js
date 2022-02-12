@@ -17,6 +17,7 @@ const StyledButtonDefault = styled.div`
   border-radius: 3px;
   padding: 4px 10px;
   cursor: pointer;
+
   .button {
     background-color: black;
     display: flex;

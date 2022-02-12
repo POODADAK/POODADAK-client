@@ -1,9 +1,9 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
+import authenticate from "../../common/api/auth";
 import { userLoggedIn } from "./loginSlice";
 
 const LoginProcessContainer = styled.div`
@@ -40,20 +40,7 @@ function Login() {
       const state = new URL(window.location.href).searchParams.get("state");
 
       try {
-        if (!state) {
-          await axios.post(
-            "auth/kakao",
-            { token: code },
-            { withCredentials: true }
-          );
-        } else {
-          await axios.post(
-            "auth/naver",
-            { code, state },
-            { withCredentials: true }
-          );
-        }
-
+        await authenticate(state, code);
         dispatch(userLoggedIn());
         navigate("/");
       } catch (error) {

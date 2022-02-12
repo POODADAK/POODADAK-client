@@ -9,11 +9,17 @@ const StyledListDefault = styled.div`
   justify-content: flex-start;
   align-items: center;
   background-color: black;
+
   .label {
     font-size: large;
     font-weight: 600;
     color: #bc955c;
     margin-left: 20px;
+    display: flex;
+    align-items: center;
+  }
+
+  .btns {
     margin-right: 20px;
   }
   .secondary {

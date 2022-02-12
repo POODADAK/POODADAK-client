@@ -14,11 +14,13 @@ const StyledHeaderMain = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: black;
+
   .logo {
     margin-left: 10px;
     display: flex;
     align-items: center;
   }
+
   .btns {
     margin-right: 10px;
     display: flex;

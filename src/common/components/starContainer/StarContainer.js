@@ -44,6 +44,7 @@ function StarContainer({ rating, showRatingNumber, onClick, width }) {
     if (ratingInput > emptyStarThreshold) {
       if (ratingInput < halfStarThreshold) {
         imageSrc = starHalf;
+
         return imageSrc;
       }
       imageSrc = starFull;

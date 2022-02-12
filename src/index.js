@@ -33,7 +33,8 @@ ReactDOM.render(
           <Route path="/toilets/:toilet_id" element={<Toilet />} />
           <Route path="/chats" element={<Chats />} />
           <Route path="/chats/:chat_id" element={<Chat />} />
-          <Route path="/editReview/:review_id" element={<ReviewEdit />} />
+          <Route path="/editReview" element={<ReviewEdit />} />
+          <Route path="/editReview/:reviewId" element={<ReviewEdit />} />
           <Route path="/users/:user_id" element={<Profile />} />
           <Route path="/editProfile/:user_id" element={<ProfileEdit />} />
           <Route path="/error" element={<ErrorPage />} />

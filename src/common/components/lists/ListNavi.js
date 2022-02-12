@@ -11,23 +11,27 @@ const StyledListNavi = styled.div`
   justify-content: space-between;
   align-items: center;
   background-color: black;
+
   .description {
     display: flex;
     flex-direction: column;
     justify-content: center;
   }
+
   .label {
     font-size: medium;
     font-weight: 600;
     color: #bc955c;
     margin-left: 20px;
   }
+
   .secondary {
     font-size: medium;
     font-weight: 100;
     color: white;
     margin-right: 10px;
   }
+
   .btns {
     margin-right: 20px;
     display: flex;

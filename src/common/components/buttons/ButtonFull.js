@@ -13,6 +13,7 @@ const StyledButtonFull = styled.button`
   color: #bc955c;
   background-color: black;
   cursor: pointer;
+
   .icon {
     margin-top: 2px;
     margin-right: 0.5rem;
