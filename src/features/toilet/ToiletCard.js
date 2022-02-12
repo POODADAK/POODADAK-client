@@ -13,7 +13,7 @@ const StyledToiletCard = styled.div`
   justify-content: center;
 
   .wrapper {
-    width: 70%;
+    width: 80%;
     height: fit-content;
     display: flex;
     flex-direction: column;
@@ -32,7 +32,7 @@ const StyledToiletCard = styled.div`
     align-items: center;
     .distance {
       padding: 0.3rem 0.8rem;
-      margin-left: 10px;
+      margin-left: 11%;
       margin-bottom: -0.5rem;
       border-radius: 0.3rem;
       background-color: #c0c0c0;
@@ -68,7 +68,7 @@ const StyledToiletCard = styled.div`
 function ToiletCard({ toilet, distance, time }) {
   const navigate = useNavigate();
   const {
-    toiletID,
+    _id,
     isSOS,
     toiletName,
     roadNameAddress,
@@ -76,9 +76,9 @@ function ToiletCard({ toilet, distance, time }) {
     ladiesToiletBowlNumber,
   } = toilet;
 
-  function moveToiletDetail(e) {
-    e.stopPropagation();
-    navigate(`/toilets/${toiletID}`, {
+  function moveToiletDetail() {
+    // e.stopPropagation(); ==> 실제 페이지로 넘어가는데 있어서 의미를 몰라 우선 주석처리
+    navigate(`/toilets/${_id}`, {
       state: toilet,
     });
   }
@@ -90,7 +90,7 @@ function ToiletCard({ toilet, distance, time }) {
           <div className="distance">
             {distance}m (도보 {time}분)
           </div>
-          <ButtonDefault moveTo="right" onClick={(e) => moveToiletDetail(e)}>
+          <ButtonDefault moveTo="right" onClick={() => moveToiletDetail()}>
             상세정보
           </ButtonDefault>
         </div>
@@ -112,7 +112,7 @@ function ToiletCard({ toilet, distance, time }) {
 
 ToiletCard.propTypes = {
   toilet: PropTypes.shape({
-    toiletID: PropTypes.string,
+    _id: PropTypes.string,
     isSOS: PropTypes.bool,
     toiletName: PropTypes.string,
     roadNameAddress: PropTypes.string,

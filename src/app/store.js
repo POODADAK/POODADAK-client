@@ -1,12 +1,14 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 import loginReducer from "../features/login/loginSlice";
-import currnetToiletInfoReducer from "../features/toilet/toiletSlice";
+import mainReducer from "../features/main/mainSlice";
+import toiletReducer from "../features/toilet/toiletSlice";
 
 const store = configureStore({
   reducer: {
     login: loginReducer,
-    currnetToiletInfo: currnetToiletInfoReducer,
+    main: mainReducer,
+    toilet: toiletReducer,
   },
 });
 
