@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React from "react";
-import { useSelector } from "react-redux";
-// import { useDispatch, useSelector } from "react-redux";  =====> 아래 주석이 해결되면 이 주석도 풀어서 활용합니다. (바로 위 라인은 삭제)
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -9,7 +8,7 @@ import close from "../../assets/icon-close-black.png";
 import right from "../../assets/icon-right-black.png";
 import kakao from "../../assets/kakao.svg";
 import naver from "../../assets/naver.svg";
-// import { eraseToken } from "../../features/login/loginSlice";
+import { eraseToken } from "../../features/login/loginSlice";
 
 const StyledSidebar = styled.div`
   width: 280px;
@@ -62,7 +61,7 @@ const StyledSidebar = styled.div`
 function Sidebar({ onClick }) {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
-  // const dispatch = useDispatch();  =====> 아래 주석이 해결되면 이 주석도 풀어서 활용합니다.
+  const dispatch = useDispatch();
 
   function kakaoLogin() {
     window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_KAKAO_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_REST_API_REDIRECT_URL}`;
@@ -73,7 +72,7 @@ function Sidebar({ onClick }) {
   }
 
   function handleLogoutClick() {
-    // dispatch(eraseToken);  =====> 여기가 어떤 의미인지 몰라서 일단 주석처리 해두었습니다.
+    dispatch(eraseToken);
   }
 
   return (

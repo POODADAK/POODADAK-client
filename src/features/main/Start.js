@@ -19,7 +19,7 @@ const StyledStart = styled.div`
     align-items: center;
     gap: 1rem;
   }
-  .startBtn {
+  .start-button {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -42,7 +42,7 @@ function Start({ onClick }) {
     <StyledStart>
       <div className="wrapper">
         <div
-          className="startBtn"
+          className="start-button"
           role="button"
           tabIndex={0}
           onClick={() => {

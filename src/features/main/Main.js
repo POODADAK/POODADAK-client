@@ -31,15 +31,19 @@ const StyledMain = styled.div`
     flex-direction: column;
     justify-content: center;
   }
+  .fullBtn {
+    display: flex;
+  }
   .card {
     position: absolute;
     z-index: 1;
     bottom: 0;
     width: 100%;
+    margin-bottom: 4px;
     .close {
       display: flex;
       justify-content: center;
-      margin-top: 5px;
+      margin-top: 4px;
     }
   }
   .start,
@@ -56,12 +60,12 @@ const StyledMain = styled.div`
 `;
 
 const { Tmapv2 } = window;
-const ANI_TYPE = Tmapv2.MarkerOptions.ANIMATE_DROP;
+const ANI_TYPE = Tmapv2.MarkerOptions.ANIMATE_BOUNCE_ONCE;
 const BASE_URL = process.env.REACT_APP_AXIOS_BASE_URL;
 
 function Main() {
   const navigate = useNavigate();
-  const defaultLocation = [127.0016985, 37.5642135];
+  const defaultLocation = [126.97796919, 37.566535];
 
   const [map, setMap] = useState(null);
   const [mapCenter, setMapCenter] = useState(null);
@@ -103,7 +107,7 @@ function Main() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  // 최초로 현재 내 위치 마커를 찍습니다.
+  // 최초로 현재 내 위치 마커를 찍고 지도를 내 위치로 이동합니다.
   useEffect(() => {
     setCurrentMarker(
       new Tmapv2.Marker({
@@ -125,7 +129,7 @@ function Main() {
     checkCurrentMarker(currentLocation);
   }, [currentMarker, currentLocation, adjCurrentMarker]);
 
-  // 3초마다 맵의 center를 체크하고 값이 변경됐을 경우 주변 화장실을 다시 가져와 핀을 찍습니다.
+  // 2초마다 맵의 center를 체크하고 값이 변경됐을 경우 주변 화장실을 다시 가져와 핀을 찍습니다.
   useEffect(() => {
     async function drawToiletMarkers(toiletsArray, anitype) {
       // eslint-disable-next-line no-restricted-syntax
@@ -137,31 +141,17 @@ function Main() {
       for (const toilet of toiletsArray) {
         const lat = toilet.location.coordinates[1];
         const lng = toilet.location.coordinates[0];
-        if (toilet.isSOS) {
-          const marker = new Tmapv2.Marker({
-            position: new Tmapv2.LatLng(lat, lng),
-            icon: pinSosToilet,
-            animation: anitype,
-            animationLength: 500,
-            map: adjMap,
-          });
-          marker.addListener("click", () => {
-            setSelectedToilet(toilet);
-          });
-          setToiletMarkers(
-            (current) => !current.includes(marker) && [...current, marker]
-          );
-        } else {
-          const marker = new Tmapv2.Marker({
-            position: new Tmapv2.LatLng(lat, lng),
-            icon: pinToilet,
-            animation: anitype,
-            animationLength: 500,
-            map: adjMap,
-          });
-          marker.addListener("click", () => {
-            setSelectedToilet(toilet);
-          });
+        const marker = new Tmapv2.Marker({
+          position: new Tmapv2.LatLng(lat, lng),
+          icon: toilet.isSOS ? pinSosToilet : pinToilet,
+          animation: anitype,
+          animationLength: 300,
+          map: adjMap,
+        });
+        marker.addListener("click", () => {
+          setSelectedToilet(toilet);
+        });
+        if (!adjToiletMarkers.includes(marker)) {
           setToiletMarkers(
             (current) => !current.includes(marker) && [...current, marker]
           );
@@ -185,14 +175,14 @@ function Main() {
           drawToiletMarkers(newToilets, ANI_TYPE);
         }
       }
-    }, 3000);
+    }, 2000);
 
     return () => {
       clearInterval(checkMapCenter);
     };
-  }, [isStart, adjMap, mapCenter, adjToiletMarkers]);
+  }, [adjMap, adjToiletMarkers, isStart, mapCenter]);
 
-  // 화장실을 선택할 경우 현재 위치부터 화장실까지 경로를 그려 안내해 줍니다.
+  // 화장실을 선택할 경우 해당 카드가 노출되고, 현재 위치부터 화장실까지 경로를 그려 안내해 줍니다.
   useEffect(() => {
     async function drawPathToToilet(start, end) {
       const sendQueryUrl = `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&appKey=l7xxa9987e08abce420da89e0fd17ee212c6`;
@@ -267,11 +257,15 @@ function Main() {
     <StyledMain>
       <HeaderMain onClick={toggleSidebar} />
       <div className="map-container">
-        <ButtonFull onClick={() => navigate("/toilets")}>
-          내 근처 화장실 리스트
-        </ButtonFull>
         <div id="TMapApp" />
+        <div className="fullBtn">
+          <ButtonFull onClick={() => getLocation()}>내 위치로 이동</ButtonFull>
+          <ButtonFull onClick={() => navigate("/toilets")}>
+            화장실 리스트로 보기
+          </ButtonFull>
+        </div>
       </div>
+
       {selectedToilet && (
         <div className="card">
           <ToiletCard
@@ -286,16 +280,19 @@ function Main() {
           </div>
         </div>
       )}
+
       {isStart && (
         <div className="start">
           <Start onClick={getLocation} />
         </div>
       )}
+
       {onSideBar && !isStart && (
         <div className="sidebar">
           <Sidebar onClick={toggleSidebar} />
         </div>
       )}
+
       {err && <Route path="/error" element={<ErrorPage error={err} />} />}
     </StyledMain>
   );

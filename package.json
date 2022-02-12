@@ -58,6 +58,5 @@
     "*.(json|css|md)": [
       "prettier --write"
     ]
-  },
-  "proxy": "https://apis.openapi.sk.com"
+  }
 }
