@@ -78,7 +78,24 @@ function ToiletCard({ toilet, distance, time }) {
 
   function moveToiletDetail(e) {
     e.stopPropagation();
-    navigate(`/toilets/${toiletID}`);
+    navigate(`/toilets/${toiletID}`, {
+      state: {
+        showToiletPath,
+        toiletName,
+        roadNameAddress,
+        inUnisexToilet,
+        menToiletBowlNumber,
+        menHandicapToiletBowlNumber,
+        menChildrenToiletBowlNumber,
+        ladiesToiletBowlNumber,
+        ladiesHandicapToiletBowlNumber,
+        ladiesChildrenToiletBowlNumber,
+        openTime,
+        latestToiletPaperInfo,
+        isSOS,
+        chatRoomList,
+      },
+    });
   }
 
   return (
