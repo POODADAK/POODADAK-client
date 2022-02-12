@@ -55,7 +55,7 @@ function Login() {
         }
 
         dispatch(userLoggedIn());
-        navigate("/ui");
+        navigate("/");
       } catch (error) {
         const fetchedErrorMessage = error.response.data.errMessage
           ? error.response.data.errMessage
@@ -67,6 +67,7 @@ function Login() {
     }
 
     getToken();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (

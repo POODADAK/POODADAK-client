@@ -10,144 +10,122 @@ import ButtonDefault from "../../common/components/buttons/ButtonDefault";
 const StyledToiletCard = styled.div`
   width: 100%;
   display: flex;
-  flex-direction: column;
   justify-content: center;
-  align-items: center;
-  border-radius: 1rem;
-  background-color: black;
 
-  .distance {
+  .wrapper {
+    width: 70%;
+    height: fit-content;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    border-radius: 0.7rem;
+    background-color: black;
+    gap: 10px;
+    padding: 0.5rem 1rem 1rem 1rem;
+  }
+  .header {
     width: 100%;
+    height: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    margin-top: 0.5rem;
-    margin-bottom: 0.3rem;
-
-    .toilet-distance {
-      margin-left: 3rem;
+    .distance {
       padding: 0.3rem 0.8rem;
+      margin-left: 10px;
+      margin-bottom: -0.5rem;
       border-radius: 0.3rem;
       background-color: #c0c0c0;
+      font-size: small;
       color: black;
     }
   }
-
   .name {
     width: 100%;
     display: flex;
     align-items: center;
     justify-content: start;
-    margin-left: 1.5rem;
-    margin-bottom: 0.5rem;
-    font-size: 1.5rem;
-
-    .toilet-name {
-      margin-left: 0.5rem;
+    font-size: large;
+    font-weight: 600;
+    color: white;
+    gap: 10px;
+    margin-bottom: -0.3rem;
+    .toilet-pin {
+      width: 30px;
+      height: 30px;
     }
   }
-
   .toilet-info {
     width: 100%;
-    margin-left: 6rem;
-    margin-bottom: 0.5rem;
+    margin-left: 80px;
+    font-size: small;
     color: gray;
+    display: flex;
+    flex-direction: column;
   }
 `;
 
-function ToiletCard({
-  distance,
-  toiletID,
-  showToiletPath,
-  toiletName,
-  roadNameAddress,
-  inUnisexToilet,
-  menToiletBowlNumber,
-  menHandicapToiletBowlNumber,
-  menChildrenToiletBowlNumber,
-  ladiesToiletBowlNumber,
-  ladiesHandicapToiletBowlNumber,
-  ladiesChildrenToiletBowlNumber,
-  openTime,
-  latestToiletPaperInfo,
-  isSOS,
-  chatRoomList,
-}) {
+function ToiletCard({ toilet, distance, time }) {
   const navigate = useNavigate();
+  const {
+    toiletID,
+    isSOS,
+    toiletName,
+    roadNameAddress,
+    menToiletBowlNumber,
+    ladiesToiletBowlNumber,
+  } = toilet;
 
   function moveToiletDetail(e) {
     e.stopPropagation();
     navigate(`/toilets/${toiletID}`, {
-      state: {
-        showToiletPath,
-        toiletName,
-        roadNameAddress,
-        inUnisexToilet,
-        menToiletBowlNumber,
-        menHandicapToiletBowlNumber,
-        menChildrenToiletBowlNumber,
-        ladiesToiletBowlNumber,
-        ladiesHandicapToiletBowlNumber,
-        ladiesChildrenToiletBowlNumber,
-        openTime,
-        latestToiletPaperInfo,
-        isSOS,
-        chatRoomList,
-      },
+      state: toilet,
     });
   }
 
   return (
-    <StyledToiletCard onClick={showToiletPath}>
-      <div className="distance">
-        <div className="toilet-distance">{distance} m</div>
-        <ButtonDefault moveTo="right" onClick={(e) => moveToiletDetail(e)}>
-          상세정보
-        </ButtonDefault>
-      </div>
-      <div className="name">
-        {isSOS ? <img src={sosPin} alt="핀" /> : <img src={pin} alt="핀" />}
-        <div className="toilet-name">{toiletName}</div>
-      </div>
-      <div className="toilet-info">{roadNameAddress}</div>
-      <div className="toilet-info">
-        남자화장실 대변기 수 : {menToiletBowlNumber}
-      </div>
-      <div className="toilet-info">
-        여자화장실 대변기 수 : {ladiesToiletBowlNumber}
+    <StyledToiletCard>
+      <div className="wrapper">
+        <div className="header">
+          <div className="distance">
+            {distance}m (도보 {time}분)
+          </div>
+          <ButtonDefault moveTo="right" onClick={(e) => moveToiletDetail(e)}>
+            상세정보
+          </ButtonDefault>
+        </div>
+        <div className="name">
+          <div className="toilet-pin">
+            {isSOS ? <img src={sosPin} alt="핀" /> : <img src={pin} alt="핀" />}
+          </div>
+          <div className="toilet-name">{toiletName}</div>
+        </div>
+        <div className="toilet-info">
+          <div>{roadNameAddress}</div>
+          <div>남자화장실 대변기 수 : {menToiletBowlNumber}</div>
+          <div>여자화장실 대변기 수 : {ladiesToiletBowlNumber}</div>
+        </div>
       </div>
     </StyledToiletCard>
   );
 }
 
 ToiletCard.propTypes = {
-  distance: PropTypes.number.isRequired,
-  toiletID: PropTypes.string.isRequired,
-  showToiletPath: PropTypes.func.isRequired,
-  toiletName: PropTypes.string.isRequired,
-  roadNameAddress: PropTypes.string.isRequired,
-  inUnisexToilet: PropTypes.bool.isRequired,
-  menToiletBowlNumber: PropTypes.number.isRequired,
-  menHandicapToiletBowlNumber: PropTypes.number.isRequired,
-  menChildrenToiletBowlNumber: PropTypes.number.isRequired,
-  ladiesToiletBowlNumber: PropTypes.number.isRequired,
-  ladiesHandicapToiletBowlNumber: PropTypes.number.isRequired,
-  ladiesChildrenToiletBowlNumber: PropTypes.number.isRequired,
-  openTime: PropTypes.string.isRequired,
-  latestToiletPaperInfo: PropTypes.shape({
-    lastDate: PropTypes.string,
-    isToiletPaper: PropTypes.bool,
-  }),
-  isSOS: PropTypes.bool.isRequired,
-  chatRoomList: PropTypes.arrayOf(PropTypes.string),
+  toilet: PropTypes.shape({
+    toiletID: PropTypes.string,
+    isSOS: PropTypes.bool,
+    toiletName: PropTypes.string,
+    roadNameAddress: PropTypes.string,
+    menToiletBowlNumber: PropTypes.number,
+    ladiesToiletBowlNumber: PropTypes.number,
+  }).isRequired,
+  distance: PropTypes.number,
+  time: PropTypes.number,
 };
 
 ToiletCard.defaultProps = {
-  chatRoomList: [],
-  latestToiletPaperInfo: {
-    lastDate: "없 음",
-    isToiletPaper: false,
-  },
+  distance: 0,
+  time: 0,
 };
 
 export default ToiletCard;

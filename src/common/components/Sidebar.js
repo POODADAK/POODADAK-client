@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
@@ -5,8 +6,8 @@ import styled from "styled-components";
 
 import close from "../../assets/icon-close-black.png";
 import right from "../../assets/icon-right-black.png";
-import kakao from "../../assets/kakao.png";
-import naver from "../../assets/naver.png";
+import kakao from "../../assets/kakao.svg";
+import naver from "../../assets/naver.svg";
 import { eraseToken } from "../../features/login/loginSlice";
 
 const StyledSidebar = styled.div`
@@ -57,12 +58,10 @@ const StyledSidebar = styled.div`
   }
 `;
 
-function Sidebar() {
+function Sidebar({ onClick }) {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const dispatch = useDispatch();
-
-  function handleKeyDown() {}
 
   function kakaoLogin() {
     window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_KAKAO_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_REST_API_REDIRECT_URL}`;
@@ -80,10 +79,14 @@ function Sidebar() {
     <StyledSidebar>
       <div
         className="close"
-        onClick={handleKeyDown}
+        onClick={() => {
+          onClick();
+        }}
         role="button"
         tabIndex={0}
-        onKeyDown={handleKeyDown}
+        onKeyDown={() => {
+          onClick();
+        }}
       >
         <img src={close} alt="닫기" />
         닫기
@@ -146,5 +149,9 @@ function Sidebar() {
     </StyledSidebar>
   );
 }
+
+Sidebar.propTypes = {
+  onClick: PropTypes.func.isRequired,
+};
 
 export default Sidebar;
