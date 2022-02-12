@@ -8,7 +8,7 @@ export const toiletSlice = createSlice({
     byIds: {},
   },
   reducers: {
-    updateToiletInfo: (state, action) => {
+    toiletInfoUpated: (state, action) => {
       const { toilet_id, isSOS, userSOSButton } = action.payload;
 
       if (!state.allIds.lengths) {
@@ -46,6 +46,6 @@ export const toiletSlice = createSlice({
   },
 });
 
-export const { updateToiletInfo } = toiletSlice.actions;
+export const { toiletInfoUpated } = toiletSlice.actions;
 
 export default toiletSlice.reducer;
