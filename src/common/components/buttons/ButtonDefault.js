@@ -33,16 +33,18 @@ const StyledButtonDefault = styled.div`
 `;
 
 function ButtonDefault({ onClick, moveTo, icon, children }) {
-  function handleKeyDown() {}
-
   return (
     <StyledButtonDefault>
       <div
         className="button"
         role="button"
         tabIndex={0}
-        onClick={onClick}
-        onKeyDown={handleKeyDown}
+        onClick={() => {
+          onClick();
+        }}
+        onKeyDown={() => {
+          onClick();
+        }}
         moveTo={moveTo}
       >
         {moveTo === "left" && <img src={left} alt="뒤로가기" />}

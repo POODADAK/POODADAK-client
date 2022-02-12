@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -26,7 +27,7 @@ const StyledHeaderSub = styled.div`
   }
 `;
 
-function HeaderSub() {
+function HeaderSub({ onClick }) {
   const navigate = useNavigate();
 
   return (
@@ -37,10 +38,16 @@ function HeaderSub() {
         </ButtonDefault>
       </div>
       <div className="btns">
-        <ButtonDefault icon={chat} />
+        <ButtonDefault icon={chat} onClick={onClick} />
       </div>
     </StyledHeaderSub>
   );
 }
+HeaderSub.propTypes = {
+  onClick: PropTypes.func,
+};
+HeaderSub.defaultProps = {
+  onClick: null,
+};
 
 export default HeaderSub;
