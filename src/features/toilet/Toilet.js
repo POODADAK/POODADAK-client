@@ -82,7 +82,6 @@ function Toilet() {
 
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
-  // const [userSOSButton, setUserSOSButton] = useState(userClickedSOSButton); ==> 용처가 확실치 않아서 우선 주석처리
 
   useEffect(() => {
     async function getReviews() {

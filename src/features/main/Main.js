@@ -1,3 +1,4 @@
+/* eslint-disable new-cap */
 import axios from "axios";
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -74,13 +75,15 @@ function Main() {
   const [map, setMap] = useState(null);
   const [mapCenter, setMapCenter] = useState(null);
   const [currentMarker, setCurrentMarker] = useState(null);
-  // const [toilets, setToilets] = useState([]);
   const [toiletMarkers, setToiletMarkers] = useState([]);
   const [selectedToilet, setSelectedToilet] = useState(null);
   const [selectedToiletDistance, setSelectedToiletDistance] = useState(null);
   const [selectedToiletTime, setSelectedToiletTime] = useState(null);
-  // const [drawPathInfos, setDrawPathInfos] = useState([]);
-  // const [drawPathResults, setDrawPathResults] = useState([]);
+  const [drawPathInfos, setDrawPathInfos] = useState([]);
+  const [drawPathResults, setDrawPathResults] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [pathMarkers, setPathMarkers] = useState([]);
+  const [polyline, setPolyline] = useState(null);
   const [onSideBar, setOnSideBar] = useState(false);
   const [err, setErr] = useState(null);
 
@@ -91,6 +94,10 @@ function Main() {
   const adjMap = map;
   const adjCurrentMarker = currentMarker;
   const adjToiletMarkers = toiletMarkers;
+  const adjDrawPathInfos = drawPathInfos;
+  const adjDrawPathResults = drawPathResults;
+  const adjPathMarkers = pathMarkers;
+  const adjPolyline = polyline;
 
   const forceSetMapCenter = useCallback(
     async (center) => {
@@ -109,7 +116,7 @@ function Main() {
   }
 
   async function getPathToToiletInfo(start, end) {
-    const sendQueryUrl = `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&appKey=l7xxa9987e08abce420da89e0fd17ee212c6`;
+    const sendQueryUrl = `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&appKey=l7xx66e7421614a24fb5b811213de86ca032`;
     const data = JSON.stringify({
       startName: "현재위치",
       startX: start[0],
@@ -254,24 +261,26 @@ function Main() {
         item.setMap(null);
       }
       setToiletMarkers([]);
-      // eslint-disable-next-line no-restricted-syntax
-      for (const toilet of toiletsArray) {
-        const lat = toilet.location.coordinates[1];
-        const lng = toilet.location.coordinates[0];
-        const marker = new Tmapv2.Marker({
-          position: new Tmapv2.LatLng(lat, lng),
-          icon: toilet.isSOS ? pinSosToilet : pinToilet,
-          animation: anitype,
-          animationLength: 300,
-          map: adjMap,
-        });
-        marker.addListener("click", () => {
-          setSelectedToilet(toilet);
-        });
-        if (!adjToiletMarkers.includes(marker)) {
-          setToiletMarkers(
-            (current) => !current.includes(marker) && [...current, marker]
-          );
+      if (toiletsArray) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const toilet of toiletsArray) {
+          const lat = toilet.location.coordinates[1];
+          const lng = toilet.location.coordinates[0];
+          const marker = new Tmapv2.Marker({
+            position: new Tmapv2.LatLng(lat, lng),
+            icon: toilet.isSOS ? pinSosToilet : pinToilet,
+            animation: anitype,
+            animationLength: 300,
+            map: adjMap,
+          });
+          marker.addListener("click", () => {
+            setSelectedToilet(toilet);
+          });
+          if (!adjToiletMarkers.includes(marker)) {
+            setToiletMarkers(
+              (current) => !current.includes(marker) && [...current, marker]
+            );
+          }
         }
       }
     }
@@ -298,12 +307,140 @@ function Main() {
 
   // 화장실을 선택할 경우 해당 카드가 노출되고, 현재 위치부터 화장실까지 경로를 그려 안내해 줍니다.
   useEffect(() => {
-    if (selectedToilet) {
+    async function drawLine(arrPoint) {
+      setPolyline(
+        new Tmapv2.Polyline({
+          path: await arrPoint,
+          strokeColor: "#DD0000",
+          strokeWeight: 6,
+          map: adjMap,
+        })
+      );
+      setDrawPathResults((current) => [...current, adjPolyline]);
+    }
+
+    async function makeDrawInfo() {
+      if (adjDrawPathResults.length > 0) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const result of adjDrawPathResults) {
+          if (result) result.setMap(null);
+        }
+        setDrawPathResults([]);
+      }
+      if (adjPathMarkers.length > 0) {
+        // eslint-disable-next-line no-restricted-syntax
+        for (const marker of adjPathMarkers) {
+          if (marker) marker.setMap(null);
+        }
+        setPathMarkers([]);
+      }
+      setDrawPathInfos([]);
+
       const lat = selectedToilet.location.coordinates[0];
       const lng = selectedToilet.location.coordinates[1];
-      getPathToToiletInfo(currentLocation, [lat, lng]);
+      const result = await getPathToToiletInfo(currentLocation, [lat, lng]);
+      const data = result.features;
+
+      for (let i = 0; i < data.length; i += 1) {
+        const { geometry } = data[i];
+
+        if (geometry.type === "LineString") {
+          for (let j = 0; j < geometry.coordinates.length; j += 1) {
+            setDrawPathInfos((current) => [
+              ...current,
+              new Tmapv2.LatLng(
+                // eslint-disable-next-line no-underscore-dangle
+                new Tmapv2.Projection.convertEPSG3857ToWGS84GEO(
+                  new Tmapv2.Point(
+                    geometry.coordinates[j][0],
+                    geometry.coordinates[j][1]
+                  )
+                )._lat,
+                // eslint-disable-next-line no-underscore-dangle
+                new Tmapv2.Projection.convertEPSG3857ToWGS84GEO(
+                  new Tmapv2.Point(
+                    geometry.coordinates[j][0],
+                    geometry.coordinates[j][1]
+                  )
+                )._lng
+              ),
+            ]);
+          }
+        } else {
+          const markerImg = "http://topopen.tmap.co.kr/imgs/point.png";
+          // eslint-disable-next-line new-cap
+          const convertPoint = new Tmapv2.Projection.convertEPSG3857ToWGS84GEO(
+            new Tmapv2.Point(geometry.coordinates[0], geometry.coordinates[1])
+          );
+          const pathInfoObj = {
+            markerImg,
+            // eslint-disable-next-line no-underscore-dangle
+            lat: convertPoint._lat,
+            // eslint-disable-next-line no-underscore-dangle
+            lng: convertPoint._lng,
+            pointType: "P",
+          };
+          setPathMarkers((current) => [
+            ...current,
+            new Tmapv2.Marker({
+              position: new Tmapv2.LatLng(pathInfoObj.lat, pathInfoObj.lng),
+              icon: pathInfoObj.markerImg,
+              iconSize: new Tmapv2.Size(8, 8),
+              map: adjMap,
+            }),
+          ]);
+        }
+      }
+      drawLine(adjDrawPathInfos);
     }
-  }, [selectedToilet, currentLocation]);
+
+    if (selectedToilet) {
+      makeDrawInfo();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [selectedToilet, adjPolyline]);
+
+  // 선택한 화장실이 있으면 매 5초마다 사용자의 위치를 추적합니다.
+  useEffect(() => {
+    const getLocationForTracking = setInterval(() => {
+      if (selectedToilet) {
+        if (navigator.geolocation) {
+          navigator.geolocation.getCurrentPosition(
+            (position) => {
+              const lng = position.coords.longitude;
+              const lat = position.coords.latitude;
+              dispatch(updateUserLocation([lng, lat]));
+            },
+            (error) => {
+              const newErr = {
+                title: "에러가 발생했습니다.",
+                description: "메인으로 이동해주세요.",
+                errorMsg: error.message,
+              };
+              setErr(newErr);
+            },
+            {
+              enableHighAccuracy: false,
+              maximumAge: 0,
+              timeout: Infinity,
+            }
+          );
+        } else {
+          dispatch(removeUserLocation());
+          const newErr = {
+            title: "GPS를 지원하지 않습니다",
+            description:
+              "위치정보 제공에 동의해주셔야 앱을 사용하실 수 있습니다.",
+          };
+          setErr(newErr);
+        }
+      }
+    }, 5000);
+
+    return () => {
+      clearInterval(getLocationForTracking);
+    };
+  }, [dispatch, selectedToilet]);
 
   return (
     <StyledMain>

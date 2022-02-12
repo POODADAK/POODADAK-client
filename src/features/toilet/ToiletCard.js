@@ -76,8 +76,8 @@ function ToiletCard({ toilet, distance, time }) {
     ladiesToiletBowlNumber,
   } = toilet;
 
-  function moveToiletDetail() {
-    // e.stopPropagation(); ==> 실제 페이지로 넘어가는데 있어서 의미를 몰라 우선 주석처리
+  function moveToiletDetail(e) {
+    e.stopPropagation();
     navigate(`/toilets/${_id}`, {
       state: toilet,
     });
@@ -90,7 +90,7 @@ function ToiletCard({ toilet, distance, time }) {
           <div className="distance">
             {distance}m (도보 {time}분)
           </div>
-          <ButtonDefault moveTo="right" onClick={() => moveToiletDetail()}>
+          <ButtonDefault moveTo="right" onClick={(e) => moveToiletDetail(e)}>
             상세정보
           </ButtonDefault>
         </div>
