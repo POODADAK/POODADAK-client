@@ -19,7 +19,7 @@ import ListDefault from "../../common/components/lists/ListDefault";
 import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
-import { updateToiletInfo } from "./toiletSlice";
+import { toiletInfoUpated } from "./toiletSlice";
 
 const StyledToilet = styled.div`
   width: 100%;
@@ -88,7 +88,7 @@ function Toilet() {
   const [userSOSButton, setUserSOSButton] = useState(userClickedSOSButton);
 
   useEffect(() => {
-    dispatch(updateToiletInfo({ toilet_id, isSOS, userSOSButton }));
+    dispatch(toiletInfoUpated({ toilet_id, isSOS, userSOSButton }));
   }, [userSOSButton]);
 
   useEffect(() => {
@@ -112,8 +112,9 @@ function Toilet() {
       }
 
       let totalRating = 0;
-      // eslint-disable-next-line no-return-assign
-      reviews.forEach((review) => (totalRating += review.rating));
+      reviews.forEach((review) => {
+        totalRating += review.rating;
+      });
       return totalRating / reviews.length;
     }
     setAvgRating(getAvgRating());
@@ -122,9 +123,9 @@ function Toilet() {
   function onClickSOSButton() {
     setUserSOSButton(true);
 
-    async function occurSOS() {
+    async function emitSOS() {
       try {
-        await axios.post("/toilets/occurSOS", {
+        await axios.post("/toilets/emitSOS", {
           toilet_id,
           SOSState: true,
         });
@@ -133,7 +134,7 @@ function Toilet() {
         console.log(error);
       }
     }
-    occurSOS();
+    emitSOS();
   }
 
   function onClickWaitingSavior() {
