@@ -56,10 +56,17 @@ function Main() {
       </ButtonSmall>
       <ButtonSmall
         onClick={() => {
+          navigate("/editReview");
+        }}
+      >
+        리뷰작성
+      </ButtonSmall>
+      <ButtonSmall
+        onClick={() => {
           navigate("/editReview/:review_id");
         }}
       >
-        리뷰작성 및 수정
+        리뷰수정
       </ButtonSmall>
       <ButtonSmall
         onClick={() => {

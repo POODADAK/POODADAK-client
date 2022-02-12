@@ -1,13 +1,14 @@
 import PropTypes from "prop-types";
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import submitIcon from "../../assets/icon-check-full.png";
 import documentIcon from "../../assets/icon-docu-fluid.png";
 import toiletPaperCheckEmpty from "../../assets/toilet-paper-check-empty.png";
 import toiletPaperCheckFull from "../../assets/toilet-paper-check-full.png";
+import editReview from "../../common/api/editReview";
+import getReview from "../../common/api/getReview";
 import { fetchS3Url, uploadImageToS3 } from "../../common/api/s3";
 import saveReview from "../../common/api/saveReview";
 import ButtonFull from "../../common/components/buttons/ButtonFull";
@@ -111,7 +112,8 @@ const UploadedImageContainer = styled.div`
   background-repeat: no-repeat;
 
   img {
-    height: 100%;
+    max-width: 100%;
+    max-height: 100%;
   }
 `;
 
@@ -147,13 +149,54 @@ const ToiletPaperCheckContainer = styled.div`
 function ReviewEdit({ toiletId }) {
   const [enteredRating, setEnteredRating] = useState(1);
   const [enteredToiletPaper, setEnteredToiletPaper] = useState(false);
-  // eslint-disable-next-line no-unused-vars
   const [enteredText, setEnteredText] = useState("");
   const [uploadedImage, setUploadedImage] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [modalMessage, setModalMessage] = useState("");
+  const [existingReview, setExistingReview] = useState(null);
 
+  const { reviewId } = useParams();
   const navigate = useNavigate();
+  const uploadedImageSrc =
+    uploadedImage?.constructor.name === "File"
+      ? URL.createObjectURL(uploadedImage)
+      : uploadedImage;
+
+  useEffect(() => {
+    const controller = new AbortController();
+
+    if (reviewId) {
+      (async () => {
+        try {
+          setExistingReview(reviewId);
+          const response = await getReview(reviewId);
+          const isImage = response.image !== "none";
+
+          if (isImage) {
+            setUploadedImage(response.image);
+          }
+
+          setEnteredRating(response.rating);
+          setEnteredText(response.description);
+          setEnteredToiletPaper(response.isToiletPaper);
+        } catch {
+          setModalMessage(
+            <>
+              <div>리뷰를 가져오지 못했습니다...</div>
+              <ButtonSmall type="button" onClick={() => navigate(-1)}>
+                돌아가기
+              </ButtonSmall>
+            </>
+          );
+          setShowModal(true);
+        }
+      })();
+    }
+
+    return () => {
+      controller.abort();
+    };
+  }, [navigate, reviewId]);
 
   function starClickHandler(starNumber) {
     setEnteredRating(starNumber);
@@ -192,19 +235,34 @@ function ReviewEdit({ toiletId }) {
       let imageUrl;
 
       if (uploadedImage) {
-        imageUrl = await uploadImageToS3(s3UploadUrl, uploadedImage);
+        const isUploadedImagePlainImageURL =
+          typeof uploadedImage === "string" &&
+          uploadedImage.startsWith("https");
+
+        if (isUploadedImagePlainImageURL) {
+          imageUrl = uploadedImage;
+        } else {
+          imageUrl = await uploadImageToS3(s3UploadUrl, uploadedImage);
+        }
       } else {
         imageUrl = "none";
       }
 
-      saveReview({
+      const payload = {
         toilet: toiletId,
         rating: enteredRating,
         description: enteredText,
         image: imageUrl,
-        didToiletPaperExist: enteredToiletPaper,
+        isToiletPaper: enteredToiletPaper,
         updatedAt: new Date().toISOString(),
-      });
+      };
+
+      if (existingReview) {
+        await editReview(existingReview, payload);
+      } else {
+        await saveReview(payload);
+      }
+
       setContentAndShowModal(
         <>
           <div>업로드 완료!</div>
@@ -225,7 +283,10 @@ function ReviewEdit({ toiletId }) {
       )}
       <HeaderSub />
       <StyledMain>
-        <h1 className="title">리뷰남기기</h1>
+        <h1 className="title">
+          {!existingReview && "리뷰 남기기"}
+          {existingReview && "리뷰 고치기"}
+        </h1>
         <StarInput>
           청결도 점수
           <StarContainer
@@ -257,13 +318,14 @@ function ReviewEdit({ toiletId }) {
         <div className="image-upload-container">
           {uploadedImage && (
             <UploadedImageContainer>
-              <img src={URL.createObjectURL(uploadedImage)} alt="uploaded" />
+              <img src={uploadedImageSrc} alt="uploaded" />
             </UploadedImageContainer>
           )}
           <div className="image-upload-button">
             <label htmlFor="photo-input">
               <img src={documentIcon} alt="upload-icon" />
-              {uploadedImage && "이미지 다시 올리기"}
+              {((existingReview && uploadedImage) || uploadedImage) &&
+                "이미지 다시 올리기"}
               {!uploadedImage && "이미지 업로드"}
             </label>
             <input
@@ -278,11 +340,11 @@ function ReviewEdit({ toiletId }) {
         <textarea
           placeholder="이 화장실에 대한 리뷰를 남겨주세요."
           onChange={handleTextAreaInput}
-        >
-          {enteredText}
-        </textarea>
+          value={enteredText}
+        />
         <ButtonFull icon={submitIcon} onClick={handleSubmitClick}>
-          리뷰 남기기
+          {!existingReview && "리뷰 남기기"}
+          {existingReview && "리뷰 수정하기"}
         </ButtonFull>
       </StyledMain>
     </StyledDiv>
