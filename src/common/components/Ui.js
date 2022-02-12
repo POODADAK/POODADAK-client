@@ -74,7 +74,7 @@ function Ui() {
       <HeaderSub />
       <HeaderChat />
       <h3>Lists</h3>
-      <ListDefault label="label" />
+      <ListDefault label="label" secondary="secondary" />
       <ListCheck label="label" />
       <List2Lines label="label" secondary="secondary" />
       <ListNavi label="label" secondary="secondary" />
