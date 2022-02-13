@@ -13,7 +13,7 @@ const StyledToiletCard = styled.div`
   justify-content: center;
 
   .wrapper {
-    width: 70%;
+    width: 80%;
     height: fit-content;
     display: flex;
     flex-direction: column;
@@ -32,7 +32,7 @@ const StyledToiletCard = styled.div`
     align-items: center;
     .distance {
       padding: 0.3rem 0.8rem;
-      margin-left: 10px;
+      margin-left: 11%;
       margin-bottom: -0.5rem;
       border-radius: 0.3rem;
       background-color: #c0c0c0;
@@ -68,7 +68,7 @@ const StyledToiletCard = styled.div`
 function ToiletCard({ toilet, distance, time }) {
   const navigate = useNavigate();
   const {
-    toiletID,
+    _id: toiletId,
     isSOS,
     toiletName,
     roadNameAddress,
@@ -78,7 +78,7 @@ function ToiletCard({ toilet, distance, time }) {
 
   function moveToiletDetail(e) {
     e.stopPropagation();
-    navigate(`/toilets/${toiletID}`, {
+    navigate(`/toilets/${toiletId}`, {
       state: toilet,
     });
   }
@@ -112,7 +112,7 @@ function ToiletCard({ toilet, distance, time }) {
 
 ToiletCard.propTypes = {
   toilet: PropTypes.shape({
-    toiletID: PropTypes.string,
+    _id: PropTypes.string,
     isSOS: PropTypes.bool,
     toiletName: PropTypes.string,
     roadNameAddress: PropTypes.string,

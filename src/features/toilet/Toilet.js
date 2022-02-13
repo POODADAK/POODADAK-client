@@ -3,7 +3,7 @@
 /* eslint-disable camelcase */
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -19,7 +19,6 @@ import ListDefault from "../../common/components/lists/ListDefault";
 import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
-import { toiletInfoUpated } from "./toiletSlice";
 
 const StyledToilet = styled.div`
   width: 100%;
@@ -56,7 +55,6 @@ const StyledToilet = styled.div`
 function Toilet() {
   const { toilet_id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const location = useLocation();
 
   const {
@@ -72,7 +70,6 @@ function Toilet() {
     ladiesChildrenToiletBowlNumber,
     openTime,
     latestToiletPaperInfo,
-    isSOS,
     chatRoomList,
   } = location.state;
 
@@ -85,11 +82,6 @@ function Toilet() {
 
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
-  const [userSOSButton, setUserSOSButton] = useState(userClickedSOSButton);
-
-  useEffect(() => {
-    dispatch(toiletInfoUpated({ toilet_id, isSOS, userSOSButton }));
-  }, [userSOSButton]);
 
   useEffect(() => {
     async function getReviews() {
@@ -103,6 +95,7 @@ function Toilet() {
     }
 
     getReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -121,7 +114,7 @@ function Toilet() {
   }, [reviews]);
 
   function onClickSOSButton() {
-    setUserSOSButton(true);
+    // setUserSOSButton(true); ==> 용처가 확실치 않아서 우선 주석처리
 
     async function emitSOS() {
       try {
