@@ -129,6 +129,7 @@ function ReviewCard({
 }) {
   const [showCover, setShowCover] = useState(true);
   const navigate = useNavigate();
+  const isImage = image !== "none";
 
   let userRankImageSrc = bronze;
 
@@ -182,26 +183,28 @@ function ReviewCard({
       </StyledHeader>
       <StarContainer rating={rating} />
       <p>{description}</p>
-      <PhotoReviewContainer
-        imageSrc={image}
-        coverSrc={photoReviewCover}
-        onClick={handlePhotoReviewClick}
-      >
-        {showCover && (
-          <div className="photo-cover">
-            <div className="photo-cover-background-color">
-              <p className="warning">
-                {
-                  "불쾌한 이미지가 있을 수 있어서 흐림 처리 해두었습니다.\n보고 싶으면 클릭해주세요."
-                }
-              </p>
-              <ButtonSmall type="button" onClick={handleCoverClick}>
-                이미지 보기
-              </ButtonSmall>
+      {isImage && (
+        <PhotoReviewContainer
+          imageSrc={image}
+          coverSrc={photoReviewCover}
+          onClick={handlePhotoReviewClick}
+        >
+          {showCover && (
+            <div className="photo-cover">
+              <div className="photo-cover-background-color">
+                <p className="warning">
+                  {
+                    "불쾌한 이미지가 있을 수 있어서 흐림 처리 해두었습니다.\n보고 싶으면 클릭해주세요."
+                  }
+                </p>
+                <ButtonSmall type="button" onClick={handleCoverClick}>
+                  이미지 보기
+                </ButtonSmall>
+              </div>
             </div>
-          </div>
-        )}
-      </PhotoReviewContainer>
+          )}
+        </PhotoReviewContainer>
+      )}
       {isMyReview && (
         <ButtonContainer>
           <ButtonFull

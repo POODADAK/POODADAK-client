@@ -12,7 +12,6 @@ import ButtonFull from "../../common/components/buttons/ButtonFull";
 import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
 import Sidebar from "../../common/components/Sidebar";
-
 import ErrorPage from "../error/ErrorPage";
 import ToiletCard from "../toilet/ToiletCard";
 import { nearToiletsUpdated } from "../toilet/toiletSlice";
@@ -24,14 +23,14 @@ const StyledMain = styled.div`
   width: 100%;
   height: 100%;
   min-height: 568px;
+  max-height: 100%;
   .map-container {
     position: absolute;
     z-index: 0;
-    top: 20;
+    top: 40;
     left: 0;
     width: 100%;
     height: 100%;
-    min-height: 568px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -58,6 +57,7 @@ const StyledMain = styled.div`
     top: 20;
     right: 0;
     width: 100%;
+    height: 100%;
     background-color: #0000004b;
     display: flex;
     justify-content: end;
@@ -397,6 +397,7 @@ function Main() {
     if (selectedToilet) {
       makeDrawInfo();
     }
+    // *중요* 티맵 Call 수량을 결정하는 중요한 세팅 입니다. 변경이 필요하다 싶으면 팀원소집 필수!!!
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedToilet, adjPolyline]);
 

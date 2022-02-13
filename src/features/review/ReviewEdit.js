@@ -152,7 +152,7 @@ function ReviewEdit({ toiletId }) {
   const [enteredText, setEnteredText] = useState("");
   const [uploadedImage, setUploadedImage] = useState(null);
   const [showModal, setShowModal] = useState(false);
-  const [modalMessage, setModalMessage] = useState("");
+  const [modalContent, setModalContent] = useState("");
   const [existingReview, setExistingReview] = useState(null);
 
   const { reviewId } = useParams();
@@ -180,7 +180,7 @@ function ReviewEdit({ toiletId }) {
           setEnteredText(response.description);
           setEnteredToiletPaper(response.isToiletPaper);
         } catch {
-          setModalMessage(
+          setModalContent(
             <>
               <div>리뷰를 가져오지 못했습니다...</div>
               <ButtonSmall type="button" onClick={() => navigate(-1)}>
@@ -215,12 +215,12 @@ function ReviewEdit({ toiletId }) {
   }
 
   function handleModalCloseClick() {
-    setModalMessage("");
+    setModalContent("");
     setShowModal(false);
   }
 
-  function setContentAndShowModal(message) {
-    setModalMessage(message);
+  function setContentAndShowModal(content) {
+    setModalContent(content);
     setShowModal(true);
   }
 
@@ -279,7 +279,7 @@ function ReviewEdit({ toiletId }) {
   return (
     <StyledDiv>
       {showModal && (
-        <Modal onModalCloseClick={handleModalCloseClick}>{modalMessage}</Modal>
+        <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
       )}
       <HeaderSub />
       <StyledMain>

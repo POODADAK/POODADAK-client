@@ -3,10 +3,9 @@ import React from "react";
 import styled from "styled-components";
 
 const StyledButtonFluid = styled.button`
-  width: 100%;
+  width: 92%;
   height: 50px;
   display: flex;
-  padding: 10px;
   flex-direction: row;
   justify-content: center;
   align-items: center;
@@ -15,7 +14,6 @@ const StyledButtonFluid = styled.button`
   background-color: ${(props) => props.color};
   border-radius: 8px;
   cursor: pointer;
-
   .icon {
     margin-right: 0.5rem;
   }

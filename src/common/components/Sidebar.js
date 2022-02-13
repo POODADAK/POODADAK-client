@@ -11,9 +11,10 @@ import naver from "../../assets/naver.svg";
 import { eraseToken } from "../../features/login/loginSlice";
 
 const StyledSidebar = styled.div`
+  position: relative;
   width: 280px;
-  height: 500px;
   background-color: white;
+  flex-shrink: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
