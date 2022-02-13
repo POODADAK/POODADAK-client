@@ -57,6 +57,7 @@ const StyledMain = styled.div`
     top: 20;
     right: 0;
     width: 100%;
+    height: 100%;
     background-color: #0000004b;
     display: flex;
     justify-content: end;
