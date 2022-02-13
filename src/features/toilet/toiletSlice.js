@@ -8,12 +8,12 @@ export const toiletSlice = createSlice({
   name: "toilet",
   initialState,
   reducers: {
-    updateNearToilets: (state, action) => {
+    nearToiletsUpdated: (state, action) => {
       state.nearToilets = action.payload;
     },
   },
 });
 
-export const { updateNearToilets } = toiletSlice.actions;
+export const { nearToiletsUpdated } = toiletSlice.actions;
 
 export default toiletSlice.reducer;

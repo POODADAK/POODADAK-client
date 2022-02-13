@@ -9,17 +9,17 @@ export const mainSlice = createSlice({
   name: "main",
   initialState,
   reducers: {
-    updateUserLocation: (state, action) => {
+    userLocationUpdated: (state, action) => {
       state.gotUserLocation = true;
       state.userLocation = action.payload;
     },
-    removeUserLocation: (state) => {
+    userLocationRemoved: (state) => {
       state.gotUserLocation = false;
       state.userLocation = [];
     },
   },
 });
 
-export const { updateUserLocation, removeUserLocation } = mainSlice.actions;
+export const { userLocationUpdated, userLocationRemoved } = mainSlice.actions;
 
 export default mainSlice.reducer;

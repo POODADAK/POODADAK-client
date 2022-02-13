@@ -68,7 +68,7 @@ const StyledToiletCard = styled.div`
 function ToiletCard({ toilet, distance, time }) {
   const navigate = useNavigate();
   const {
-    _id,
+    _id: toiletId,
     isSOS,
     toiletName,
     roadNameAddress,
@@ -78,7 +78,7 @@ function ToiletCard({ toilet, distance, time }) {
 
   function moveToiletDetail(e) {
     e.stopPropagation();
-    navigate(`/toilets/${_id}`, {
+    navigate(`/toilets/${toiletId}`, {
       state: toilet,
     });
   }

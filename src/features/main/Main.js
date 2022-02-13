@@ -14,8 +14,8 @@ import HeaderMain from "../../common/components/headers/HeaderMain";
 import Sidebar from "../../common/components/Sidebar";
 import ErrorPage from "../error/ErrorPage";
 import ToiletCard from "../toilet/ToiletCard";
-import { updateNearToilets } from "../toilet/toiletSlice";
-import { updateUserLocation, removeUserLocation } from "./mainSlice";
+import { nearToiletsUpdated } from "../toilet/toiletSlice";
+import { userLocationUpdated, userLocationRemoved } from "./mainSlice";
 import Start from "./Start";
 
 const StyledMain = styled.div`
@@ -81,7 +81,6 @@ function Main() {
   const [selectedToiletTime, setSelectedToiletTime] = useState(null);
   const [drawPathInfos, setDrawPathInfos] = useState([]);
   const [drawPathResults, setDrawPathResults] = useState([]);
-  // eslint-disable-next-line no-unused-vars
   const [pathMarkers, setPathMarkers] = useState([]);
   const [polyline, setPolyline] = useState(null);
   const [onSideBar, setOnSideBar] = useState(false);
@@ -148,7 +147,7 @@ function Main() {
         (position) => {
           const lng = position.coords.longitude;
           const lat = position.coords.latitude;
-          dispatch(updateUserLocation([lng, lat]));
+          dispatch(userLocationUpdated([lng, lat]));
           forceSetMapCenter([lng, lat]);
         },
         (error) => {
@@ -166,7 +165,7 @@ function Main() {
         }
       );
     } else {
-      dispatch(removeUserLocation());
+      dispatch(userLocationRemoved());
       const newErr = {
         title: "GPS를 지원하지 않습니다",
         description: "위치정보 제공에 동의해주셔야 앱을 사용하실 수 있습니다.",
@@ -245,7 +244,7 @@ function Main() {
             newNearToilets.push(newToilet);
           }
 
-          dispatch(updateNearToilets(newNearToilets));
+          dispatch(nearToiletsUpdated(newNearToilets));
         }
       }
     }
@@ -409,7 +408,7 @@ function Main() {
             (position) => {
               const lng = position.coords.longitude;
               const lat = position.coords.latitude;
-              dispatch(updateUserLocation([lng, lat]));
+              dispatch(userLocationUpdated([lng, lat]));
             },
             (error) => {
               const newErr = {
@@ -426,7 +425,7 @@ function Main() {
             }
           );
         } else {
-          dispatch(removeUserLocation());
+          dispatch(userLocationRemoved());
           const newErr = {
             title: "GPS를 지원하지 않습니다",
             description:
