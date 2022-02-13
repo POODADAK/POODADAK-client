@@ -12,7 +12,6 @@ import ButtonFull from "../../common/components/buttons/ButtonFull";
 import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
 import Sidebar from "../../common/components/Sidebar";
-
 import ErrorPage from "../error/ErrorPage";
 import ToiletCard from "../toilet/ToiletCard";
 import { nearToiletsUpdated } from "../toilet/toiletSlice";

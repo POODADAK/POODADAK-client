@@ -6,6 +6,7 @@ import HeaderSub from "../../common/components/headers/HeaderSub";
 
 const StyledChats = styled.div`
   width: 100%;
+  height: 100%;
   display: flex;
   flex-direction: column;
   background-color: black;
