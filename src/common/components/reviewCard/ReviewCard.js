@@ -69,6 +69,7 @@ const StyledDiv = styled.div`
   width: 100%;
   height: 477px;
   background-color: black;
+  color: white;
 `;
 
 const PhotoReviewContainer = styled.div`

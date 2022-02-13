@@ -1,13 +1,9 @@
-/* eslint-disable no-unused-vars */
-/* eslint-disable prettier/prettier */
-
+/* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-// import { useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-// import getReview from "../../common/api/getReview";
-
+import getUserReviewList from "../../common/api/getUserReviewList";
 import HeaderSub from "../../common/components/headers/HeaderSub";
 import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import Title from "../../common/components/Title";
@@ -21,26 +17,47 @@ const StyledProfile = styled.div`
 
 function Profile() {
   const { userId } = useParams();
-  // eslint-disable-next-line no-unused-vars
+  const [userInfo, setUserInfo] = useState({});
   const [reviewList, setReviewList] = useState([]);
-  // const navigate = useNavigate();
-  // console.log(userId);
+  // eslint-disable-next-line no-unused-vars
+  const navigate = useNavigate();
 
-  // useEffect(async () => {
-  //   const response = await getReviewByUserID();
-  // }, []);
+  useEffect(() => {
+    (async function getReviewLit() {
+      const response = await getUserReviewList(userId);
+      setUserInfo(response);
+      setReviewList(response.reviewList);
+    })();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   return (
     <StyledProfile>
       <HeaderSub />
-      <Title title="유저네임" />
+      <Title title={userInfo.username} />
       {/* 등급표시 어떻게 할건지 파악 */}
       <Title
         title="리뷰"
-        description={`총 ${`reviews.length`}개의 리뷰가 있습니다.`}
+        description={`총 ${reviewList.length}개의 리뷰가 있습니다.`}
       />
-      <ReviewCard />
-      {/* 가져온 리뷰 뿌려주기 */}
+      {reviewList.map((review) => {
+        // eslint-disable-next-line no-console
+        console.log("12341234", review);
+        return (
+          <ReviewCard
+            userId={userId}
+            username={userInfo.username}
+            level={userInfo.level}
+            updatedAt={review.updatedAt}
+            image={review.image}
+            description={review.description}
+            rating={review.rating}
+            isMyReview={false}
+            reviewId={review._id}
+            key={review._id}
+          />
+        );
+      })}
     </StyledProfile>
   );
 }
