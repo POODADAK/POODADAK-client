@@ -4,7 +4,7 @@
 import axios from "axios";
 import haversine from "haversine-distance";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -26,6 +26,7 @@ import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
 import { userCreatedChat, userClosedChat } from "../chat/chatSlice";
+
 
 const StyledToilet = styled.div`
   width: 100%;
@@ -64,7 +65,6 @@ const SOS_AVAILABLE_METER = 500;
 function Toilet() {
   const { toilet_id } = useParams();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
   const location = useLocation();
 
   const {
@@ -106,6 +106,7 @@ function Toilet() {
     }
 
     getReviews();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -147,7 +148,6 @@ function Toilet() {
         }
       }
     }
-
     checkLiveChatAndSetRescueButton();
   }, [isLoggedIn, toilet_id]);
 
