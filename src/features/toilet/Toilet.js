@@ -3,7 +3,6 @@
 /* eslint-disable camelcase */
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -50,35 +49,21 @@ const StyledToilet = styled.div`
     color: gray;
     margin-right: 1rem;
   }
+
+  .fluidButtonWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 4px 0;
+  }
 `;
 
 function Toilet() {
   const { toilet_id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-
-  const {
-    showToiletPath,
-    toiletName,
-    roadNameAddress,
-    inUnisexToilet,
-    menToiletBowlNumber,
-    menHandicapToiletBowlNumber,
-    menChildrenToiletBowlNumber,
-    ladiesToiletBowlNumber,
-    ladiesHandicapToiletBowlNumber,
-    ladiesChildrenToiletBowlNumber,
-    openTime,
-    latestToiletPaperInfo,
-    chatRoomList,
-  } = location.state;
-
-  const userClickedSOSButton = useSelector(
-    (state) => state.currnetToiletInfo.byIds[toilet_id]?.userClickedSOSButton
-  );
-  const isSOSCurrnetToilet = useSelector(
-    (state) => state.currnetToiletInfo.byIds[toilet_id]?.isSOSCurrnetToilet
-  );
+  const toilet = location.state;
 
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
@@ -131,28 +116,32 @@ function Toilet() {
   }
 
   function onClickWaitingSavior() {
-    navigate("/chats", { toilet_id, chatRoomList });
+    navigate("/chats", {
+      state: {
+        toilet_id,
+      },
+    });
   }
 
   function onClickCreatReview() {
     navigate("/editReview/", { toilet_id });
   }
 
+  function blablablabla() {} // TODO: 애매한 함수 처리를 위해 세팅해두었습니다. 해당 함수 적용은 정리 필요!!
+
   return (
     <StyledToilet>
       <HeaderSub onClick={onClickWaitingSavior} />
 
       <div className="titleContainer">
-        <Title title={toiletName} description={roadNameAddress} />
+        <Title title={toilet.toiletName} description={toilet.roadNameAddress} />
 
-        {!userClickedSOSButton && (
-          <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
-        )}
+        <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
 
-        <ButtonDefault onClick={showToiletPath} icon={viewFinder} />
+        <ButtonDefault onClick={blablablabla} icon={viewFinder} />
       </div>
 
-      {isSOSCurrnetToilet && (
+      <div className="fluidButtonWrapper">
         <ButtonFluid
           icon={helpIcon}
           color="#EB5757"
@@ -160,9 +149,9 @@ function Toilet() {
         >
           SOS 보낸사람 구조하기
         </ButtonFluid>
-      )}
+      </div>
 
-      {userClickedSOSButton && (
+      <div className="fluidButtonWrapper">
         <ButtonFluid
           icon={waitIcon}
           color="#6FCF97"
@@ -170,7 +159,7 @@ function Toilet() {
         >
           도와줄 사람 기다리기
         </ButtonFluid>
-      )}
+      </div>
 
       <div className="rankContainer">
         <div>청결도 평균 ( {avgRating} ) </div>
@@ -178,30 +167,33 @@ function Toilet() {
       </div>
 
       <div className="toiletInfoContainer">
-        <ListDefault label="개방시간" secondary={openTime} />
+        <ListDefault label="개방시간" secondary={toilet.openTime} />
 
         <div className="toiletPaperContainer">
           <ListDefault
             label="휴지제공"
-            secondary={latestToiletPaperInfo.isToiletPaper ? "O" : "X"}
+            secondary={toilet.latestToiletPaperInfo.isToiletPaper ? "O" : "X"}
           />
           <div className="lastToiletPaterProvideTime">
-            마지막 확인 : {latestToiletPaperInfo.lastDate}
+            마지막 확인 : {toilet.latestToiletPaperInfo.lastDate}
           </div>
         </div>
 
-        <ListDefault label="남녀공용" secondary={inUnisexToilet ? "O" : "X"} />
+        <ListDefault
+          label="남녀공용"
+          secondary={toilet.inUnisexToilet ? "O" : "X"}
+        />
         <ListDefault
           label="대변기"
-          secondary={`남 : ${menToiletBowlNumber}  /  여 : ${ladiesToiletBowlNumber}`}
+          secondary={`남 : ${toilet.menToiletBowlNumber}  /  여 : ${toilet.ladiesToiletBowlNumber}`}
         />
         <ListDefault
           label="장애인 대변기"
-          secondary={`남 : ${menHandicapToiletBowlNumber}  /  여 : ${ladiesHandicapToiletBowlNumber}`}
+          secondary={`남 : ${toilet.menHandicapToiletBowlNumber}  /  여 : ${toilet.ladiesHandicapToiletBowlNumber}`}
         />
         <ListDefault
           label="아동용 대변기"
-          secondary={`남아 : ${menChildrenToiletBowlNumber}  /  여아 : ${ladiesChildrenToiletBowlNumber}`}
+          secondary={`남아 : ${toilet.menChildrenToiletBowlNumber}  /  여아 : ${toilet.ladiesChildrenToiletBowlNumber}`}
         />
       </div>
 
@@ -210,9 +202,15 @@ function Toilet() {
         description={`총 ${reviews.length}개의 리뷰가 있습니다.`}
       />
 
-      <ButtonFluid icon={docuIcon} color="#bc955c" onClick={onClickCreatReview}>
-        리뷰 남기기
-      </ButtonFluid>
+      <div className="fluidButtonWrapper">
+        <ButtonFluid
+          icon={docuIcon}
+          color="#bc955c"
+          onClick={onClickCreatReview}
+        >
+          리뷰 남기기
+        </ButtonFluid>
+      </div>
 
       {reviews.map((review) => (
         <ReviewCard
