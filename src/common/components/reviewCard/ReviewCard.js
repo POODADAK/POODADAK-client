@@ -70,6 +70,12 @@ const StyledDiv = styled.div`
   height: 477px;
   background-color: black;
   color: white;
+
+  .toiletName {
+    margin: 0.5rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
 `;
 
 const PhotoReviewContainer = styled.div`
@@ -126,6 +132,7 @@ function ReviewCard({
   rating,
   isMyReview,
   reviewId,
+  toilet,
 }) {
   const [showCover, setShowCover] = useState(true);
   const navigate = useNavigate();
@@ -166,6 +173,11 @@ function ReviewCard({
     // 차후 리뷰 삭제 로직 구현 필요
   }
 
+  function handleToiletNameClick() {
+    // eslint-disable-next-line no-underscore-dangle
+    navigate(`/toilets/${toilet._id}`, { state: toilet });
+  }
+
   return (
     <StyledDiv>
       <StyledHeader>
@@ -181,6 +193,15 @@ function ReviewCard({
         </div>
         <div className="date">{updatedAt}</div>
       </StyledHeader>
+      <div
+        className="toiletName"
+        onClick={handleToiletNameClick}
+        onKeyPress={handleToiletNameClick}
+        role="button"
+        tabIndex={0}
+      >
+        {toilet.toiletName}
+      </div>
       <StarContainer rating={rating} />
       <p>{description}</p>
       {isImage && (
@@ -240,6 +261,29 @@ ReviewCard.propTypes = {
   rating: PropTypes.number.isRequired,
   isMyReview: PropTypes.bool.isRequired,
   reviewId: PropTypes.string.isRequired,
+  toilet: PropTypes.shape({
+    _id: PropTypes.string,
+    toiletType: PropTypes.string,
+    toiletName: PropTypes.string,
+    roadNameAddress: PropTypes.string,
+    indexNameAddress: PropTypes.string,
+    isUnisexToilet: PropTypes.bool,
+    menToiletBowlNumber: PropTypes.number,
+    menUrinalNumber: PropTypes.number,
+    menHandicapToiletBowlNumber: PropTypes.number,
+    menHandicapUrinalNumber: PropTypes.number,
+    menChildrenToiletBowlNumber: PropTypes.number,
+    menChildrenUrinalNumber: PropTypes.number,
+    ladiesToiletBowlNumber: PropTypes.number,
+    ladiesHandicapToiletBowlNumber: PropTypes.number,
+    ladiesChildrenToiletBowlNumber: PropTypes.number,
+    openTime: PropTypes.string,
+    latestToiletPaperInfo: PropTypes.shape({
+      lastDate: PropTypes.string,
+      isToiletPaper: PropTypes.bool,
+    }),
+    isSOS: PropTypes.bool,
+  }).isRequired,
 };
 
 export default ReviewCard;
