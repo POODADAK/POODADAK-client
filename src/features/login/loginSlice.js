@@ -5,13 +5,16 @@ export const loginSlice = createSlice({
   name: "login",
   initialState: {
     isLoggedIn: false,
+    userId: null,
   },
   reducers: {
-    userLoggedIn: (state) => {
+    userLoggedIn: (state, action) => {
       state.isLoggedIn = true;
+      state.userId = action.payload;
     },
     userLoggedOut: (state) => {
       state.isLoggedIn = false;
+      state.userId = null;
     },
   },
 });
@@ -37,7 +40,7 @@ export async function checkToken(dispatch) {
     );
 
     if (response.data.result === "verified") {
-      dispatch({ type: "login/userLoggedIn" });
+      dispatch({ type: "login/userLoggedIn", payload: response.data.userId });
     }
   } catch (error) {
     // 차후 에러처리 필요.

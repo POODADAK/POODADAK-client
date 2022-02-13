@@ -7,7 +7,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import store from "./app/store";
 import GlobalStyle from "./common/components/GlobalStyle";
 import Ui from "./common/components/Sidebar";
-import Chat from "./features/chat/Chat";
+import Chatroom from "./features/chat/Chatroom";
 import Chats from "./features/chat/Chats";
 import ErrorPage from "./features/error/ErrorPage";
 import Login from "./features/login/Login";
@@ -31,8 +31,8 @@ ReactDOM.render(
           <Route path="/" element={<Main />} />
           <Route path="/toilets" element={<Toilets />} />
           <Route path="/toilets/:toilet_id" element={<Toilet />} />
-          <Route path="/chats" element={<Chats />} />
-          <Route path="/chats/:chat_id" element={<Chat />} />
+          <Route path="/chatList" element={<Chats />} />
+          <Route path="/chatroom" element={<Chatroom />} />
           <Route path="/editReview" element={<ReviewEdit />} />
           <Route path="/editReview/:reviewId" element={<ReviewEdit />} />
           <Route path="/users/:userId" element={<Profile />} />
