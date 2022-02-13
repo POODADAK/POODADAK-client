@@ -2,6 +2,7 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable camelcase */
 import axios from "axios";
+import haversine from "haversine-distance";
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
@@ -11,13 +12,20 @@ import helpIcon from "../../assets/icon-help-fluid.png";
 import squaredSOS from "../../assets/icon-squaredsos.svg";
 import viewFinder from "../../assets/icon-viewfinder.svg";
 import waitIcon from "../../assets/icon-wait-fluid.png";
+import connectSocketNamespace from "../../common/api/connectSocketNamespace";
+import getLiveChatByToilet from "../../common/api/getLiveChatByToilet";
+import getMyLongLat from "../../common/api/getMyLongLat";
 import ButtonDefault from "../../common/components/buttons/ButtonDefault";
 import ButtonFluid from "../../common/components/buttons/ButtonFluid";
+import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderSub from "../../common/components/headers/HeaderSub";
 import ListDefault from "../../common/components/lists/ListDefault";
+import Modal from "../../common/components/modal/Modal";
 import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
+import { userCreatedChat, userClosedChat } from "../chat/chatSlice";
+
 
 const StyledToilet = styled.div`
   width: 100%;
@@ -59,14 +67,23 @@ const StyledToilet = styled.div`
   }
 `;
 
+const SOS_AVAILABLE_METER = 500;
+
 function Toilet() {
   const { toilet_id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
   const toilet = location.state;
 
+  const [toiletLongitude, toiletLatitude] = toilet.location.coordinates;
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+  const myChat = useSelector((state) => state.chat.myChat);
+
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+  const [isLiveChat, setIsLiveChat] = useState(false);
 
   useEffect(() => {
     async function getReviews() {
@@ -98,21 +115,77 @@ function Toilet() {
     setAvgRating(getAvgRating());
   }, [reviews]);
 
-  function onClickSOSButton() {
-    // setUserSOSButton(true); ==> 용처가 확실치 않아서 우선 주석처리
+  useEffect(() => {
+    async function checkLiveChatAndSetRescueButton() {
+      if (isLoggedIn) {
+        const checkResult = await getLiveChatByToilet(toilet_id);
+        console.log(checkResult);
 
-    async function emitSOS() {
-      try {
-        await axios.post("/toilets/emitSOS", {
-          toilet_id,
-          SOSState: true,
-        });
-      } catch (error) {
-        // 추후 에러처리 필요.
-        console.log(error);
+        if (checkResult.isMyChat) {
+          const socket = connectSocketNamespace("toiletId", toilet_id);
+
+          socket.on("connect", () => {
+            dispatch(userCreatedChat(socket));
+          });
+
+          socket.on("disconnect", () => {
+            console.log("disconnect!");
+            dispatch(userClosedChat());
+          });
+        }
+
+        if (isLiveChat) {
+          setIsLiveChat(checkResult.liveChatList);
+        }
       }
     }
-    emitSOS();
+    checkLiveChatAndSetRescueButton();
+  }, [isLoggedIn, toilet_id]);
+
+  async function onClickSOSButton() {
+    if (!isLoggedIn) {
+      // eslint-disable-next-line no-use-before-define
+      setContentAndShowModal(
+        <>
+          <div>로그인이 필요합니다!</div>
+          <ButtonSmall type="button" onClick={() => navigate("/")}>
+            메인페이지로
+          </ButtonSmall>
+        </>
+      );
+
+      return;
+    }
+
+    try {
+      const { longitude, latitude } = await getMyLongLat();
+      const isDistanceWithin500m =
+        haversine(
+          { longitude, latitude },
+          { longitude: toiletLongitude, latitude: toiletLatitude }
+        ) <= SOS_AVAILABLE_METER;
+
+      if (!isDistanceWithin500m) {
+        // eslint-disable-next-line no-use-before-define
+        setContentAndShowModal(<p>현재 위치가 해당 화장실 근처가 아닙니다!</p>);
+
+        return;
+      }
+
+      const socket = connectSocketNamespace("toiletId", toilet_id);
+
+      socket.on("connect", () => {
+        dispatch(userCreatedChat(socket));
+      });
+
+      socket.on("disconnect", () => {
+        console.log("disconnect!");
+        dispatch(userClosedChat());
+      });
+    } catch (error) {
+      // 추후 에러처리 필요.
+      console.log(error);
+    }
   }
 
   function onClickWaitingSavior() {
@@ -129,8 +202,21 @@ function Toilet() {
 
   function blablablabla() {} // TODO: 애매한 함수 처리를 위해 세팅해두었습니다. 해당 함수 적용은 정리 필요!!
 
+  function handleModalCloseClick() {
+    setModalContent("");
+    setShowModal(false);
+  }
+
+  function setContentAndShowModal(content) {
+    setModalContent(content);
+    setShowModal(true);
+  }
+
   return (
     <StyledToilet>
+      {showModal && (
+        <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
+      )}
       <HeaderSub onClick={onClickWaitingSavior} />
 
       <div className="titleContainer">
