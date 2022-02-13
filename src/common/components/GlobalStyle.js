@@ -4,17 +4,18 @@ const GlobalStyle = createGlobalStyle`
   html {
     width: auto;
     display: flex;
-    justify-content: center;
+    flex-direction: column;
+    align-items: center;
     background-color: white;
-    height: 100vh;
   }
 
   body {
-    margin: 0;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
     max-width: 428px;
     min-width: 320px;
-    width: 100%;
-    height: inherit;
     font-family: Noto Sans KR, sans-serif;
   }
 

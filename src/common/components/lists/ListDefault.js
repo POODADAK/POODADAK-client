@@ -9,6 +9,7 @@ const StyledListDefault = styled.div`
   justify-content: flex-start;
   align-items: center;
   background-color: black;
+  gap: 1rem;
 
   .label {
     font-size: large;
@@ -24,7 +25,6 @@ const StyledListDefault = styled.div`
   }
   .secondary {
     font-size: medium;
-    font-weight: 600;
     color: white;
   }
 `;
