@@ -1,10 +1,9 @@
-/* eslint-disable no-console */
-/* eslint-disable no-underscore-dangle */
 /* eslint-disable camelcase */
+/* eslint-disable no-underscore-dangle */
 import axios from "axios";
 import haversine from "haversine-distance";
 import React, { useEffect, useState } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -25,8 +24,11 @@ import Modal from "../../common/components/modal/Modal";
 import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
-import { userCreatedChat, userClosedChat } from "../chat/chatSlice";
-
+import {
+  userCreatedChat,
+  userClosedChat,
+  disconnectExistingSocket,
+} from "../chat/chatSlice";
 
 const StyledToilet = styled.div`
   width: 100%;
@@ -65,8 +67,27 @@ const SOS_AVAILABLE_METER = 500;
 function Toilet() {
   const { toilet_id } = useParams();
   const navigate = useNavigate();
+  // eslint-disable-next-line no-unused-vars
   const location = useLocation();
+  const dispatch = useDispatch();
 
+  // const {
+  //   showToiletPath,
+  //   toiletName,
+  //   roadNameAddress,
+  //   inUnisexToilet,
+  //   menToiletBowlNumber,
+  //   menHandicapToiletBowlNumber,
+  //   menChildrenToiletBowlNumber,
+  //   ladiesToiletBowlNumber,
+  //   ladiesHandicapToiletBowlNumber,
+  //   ladiesChildrenToiletBowlNumber,
+  //   openTime,
+  //   latestToiletPaperInfo,
+  //   location: DBlocation,
+  // } = location.state.toilet;
+
+  // console.log("커밋하기전에 아래거 지울것.");
   const {
     showToiletPath,
     toiletName,
@@ -80,19 +101,38 @@ function Toilet() {
     ladiesChildrenToiletBowlNumber,
     openTime,
     latestToiletPaperInfo,
-    chatRoomList,
     location: DBlocation,
-  } = location.state.toilet;
+  } = {
+    showToiletPath: () => {},
+    toiletName: "삼성",
+    roadNameAddress: "삼성",
+    inUnisexToilet: true,
+    menToiletBowlNumber: 1,
+    menHandicapToiletBowlNumber: 1,
+    menChildrenToiletBowlNumber: 1,
+    ladiesToiletBowlNumber: 1,
+    ladiesHandicapToiletBowlNumber: 1,
+    ladiesChildrenToiletBowlNumber: 1,
+    openTime: "33",
+    latestToiletPaperInfo: {
+      lastDate: new Date().toISOString(),
+      isToiletPaper: true,
+    },
+    chatRoomList: [],
+    location: {
+      coordinates: [127.063067, 37.508826],
+    },
+  };
 
   const [toiletLongitude, toiletLatitude] = DBlocation.coordinates;
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
-  const myChat = useSelector((state) => state.chat.myChat);
+  const currentSocket = useSelector((state) => state.chat.currentSocket);
 
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
-  const [isLiveChat, setIsLiveChat] = useState(false);
+  const [showRescueButton, setShowRescueButton] = useState(false);
 
   useEffect(() => {
     async function getReviews() {
@@ -101,6 +141,7 @@ function Toilet() {
         setReviews(data.reviewList);
       } catch (error) {
         // 추후 에러처리 필요.
+        // eslint-disable-next-line no-console
         console.log(error);
       }
     }
@@ -127,29 +168,37 @@ function Toilet() {
   useEffect(() => {
     async function checkLiveChatAndSetRescueButton() {
       if (isLoggedIn) {
-        const checkResult = await getLiveChatByToilet(toilet_id);
-        console.log(checkResult);
+        const { liveChatList, isMyChat } = await getLiveChatByToilet(toilet_id);
 
-        if (checkResult.isMyChat) {
+        if (isMyChat) {
           const socket = connectSocketNamespace("toiletId", toilet_id);
 
           socket.on("connect", () => {
+            dispatch(disconnectExistingSocket);
             dispatch(userCreatedChat(socket));
           });
 
           socket.on("disconnect", () => {
-            console.log("disconnect!");
+            // eslint-disable-next-line no-console
+            console.log("Socket disconnected!");
             dispatch(userClosedChat());
           });
         }
 
-        if (isLiveChat) {
-          setIsLiveChat(checkResult.liveChatList);
+        if (liveChatList.length && !isMyChat) {
+          setShowRescueButton(true);
         }
       }
     }
+
     checkLiveChatAndSetRescueButton();
   }, [isLoggedIn, toilet_id]);
+
+  useEffect(() => () => {
+    if (currentSocket) {
+      currentSocket.off("db-error");
+    }
+  });
 
   async function onClickSOSButton() {
     if (!isLoggedIn) {
@@ -164,6 +213,18 @@ function Toilet() {
       );
 
       return;
+    }
+
+    if (currentSocket) {
+      // eslint-disable-next-line no-use-before-define
+      setContentAndShowModal(
+        <>
+          <div>이미 구조요청을 보냈습니다!</div>
+          <ButtonSmall type="button" onClick={() => navigate("/")}>
+            메인페이지로
+          </ButtonSmall>
+        </>
+      );
     }
 
     try {
@@ -183,22 +244,40 @@ function Toilet() {
 
       const socket = connectSocketNamespace("toiletId", toilet_id);
 
-      socket.on("connect", () => {
-        dispatch(userCreatedChat(socket));
+      socket.on("createChatroom", (chatroomId) => {
+        dispatch(disconnectExistingSocket);
+        dispatch(userCreatedChat({ socket, chatroomId }));
+      });
+
+      socket.on("db-error", (error) => {
+        dispatch(userClosedChat());
+        // eslint-disable-next-line no-use-before-define
+        setContentAndShowModal(
+          <>
+            <p>현재 연결 할 수 없습니다!</p>
+            <p>{`${error.status} :  ${error.message}`}</p>
+          </>
+        );
       });
 
       socket.on("disconnect", () => {
-        console.log("disconnect!");
+        // eslint-disable-next-line no-console
+        console.log("Socket disconnected!");
         dispatch(userClosedChat());
       });
     } catch (error) {
       // 추후 에러처리 필요.
+      // eslint-disable-next-line no-console
       console.log(error);
     }
   }
 
-  function onClickWaitingSavior() {
-    navigate("/chats", { toilet_id, chatRoomList });
+  function handleWaitingSaviorClick() {
+    navigate("/chatroom");
+  }
+
+  function handleRescueClick() {
+    navigate("/chatList");
   }
 
   function onClickCreatReview() {
@@ -220,33 +299,33 @@ function Toilet() {
       {showModal && (
         <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
       )}
-      <HeaderSub onClick={onClickWaitingSavior} />
+      <HeaderSub onClick={handleWaitingSaviorClick} />
 
       <div className="titleContainer">
         <Title title={toiletName} description={roadNameAddress} />
 
-        {!myChat && (
+        {!currentSocket && (
           <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
         )}
 
         <ButtonDefault onClick={showToiletPath} icon={viewFinder} />
       </div>
 
-      {!myChat && isLiveChat && (
+      {!currentSocket && showRescueButton && (
         <ButtonFluid
           icon={helpIcon}
           color="#EB5757"
-          onClick={onClickWaitingSavior}
+          onClick={handleRescueClick}
         >
           SOS 보낸사람 구조하기
         </ButtonFluid>
       )}
 
-      {myChat && (
+      {currentSocket && (
         <ButtonFluid
           icon={waitIcon}
           color="#6FCF97"
-          onClick={onClickWaitingSavior}
+          onClick={handleWaitingSaviorClick}
         >
           도와줄 사람 기다리기
         </ButtonFluid>

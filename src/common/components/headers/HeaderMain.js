@@ -1,5 +1,7 @@
 import PropTypes from "prop-types";
 import React from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import chat from "../../../assets/icon-chat.png";
@@ -29,13 +31,19 @@ const StyledHeaderMain = styled.div`
 `;
 
 function HeaderMain({ onClick }) {
+  const navigate = useNavigate();
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+  const currentSocket = useSelector((state) => state.chat.currentSocket);
+
   return (
     <StyledHeaderMain>
       <div className="logo">
         <img src={logo} alt="로고" />
       </div>
       <div className="btns">
-        <ButtonDefault icon={chat} />
+        {isLoggedIn && currentSocket && (
+          <ButtonDefault icon={chat} onClick={() => navigate("/chatroom")} />
+        )}
         <ButtonDefault icon={menu} onClick={onClick} />
       </div>
     </StyledHeaderMain>

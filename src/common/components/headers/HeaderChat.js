@@ -32,7 +32,7 @@ function HeaderChat() {
   return (
     <StyledHeaderChat>
       <div className="back">
-        <ButtonDefault moveTo="left" onClick={() => navigate(-2)}>
+        <ButtonDefault moveTo="left" onClick={() => navigate("/")}>
           채팅창 나가기
         </ButtonDefault>
       </div>
