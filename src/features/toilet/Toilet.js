@@ -13,6 +13,8 @@ import helpIcon from "../../assets/icon-help-fluid.png";
 import squaredSOS from "../../assets/icon-squaredsos.svg";
 import viewFinder from "../../assets/icon-viewfinder.svg";
 import waitIcon from "../../assets/icon-wait-fluid.png";
+import connectSocketNamespace from "../../common/api/connectSocketNamespace";
+import getLiveChatByToilet from "../../common/api/getLiveChatByToilet";
 import getMyLongLat from "../../common/api/getMyLongLat";
 import ButtonDefault from "../../common/components/buttons/ButtonDefault";
 import ButtonFluid from "../../common/components/buttons/ButtonFluid";
@@ -23,7 +25,7 @@ import Modal from "../../common/components/modal/Modal";
 import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
-import { toiletInfoUpated } from "./toiletSlice";
+import { userCreatedChat, userClosedChat } from "../chat/chatSlice";
 
 const StyledToilet = styled.div`
   width: 100%;
@@ -57,6 +59,8 @@ const StyledToilet = styled.div`
   }
 `;
 
+const SOS_AVAILABLE_METER = 500;
+
 function Toilet() {
   const { toilet_id } = useParams();
   const navigate = useNavigate();
@@ -76,29 +80,19 @@ function Toilet() {
     ladiesChildrenToiletBowlNumber,
     openTime,
     latestToiletPaperInfo,
-    isSOS,
     chatRoomList,
-    toiletLongitude,
-    toiletLatitude,
+    location: DBlocation,
   } = location.state.toilet;
 
-  const userClickedSOSButton = useSelector(
-    (state) => state.currnetToiletInfo.byIds[toilet_id]?.userClickedSOSButton
-  );
-  const isSOSCurrnetToilet = useSelector(
-    (state) => state.currnetToiletInfo.byIds[toilet_id]?.isSOSCurrnetToilet
-  );
+  const [toiletLongitude, toiletLatitude] = DBlocation.coordinates;
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+  const myChat = useSelector((state) => state.chat.myChat);
 
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
-  const [userSOSButton, setUserSOSButton] = useState(userClickedSOSButton);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
-
-  useEffect(() => {
-    dispatch(toiletInfoUpated({ toilet_id, isSOS, userSOSButton }));
-  }, [userSOSButton]);
+  const [isLiveChat, setIsLiveChat] = useState(false);
 
   useEffect(() => {
     async function getReviews() {
@@ -129,7 +123,35 @@ function Toilet() {
     setAvgRating(getAvgRating());
   }, [reviews]);
 
-  function onClickSOSButton() {
+  useEffect(() => {
+    async function checkLiveChatAndSetRescueButton() {
+      if (isLoggedIn) {
+        const checkResult = await getLiveChatByToilet(toilet_id);
+        console.log(checkResult);
+
+        if (checkResult.isMyChat) {
+          const socket = connectSocketNamespace("toiletId", toilet_id);
+
+          socket.on("connect", () => {
+            dispatch(userCreatedChat(socket));
+          });
+
+          socket.on("disconnect", () => {
+            console.log("disconnect!");
+            dispatch(userClosedChat());
+          });
+        }
+
+        if (isLiveChat) {
+          setIsLiveChat(checkResult.liveChatList);
+        }
+      }
+    }
+
+    checkLiveChatAndSetRescueButton();
+  }, [isLoggedIn, toilet_id]);
+
+  async function onClickSOSButton() {
     if (!isLoggedIn) {
       // eslint-disable-next-line no-use-before-define
       setContentAndShowModal(
@@ -144,32 +166,35 @@ function Toilet() {
       return;
     }
 
-    const [lon, lat] = getMyLongLat();
-    const isDistanceWithin100m =
-      haversine({ lon, lat }, { lon: toiletLongitude, lat: toiletLatitude }) <
-      101;
+    try {
+      const { longitude, latitude } = await getMyLongLat();
+      const isDistanceWithin500m =
+        haversine(
+          { longitude, latitude },
+          { longitude: toiletLongitude, latitude: toiletLatitude }
+        ) <= SOS_AVAILABLE_METER;
 
-    if (!isDistanceWithin100m) {
-      // eslint-disable-next-line no-use-before-define
-      setContentAndShowModal(<p>현재 위치가 해당 화장실 근처가 아닙니다!</p>);
+      if (!isDistanceWithin500m) {
+        // eslint-disable-next-line no-use-before-define
+        setContentAndShowModal(<p>현재 위치가 해당 화장실 근처가 아닙니다!</p>);
 
-      return;
-    }
-
-    setUserSOSButton(true);
-
-    async function emitSOS() {
-      try {
-        await axios.post("/toilets/emitSOS", {
-          toilet_id,
-          SOSState: true,
-        });
-      } catch (error) {
-        // 추후 에러처리 필요.
-        console.log(error);
+        return;
       }
+
+      const socket = connectSocketNamespace("toiletId", toilet_id);
+
+      socket.on("connect", () => {
+        dispatch(userCreatedChat(socket));
+      });
+
+      socket.on("disconnect", () => {
+        console.log("disconnect!");
+        dispatch(userClosedChat());
+      });
+    } catch (error) {
+      // 추후 에러처리 필요.
+      console.log(error);
     }
-    emitSOS();
   }
 
   function onClickWaitingSavior() {
@@ -200,14 +225,14 @@ function Toilet() {
       <div className="titleContainer">
         <Title title={toiletName} description={roadNameAddress} />
 
-        {!userClickedSOSButton && (
+        {!myChat && (
           <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
         )}
 
         <ButtonDefault onClick={showToiletPath} icon={viewFinder} />
       </div>
 
-      {isSOSCurrnetToilet && (
+      {!myChat && isLiveChat && (
         <ButtonFluid
           icon={helpIcon}
           color="#EB5757"
@@ -217,7 +242,7 @@ function Toilet() {
         </ButtonFluid>
       )}
 
-      {userClickedSOSButton && (
+      {myChat && (
         <ButtonFluid
           icon={waitIcon}
           color="#6FCF97"
