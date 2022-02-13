@@ -35,7 +35,7 @@ ReactDOM.render(
           <Route path="/chats/:chat_id" element={<Chat />} />
           <Route path="/editReview" element={<ReviewEdit />} />
           <Route path="/editReview/:reviewId" element={<ReviewEdit />} />
-          <Route path="/users/:user_id" element={<Profile />} />
+          <Route path="/users/:userId" element={<Profile />} />
           <Route path="/editProfile/:user_id" element={<ProfileEdit />} />
           <Route path="/error" element={<ErrorPage />} />
           <Route path="/ui" element={<Ui />} />
