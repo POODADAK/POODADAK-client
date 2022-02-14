@@ -4,7 +4,8 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import chat from "../../../assets/icon-chat.png";
+import chatFull from "../../../assets/icon-chat-full.png";
+import chatEmpty from "../../../assets/icon-chat.png";
 import menu from "../../../assets/icon-menu.png";
 import logo from "../../../assets/logo-main.svg";
 import ButtonDefault from "../buttons/ButtonDefault";
@@ -34,6 +35,9 @@ function HeaderMain({ onClick }) {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const currentSocket = useSelector((state) => state.chat.currentSocket);
+  const hasUncheckedChat = useSelector((state) => state.chat.hasUncheckedChat);
+
+  const chatIcon = hasUncheckedChat ? chatFull : chatEmpty;
 
   return (
     <StyledHeaderMain>
@@ -42,7 +46,10 @@ function HeaderMain({ onClick }) {
       </div>
       <div className="btns">
         {isLoggedIn && currentSocket && (
-          <ButtonDefault icon={chat} onClick={() => navigate("/chatroom")} />
+          <ButtonDefault
+            icon={chatIcon}
+            onClick={() => navigate("/chatroom")}
+          />
         )}
         <ButtonDefault icon={menu} onClick={onClick} />
       </div>

@@ -28,6 +28,7 @@ import Title from "../../common/components/Title";
 import {
   userCreatedChat,
   userClosedChat,
+  userReceivedChat,
   disconnectExistingSocket,
 } from "../chat/chatSlice";
 
@@ -84,6 +85,10 @@ function Toilet() {
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   // eslint-disable-next-line no-unused-vars
   const currentSocket = useSelector((state) => state.chat.currentSocket);
+  const userId = useSelector((state) => state.login.userId);
+  const currentChatroomId = useSelector(
+    (state) => state.chat.currentChatroomId
+  );
 
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
@@ -126,13 +131,28 @@ function Toilet() {
     async function checkLiveChatAndSetRescueButton() {
       if (isLoggedIn) {
         const { liveChatList, isMyChat } = await getLiveChatByToilet(toilet_id);
-
         if (isMyChat) {
-          const socket = connectSocketNamespace("toiletId", toilet_id);
+          const socket = connectSocketNamespace(
+            "toiletId",
+            toilet_id,
+            userId,
+            currentChatroomId
+          );
 
-          socket.on("connect", () => {
+          socket.on("joinChatroom", () => {
             dispatch(disconnectExistingSocket);
             dispatch(userCreatedChat(socket));
+          });
+
+          socket.on("db-error", (error) => {
+            dispatch(userClosedChat());
+            // eslint-disable-next-line no-use-before-define
+            setContentAndShowModal(
+              <>
+                <p>현재 연결 할 수 없습니다!</p>
+                <p>{`${error.status} :  ${error.message}`}</p>
+              </>
+            );
           });
 
           socket.on("disconnect", () => {
@@ -142,15 +162,14 @@ function Toilet() {
           });
         }
 
-        if (liveChatList.length && !isMyChat) {
+        if (liveChatList.length && !isMyChat && !currentSocket) {
           setShowRescueButton(true);
         }
       }
     }
 
     checkLiveChatAndSetRescueButton();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn, toilet_id]);
+  }, [isLoggedIn]);
 
   useEffect(() => () => {
     if (currentSocket) {
@@ -177,7 +196,7 @@ function Toilet() {
       // eslint-disable-next-line no-use-before-define
       setContentAndShowModal(
         <>
-          <div>이미 구조요청을 보냈습니다!</div>
+          <div>이미 참여중인 구조요청이 있습니다!</div>
           <ButtonSmall type="button" onClick={() => navigate("/")}>
             메인페이지로
           </ButtonSmall>
@@ -200,9 +219,19 @@ function Toilet() {
         return;
       }
 
-      const socket = connectSocketNamespace("toiletId", toilet_id);
+      const socket = connectSocketNamespace(
+        "toiletId",
+        toilet_id,
+        userId,
+        "6209b686af076f5d395dab12"
+      );
 
-      socket.on("createChatroom", (chatroomId) => {
+      socket.on("joinChatroom", (chatroomId) => {
+        dispatch(disconnectExistingSocket);
+        dispatch(userCreatedChat({ socket, chatroomId }));
+      });
+
+      socket.on("receiveChat", (chatroomId) => {
         dispatch(disconnectExistingSocket);
         dispatch(userCreatedChat({ socket, chatroomId }));
       });
@@ -235,7 +264,55 @@ function Toilet() {
   }
 
   function handleRescueClick() {
-    navigate("/chatList");
+    // 아래의 코드는 SOS 신호를 보낸 사람이 DB에 chatroom을 개설하면 DB에 있는 해당 chatroomId 를 가지고 그 채팅창으로 바로 넘어가게 되어있습니다.
+    // 진호님이 채팅리스트를 구현하는데 참조하면 도움이 될것같아 남겨 둡니다.
+    // 진호님이 작업이 완료된 후 PR 하시기 전에 지워 주시면 될거 같습니다.
+
+    if (!isLoggedIn) {
+      // eslint-disable-next-line no-use-before-define
+      setContentAndShowModal(
+        <>
+          <div>로그인이 필요합니다!</div>
+          <ButtonSmall type="button" onClick={() => navigate("/")}>
+            메인페이지로
+          </ButtonSmall>
+        </>
+      );
+      return;
+    }
+    const socket = connectSocketNamespace(
+      "toiletId",
+      toilet_id,
+      "6205b7dc6ca34d732d1bfee9",
+      "620a15a581e198dcdb21bbf5"
+    );
+
+    socket.on("joinChatroom", (chatroomId) => {
+      dispatch(disconnectExistingSocket);
+      dispatch(userCreatedChat({ socket, chatroomId }));
+      navigate("/chatroom");
+    });
+
+    socket.on("receiveChat", (chat) => {
+      dispatch(userReceivedChat(chat.updatedChatListLength));
+    });
+
+    socket.on("db-error", (error) => {
+      dispatch(userClosedChat());
+      // eslint-disable-next-line no-use-before-define
+      setContentAndShowModal(
+        <>
+          <p>현재 연결 할 수 없습니다!</p>
+          <p>{`${error.status} :  ${error.message}`}</p>
+        </>
+      );
+    });
+
+    socket.on("disconnect", () => {
+      // eslint-disable-next-line no-console
+      console.log("Socket disconnected!");
+      dispatch(userClosedChat());
+    });
   }
 
   function onClickCreatReview() {

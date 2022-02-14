@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -28,18 +29,27 @@ const StyledHeaderChat = styled.div`
 
 function HeaderChat() {
   const navigate = useNavigate();
+  const currentSocket = useSelector((state) => state.chat.currentSocket);
+
+  function handleChatEndClick() {
+    if (currentSocket) {
+      currentSocket.disconnect();
+    }
+  }
 
   return (
     <StyledHeaderChat>
       <div className="back">
-        <ButtonDefault moveTo="left" onClick={() => navigate("/")}>
+        <ButtonDefault moveTo="left" onClick={() => navigate(-1)}>
           채팅창 나가기
         </ButtonDefault>
       </div>
       <div className="btns">
-        <ButtonDefault icon={close} onClick={() => navigate("/")}>
-          완전종료
-        </ButtonDefault>
+        {currentSocket && (
+          <ButtonDefault icon={close} onClick={handleChatEndClick}>
+            완전종료
+          </ButtonDefault>
+        )}
       </div>
     </StyledHeaderChat>
   );
