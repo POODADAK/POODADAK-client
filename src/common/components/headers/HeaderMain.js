@@ -33,7 +33,6 @@ const StyledHeaderMain = styled.div`
 
 function HeaderMain({ onClick }) {
   const navigate = useNavigate();
-
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const currentSocket = useSelector((state) => state.chat.currentSocket);
   const hasUncheckedChat = useSelector((state) => state.chat.hasUncheckedChat);
