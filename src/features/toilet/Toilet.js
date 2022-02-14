@@ -4,6 +4,7 @@
 import axios from "axios";
 import haversine from "haversine-distance";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -25,7 +26,6 @@ import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
 import { userCreatedChat, userClosedChat } from "../chat/chatSlice";
-
 
 const StyledToilet = styled.div`
   width: 100%;
@@ -72,12 +72,13 @@ const SOS_AVAILABLE_METER = 500;
 function Toilet() {
   const { toilet_id } = useParams();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
   const location = useLocation();
   const toilet = location.state;
 
   const [toiletLongitude, toiletLatitude] = toilet.location.coordinates;
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
-  const myChat = useSelector((state) => state.chat.myChat);
+  // const myChat = useSelector((state) => state.chat.myChat);
 
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
@@ -140,6 +141,7 @@ function Toilet() {
       }
     }
     checkLiveChatAndSetRescueButton();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, toilet_id]);
 
   async function onClickSOSButton() {
