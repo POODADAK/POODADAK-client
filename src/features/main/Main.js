@@ -2,7 +2,7 @@
 import axios from "axios";
 import React, { useEffect, useState, useCallback } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { Route, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import pinSosToilet from "../../assets/icon-pin-sos.svg";
@@ -12,7 +12,6 @@ import ButtonFull from "../../common/components/buttons/ButtonFull";
 import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
 import Sidebar from "../../common/components/Sidebar";
-import ErrorPage from "../error/ErrorPage";
 import ToiletCard from "../toilet/ToiletCard";
 import { nearToiletsUpdated } from "../toilet/toiletSlice";
 import { userLocationUpdated, userLocationRemoved } from "./mainSlice";
@@ -85,7 +84,6 @@ function Main() {
   const [pathMarkers, setPathMarkers] = useState([]);
   const [polyline, setPolyline] = useState(null);
   const [onSideBar, setOnSideBar] = useState(false);
-  const [err, setErr] = useState(null);
 
   const gotUserLocation = useSelector((state) => state.main.gotUserLocation);
   const currentLocation = useSelector((state) => state.main.userLocation);
@@ -157,7 +155,7 @@ function Main() {
             description: "메인으로 이동해주세요.",
             errorMsg: error.message,
           };
-          setErr(newErr);
+          navigate("/error", { state: newErr });
         },
         {
           enableHighAccuracy: false,
@@ -171,7 +169,7 @@ function Main() {
         title: "GPS를 지원하지 않습니다",
         description: "위치정보 제공에 동의해주셔야 앱을 사용하실 수 있습니다.",
       };
-      setErr(newErr);
+      navigate("/error", { state: newErr });
     }
   }
 
@@ -418,7 +416,7 @@ function Main() {
                 description: "메인으로 이동해주세요.",
                 errorMsg: error.message,
               };
-              setErr(newErr);
+              navigate("/error", { state: newErr });
             },
             {
               enableHighAccuracy: false,
@@ -433,7 +431,7 @@ function Main() {
             description:
               "위치정보 제공에 동의해주셔야 앱을 사용하실 수 있습니다.",
           };
-          setErr(newErr);
+          navigate("/error", { state: newErr });
         }
       }
     }, 5000);
@@ -441,7 +439,7 @@ function Main() {
     return () => {
       clearInterval(getLocationForTracking);
     };
-  }, [dispatch, selectedToilet]);
+  }, [dispatch, navigate, selectedToilet]);
 
   return (
     <StyledMain>
@@ -484,8 +482,6 @@ function Main() {
           <Sidebar onClick={toggleSidebar} />
         </div>
       )}
-
-      {err && <Route path="/error" element={<ErrorPage error={err} />} />}
     </StyledMain>
   );
 }
