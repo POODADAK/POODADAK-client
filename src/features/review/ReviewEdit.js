@@ -1,6 +1,5 @@
-import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import submitIcon from "../../assets/icon-check-full.png";
@@ -146,7 +145,7 @@ const ToiletPaperCheckContainer = styled.div`
   }
 `;
 
-function ReviewEdit({ toiletId }) {
+function ReviewEdit() {
   const [enteredRating, setEnteredRating] = useState(1);
   const [enteredToiletPaper, setEnteredToiletPaper] = useState(false);
   const [enteredText, setEnteredText] = useState("");
@@ -157,6 +156,9 @@ function ReviewEdit({ toiletId }) {
 
   const { reviewId } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+
+  const toiletId = location.state.toilet_id;
   const uploadedImageSrc =
     uploadedImage?.constructor.name === "File"
       ? URL.createObjectURL(uploadedImage)
@@ -350,9 +352,5 @@ function ReviewEdit({ toiletId }) {
     </StyledDiv>
   );
 }
-
-ReviewEdit.propTypes = {
-  toiletId: PropTypes.string.isRequired,
-};
 
 export default ReviewEdit;
