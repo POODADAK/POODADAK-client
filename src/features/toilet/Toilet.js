@@ -337,13 +337,11 @@ function Toilet() {
         <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
       )}
       <HeaderSub onClick={handleWaitingSaviorClick} />
-
       <div className="titleContainer">
         <Title title={toilet.toiletName} description={toilet.roadNameAddress} />
         <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
         <ButtonDefault onClick={blablablabla} icon={viewFinder} />
       </div>
-
       <div className="fluidButtonWrapper">
         {!currentSocket && showRescueButton && (
           <ButtonFluid
@@ -355,7 +353,6 @@ function Toilet() {
           </ButtonFluid>
         )}
       </div>
-
       <div className="fluidButtonWrapper">
         {currentSocket && (
           <ButtonFluid
@@ -367,15 +364,12 @@ function Toilet() {
           </ButtonFluid>
         )}
       </div>
-
       <div className="rankContainer">
         <div>청결도 평균 ( {avgRating} ) </div>
         <StarContainer rating={avgRating} showRatingNumber={false} />
       </div>
-
       <div className="toiletInfoContainer">
         <ListDefault label="개방시간" secondary={toilet.openTime} />
-
         <div className="toiletPaperContainer">
           <ListDefault
             label="휴지제공"
@@ -385,7 +379,6 @@ function Toilet() {
             마지막 확인 : {toilet.latestToiletPaperInfo.lastDate}
           </div>
         </div>
-
         <ListDefault
           label="남녀공용"
           secondary={toilet.inUnisexToilet ? "O" : "X"}
@@ -403,12 +396,10 @@ function Toilet() {
           secondary={`남아 : ${toilet.menChildrenToiletBowlNumber}  /  여아 : ${toilet.ladiesChildrenToiletBowlNumber}`}
         />
       </div>
-
       <Title
         title="리뷰"
         description={`총 ${reviews.length}개의 리뷰가 있습니다.`}
       />
-
       <div className="fluidButtonWrapper">
         <ButtonFluid
           icon={docuIcon}
@@ -418,7 +409,6 @@ function Toilet() {
           리뷰 남기기
         </ButtonFluid>
       </div>
-
       {reviews.map((review) => (
         <ReviewCard
           userId={review.writer._id}
