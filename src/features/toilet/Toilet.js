@@ -170,13 +170,8 @@ function Toilet() {
     }
 
     checkLiveChatAndSetRescueButton();
-  }, [isLoggedIn]);
-
-  useEffect(() => () => {
-    if (currentSocket) {
-      currentSocket.off("db-error");
-    }
-  });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isLoggedIn, toilet_id]);
 
   async function onClickSOSButton() {
     if (!isLoggedIn) {
