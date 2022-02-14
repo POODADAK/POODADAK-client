@@ -200,7 +200,7 @@ function Toilet() {
   }
 
   function onClickCreatReview() {
-    navigate("/editReview/", { toilet_id });
+    navigate("/editReview/", { state: { toilet_id } });
   }
 
   function blablablabla() {} // TODO: 애매한 함수 처리를 위해 세팅해두었습니다. 해당 함수 적용은 정리 필요!!
