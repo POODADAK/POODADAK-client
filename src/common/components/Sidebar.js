@@ -63,6 +63,7 @@ function Sidebar({ onClick }) {
   const navigate = useNavigate();
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const dispatch = useDispatch();
+  const loginedUserId = useSelector((state) => state.login.userId);
 
   function kakaoLogin() {
     window.location.href = `https://kauth.kakao.com/oauth/authorize?response_type=code&client_id=${process.env.REACT_APP_KAKAO_REST_API_KEY}&redirect_uri=${process.env.REACT_APP_KAKAO_REST_API_REDIRECT_URL}`;
@@ -122,9 +123,9 @@ function Sidebar({ onClick }) {
           <div
             className="list"
             role="button"
-            onClick={() => navigate("/users/:id")}
+            onClick={() => navigate(`/users/${loginedUserId}`)}
             tabIndex={0}
-            onKeyDown={() => navigate("/users/:id")}
+            onKeyDown={() => navigate(`/users/${loginedUserId}`)}
           >
             <hr className="line" />
             <div className="list-content">

@@ -9,8 +9,10 @@ import gold from "../../../assets/icon-rank-gold.png";
 import silver from "../../../assets/icon-rank-silver.png";
 import send from "../../../assets/icon-send-full.png";
 import photoReviewCover from "../../../assets/photo-review-cover.png";
+import deleteReview from "../../api/deleteReview";
 import ButtonFull from "../buttons/ButtonFull";
 import ButtonSmall from "../buttons/ButtonSmall";
+import Modal from "../modal/Modal";
 import StarContainer from "../starContainer/StarContainer";
 
 const ButtonContainer = styled.div`
@@ -135,6 +137,9 @@ function ReviewCard({
   toilet,
 }) {
   const [showCover, setShowCover] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+
   const navigate = useNavigate();
   const isImage = image !== "none";
 
@@ -166,11 +171,7 @@ function ReviewCard({
   }
 
   function handleReviewEditClick() {
-    navigate(`/editReview/${reviewId}`);
-  }
-
-  function handleReviewDeleteClick() {
-    // 차후 리뷰 삭제 로직 구현 필요
+    navigate(`/editReview/${reviewId}`, { state: toilet });
   }
 
   function handleToiletNameClick() {
@@ -178,8 +179,42 @@ function ReviewCard({
     navigate(`/toilets/${toilet._id}`, { state: toilet });
   }
 
+  function handleModalCloseClick() {
+    setModalContent("");
+    setShowModal(false);
+  }
+
+  function setContentAndShowModal(content) {
+    setModalContent(content);
+    setShowModal(true);
+  }
+
+  async function handleReviewDeleteConfirmClick() {
+    try {
+      await deleteReview(reviewId);
+      navigate(-1);
+    } catch (error) {
+      setModalContent("리뷰 삭제가 실패하였습니다.");
+      setShowModal(true);
+    }
+  }
+
+  function handleReviewDeleteClick() {
+    setContentAndShowModal(
+      <>
+        <div>정말로 삭제 하시겠습니까?</div>
+        <ButtonSmall type="button" onClick={handleReviewDeleteConfirmClick}>
+          삭제
+        </ButtonSmall>
+      </>
+    );
+  }
+
   return (
     <StyledDiv>
+      {showModal && (
+        <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
+      )}
       <StyledHeader>
         <img className="rank" src={userRankImageSrc} alt="rank" />
         <div
