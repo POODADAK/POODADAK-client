@@ -25,7 +25,12 @@ import Modal from "../../common/components/modal/Modal";
 import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
-import { userCreatedChat, userClosedChat } from "../chat/chatSlice";
+import {
+  userCreatedChat,
+  userClosedChat,
+  userReceivedChat,
+  disconnectExistingSocket,
+} from "../chat/chatSlice";
 
 const StyledToilet = styled.div`
   width: 100%;
@@ -80,13 +85,17 @@ function Toilet() {
   const [toiletLongitude, toiletLatitude] = toilet.location.coordinates;
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   // eslint-disable-next-line no-unused-vars
-  const myChat = useSelector((state) => state.chat.myChat);
+  const currentSocket = useSelector((state) => state.chat.currentSocket);
+  const userId = useSelector((state) => state.login.userId);
+  const currentChatroomId = useSelector(
+    (state) => state.chat.currentChatroomId
+  );
 
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
-  const [isLiveChat, setIsLiveChat] = useState(false);
+  const [showRescueButton, setShowRescueButton] = useState(false);
 
   useEffect(() => {
     async function getReviews() {
@@ -95,6 +104,7 @@ function Toilet() {
         setReviews(data.reviewList);
       } catch (error) {
         // 추후 에러처리 필요.
+        // eslint-disable-next-line no-console
         console.log(error);
       }
     }
@@ -121,30 +131,52 @@ function Toilet() {
   useEffect(() => {
     async function checkLiveChatAndSetRescueButton() {
       if (isLoggedIn) {
-        const checkResult = await getLiveChatByToilet(toilet_id);
-        console.log(checkResult);
+        const { liveChatList, isMyChat } = await getLiveChatByToilet(toilet_id);
+        if (isMyChat) {
+          const socket = connectSocketNamespace(
+            "toiletId",
+            toilet_id,
+            userId,
+            currentChatroomId
+          );
 
-        if (checkResult.isMyChat) {
-          const socket = connectSocketNamespace("toiletId", toilet_id);
-
-          socket.on("connect", () => {
+          socket.on("joinChatroom", () => {
+            dispatch(disconnectExistingSocket);
             dispatch(userCreatedChat(socket));
           });
 
+          socket.on("db-error", (error) => {
+            dispatch(userClosedChat());
+            // eslint-disable-next-line no-use-before-define
+            setContentAndShowModal(
+              <>
+                <p>현재 연결 할 수 없습니다!</p>
+                <p>{`${error.status} :  ${error.message}`}</p>
+              </>
+            );
+          });
+
           socket.on("disconnect", () => {
-            console.log("disconnect!");
+            // eslint-disable-next-line no-console
+            console.log("Socket disconnected!");
             dispatch(userClosedChat());
           });
         }
 
-        if (isLiveChat) {
-          setIsLiveChat(checkResult.liveChatList);
+        if (liveChatList.length && !isMyChat && !currentSocket) {
+          setShowRescueButton(true);
         }
       }
     }
+
     checkLiveChatAndSetRescueButton();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn, toilet_id]);
+  }, [isLoggedIn]);
+
+  useEffect(() => () => {
+    if (currentSocket) {
+      currentSocket.off("db-error");
+    }
+  });
 
   async function onClickSOSButton() {
     if (!isLoggedIn) {
@@ -159,6 +191,18 @@ function Toilet() {
       );
 
       return;
+    }
+
+    if (currentSocket) {
+      // eslint-disable-next-line no-use-before-define
+      setContentAndShowModal(
+        <>
+          <div>이미 참여중인 구조요청이 있습니다!</div>
+          <ButtonSmall type="button" onClick={() => navigate("/")}>
+            메인페이지로
+          </ButtonSmall>
+        </>
+      );
     }
 
     try {
@@ -176,27 +220,99 @@ function Toilet() {
         return;
       }
 
-      const socket = connectSocketNamespace("toiletId", toilet_id);
+      const socket = connectSocketNamespace(
+        "toiletId",
+        toilet_id,
+        userId,
+        "6209b686af076f5d395dab12"
+      );
 
-      socket.on("connect", () => {
-        dispatch(userCreatedChat(socket));
+      socket.on("joinChatroom", (chatroomId) => {
+        dispatch(disconnectExistingSocket);
+        dispatch(userCreatedChat({ socket, chatroomId }));
+      });
+
+      socket.on("receiveChat", (chatroomId) => {
+        dispatch(disconnectExistingSocket);
+        dispatch(userCreatedChat({ socket, chatroomId }));
+      });
+
+      socket.on("db-error", (error) => {
+        dispatch(userClosedChat());
+        // eslint-disable-next-line no-use-before-define
+        setContentAndShowModal(
+          <>
+            <p>현재 연결 할 수 없습니다!</p>
+            <p>{`${error.status} :  ${error.message}`}</p>
+          </>
+        );
       });
 
       socket.on("disconnect", () => {
-        console.log("disconnect!");
+        // eslint-disable-next-line no-console
+        console.log("Socket disconnected!");
         dispatch(userClosedChat());
       });
     } catch (error) {
       // 추후 에러처리 필요.
+      // eslint-disable-next-line no-console
       console.log(error);
     }
   }
 
-  function onClickWaitingSavior() {
-    navigate("/chats", {
-      state: {
-        toilet_id,
-      },
+  function handleWaitingSaviorClick() {
+    navigate("/chatroom");
+  }
+
+  function handleRescueClick() {
+    // 아래의 코드는 SOS 신호를 보낸 사람이 DB에 chatroom을 개설하면 DB에 있는 해당 chatroomId 를 가지고 그 채팅창으로 바로 넘어가게 되어있습니다.
+    // 진호님이 채팅리스트를 구현하는데 참조하면 도움이 될것같아 남겨 둡니다.
+    // 진호님이 작업이 완료된 후 PR 하시기 전에 지워 주시면 될거 같습니다.
+
+    if (!isLoggedIn) {
+      // eslint-disable-next-line no-use-before-define
+      setContentAndShowModal(
+        <>
+          <div>로그인이 필요합니다!</div>
+          <ButtonSmall type="button" onClick={() => navigate("/")}>
+            메인페이지로
+          </ButtonSmall>
+        </>
+      );
+      return;
+    }
+    const socket = connectSocketNamespace(
+      "toiletId",
+      toilet_id,
+      "6205b7dc6ca34d732d1bfee9",
+      "620a15a581e198dcdb21bbf5"
+    );
+
+    socket.on("joinChatroom", (chatroomId) => {
+      dispatch(disconnectExistingSocket);
+      dispatch(userCreatedChat({ socket, chatroomId }));
+      navigate("/chatroom");
+    });
+
+    socket.on("receiveChat", (chat) => {
+      dispatch(userReceivedChat(chat.updatedChatListLength));
+    });
+
+    socket.on("db-error", (error) => {
+      dispatch(userClosedChat());
+      // eslint-disable-next-line no-use-before-define
+      setContentAndShowModal(
+        <>
+          <p>현재 연결 할 수 없습니다!</p>
+          <p>{`${error.status} :  ${error.message}`}</p>
+        </>
+      );
+    });
+
+    socket.on("disconnect", () => {
+      // eslint-disable-next-line no-console
+      console.log("Socket disconnected!");
+      dispatch(userClosedChat());
     });
   }
 
@@ -221,44 +337,40 @@ function Toilet() {
       {showModal && (
         <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
       )}
-      <HeaderSub onClick={onClickWaitingSavior} />
-
+      <HeaderSub onClick={handleWaitingSaviorClick} />
       <div className="titleContainer">
         <Title title={toilet.toiletName} description={toilet.roadNameAddress} />
-
         <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
-
         <ButtonDefault onClick={blablablabla} icon={viewFinder} />
       </div>
-
       <div className="fluidButtonWrapper">
-        <ButtonFluid
-          icon={helpIcon}
-          color="#EB5757"
-          onClick={onClickWaitingSavior}
-        >
-          SOS 보낸사람 구조하기
-        </ButtonFluid>
+        {!currentSocket && showRescueButton && (
+          <ButtonFluid
+            icon={helpIcon}
+            color="#EB5757"
+            onClick={handleRescueClick}
+          >
+            SOS 보낸사람 구조하기
+          </ButtonFluid>
+        )}
       </div>
-
       <div className="fluidButtonWrapper">
-        <ButtonFluid
-          icon={waitIcon}
-          color="#6FCF97"
-          onClick={onClickWaitingSavior}
-        >
-          도와줄 사람 기다리기
-        </ButtonFluid>
+        {currentSocket && (
+          <ButtonFluid
+            icon={waitIcon}
+            color="#6FCF97"
+            onClick={handleWaitingSaviorClick}
+          >
+            도와줄 사람 기다리기
+          </ButtonFluid>
+        )}
       </div>
-
       <div className="rankContainer">
         <div>청결도 평균 ( {avgRating} ) </div>
         <StarContainer rating={avgRating} showRatingNumber={false} />
       </div>
-
       <div className="toiletInfoContainer">
         <ListDefault label="개방시간" secondary={toilet.openTime} />
-
         <div className="toiletPaperContainer">
           <ListDefault
             label="휴지제공"
@@ -268,7 +380,6 @@ function Toilet() {
             마지막 확인 : {toilet.latestToiletPaperInfo.lastDate}
           </div>
         </div>
-
         <ListDefault
           label="남녀공용"
           secondary={toilet.inUnisexToilet ? "O" : "X"}
@@ -286,12 +397,10 @@ function Toilet() {
           secondary={`남아 : ${toilet.menChildrenToiletBowlNumber}  /  여아 : ${toilet.ladiesChildrenToiletBowlNumber}`}
         />
       </div>
-
       <Title
         title="리뷰"
         description={`총 ${reviews.length}개의 리뷰가 있습니다.`}
       />
-
       <div className="fluidButtonWrapper">
         <ButtonFluid
           icon={docuIcon}
@@ -301,7 +410,6 @@ function Toilet() {
           리뷰 남기기
         </ButtonFluid>
       </div>
-
       {reviews.map((review) => (
         <ReviewCard
           userId={review.writer._id}

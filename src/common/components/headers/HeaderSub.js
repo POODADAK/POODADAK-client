@@ -1,9 +1,10 @@
-import PropTypes from "prop-types";
 import React from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import chat from "../../../assets/icon-chat.png";
+import chatFull from "../../../assets/icon-chat-full.png";
+import chatEmpty from "../../../assets/icon-chat.png";
 import ButtonDefault from "../buttons/ButtonDefault";
 
 const StyledHeaderSub = styled.div`
@@ -27,8 +28,12 @@ const StyledHeaderSub = styled.div`
   }
 `;
 
-function HeaderSub({ onClick }) {
+function HeaderSub() {
   const navigate = useNavigate();
+  const currentSocket = useSelector((state) => state.chat.currentSocket);
+  const hasUncheckedChat = useSelector((state) => state.chat.hasUncheckedChat);
+
+  const chatIcon = hasUncheckedChat ? chatFull : chatEmpty;
 
   return (
     <StyledHeaderSub>
@@ -37,17 +42,16 @@ function HeaderSub({ onClick }) {
           뒤로가기
         </ButtonDefault>
       </div>
-      <div className="btns">
-        <ButtonDefault icon={chat} onClick={onClick} />
-      </div>
+      {currentSocket && (
+        <div className="btns">
+          <ButtonDefault
+            icon={chatIcon}
+            onClick={() => navigate("/chatroom")}
+          />
+        </div>
+      )}
     </StyledHeaderSub>
   );
 }
-HeaderSub.propTypes = {
-  onClick: PropTypes.func,
-};
-HeaderSub.defaultProps = {
-  onClick: null,
-};
 
 export default HeaderSub;
