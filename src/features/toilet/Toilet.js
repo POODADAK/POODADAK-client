@@ -170,8 +170,13 @@ function Toilet() {
     }
 
     checkLiveChatAndSetRescueButton();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoggedIn, toilet_id]);
+  }, [isLoggedIn]);
+
+  useEffect(() => () => {
+    if (currentSocket) {
+      currentSocket.off("db-error");
+    }
+  });
 
   async function onClickSOSButton() {
     if (!isLoggedIn) {
@@ -286,7 +291,7 @@ function Toilet() {
     socket.on("joinChatroom", (chatroomId) => {
       dispatch(disconnectExistingSocket);
       dispatch(userCreatedChat({ socket, chatroomId }));
-      navigate("/chats");
+      navigate("/chatroom");
     });
 
     socket.on("receiveChat", (chat) => {
