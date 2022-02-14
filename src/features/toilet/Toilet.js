@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
+/* eslint-disable no-console */
 /* eslint-disable camelcase */
 import axios from "axios";
 import haversine from "haversine-distance";
@@ -78,7 +78,8 @@ function Toilet() {
 
   const [toiletLongitude, toiletLatitude] = toilet.location.coordinates;
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
-  // const myChat = useSelector((state) => state.chat.myChat);
+  // eslint-disable-next-line no-unused-vars
+  const myChat = useSelector((state) => state.chat.myChat);
 
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
@@ -311,6 +312,7 @@ function Toilet() {
           rating={review.rating}
           isMyReview={false}
           reviewId={review._id}
+          toilet={review.toilet}
           key={review._id}
         />
       ))}
