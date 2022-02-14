@@ -1,3 +1,4 @@
+import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
 
@@ -10,8 +11,9 @@ const StyledInputChat = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-top: auto;
 
-  .form {
+  .input-container {
     width: 94%;
     display: flex;
     align-items: center;
@@ -38,17 +40,33 @@ const StyledInputChat = styled.form`
   }
 `;
 
-function InputChat() {
+function InputChat({ chat, onChange, onSubmit }) {
   return (
-    <StyledInputChat>
-      <div className="form">
-        <input id="input" placeholder="채팅 메시지를 입력하세요." />
+    <StyledInputChat autoComplete="off" onSubmit={onSubmit}>
+      <div className="input-container">
+        <input
+          id="input"
+          type="text"
+          placeholder="채팅 메시지를 입력하세요."
+          value={chat}
+          onChange={onChange}
+        />
         <div className="btn">
-          <ButtonSmall>보내기</ButtonSmall>
+          <ButtonSmall type="submit">보내기</ButtonSmall>
         </div>
       </div>
     </StyledInputChat>
   );
 }
+
+InputChat.propTypes = {
+  chat: PropTypes.string,
+  onSubmit: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+};
+
+InputChat.defaultProps = {
+  chat: "",
+};
 
 export default InputChat;
