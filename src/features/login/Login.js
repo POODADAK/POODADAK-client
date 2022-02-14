@@ -40,8 +40,8 @@ function Login() {
       const state = new URL(window.location.href).searchParams.get("state");
 
       try {
-        await authenticate(state, code);
-        dispatch(userLoggedIn());
+        const { data } = await authenticate(state, code);
+        dispatch(userLoggedIn(data.userId));
         navigate("/");
       } catch (error) {
         const fetchedErrorMessage = error.response.data.errMessage

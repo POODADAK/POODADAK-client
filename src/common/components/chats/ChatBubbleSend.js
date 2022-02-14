@@ -1,6 +1,9 @@
+import dayjs from "dayjs";
 import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
+
+import { COLOR } from "../../util/constants";
 
 const StyledChatBubbleSend = styled.div`
   width: 100%;
@@ -23,11 +26,13 @@ const StyledChatBubbleSend = styled.div`
     padding: 0.8rem;
     border: none;
     border-radius: 1rem;
+    margin-right: 1rem;
   }
 
   .chat-time {
     font-size: x-small;
     margin-right: 1rem;
+    color: ${COLOR.GREY};
   }
 
   img {
@@ -37,11 +42,13 @@ const StyledChatBubbleSend = styled.div`
 `;
 
 function ChatBubbleSend({ chat }) {
+  const formattedDate = dayjs(chat.date).format("HH.mm");
+
   return (
     <StyledChatBubbleSend>
       <div className="msg">
         <div className="bubble">{chat.message}</div>
-        <div className="chat-time">{chat.date}</div>
+        <div className="chat-time">{formattedDate}</div>
       </div>
     </StyledChatBubbleSend>
   );
