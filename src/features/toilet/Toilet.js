@@ -4,6 +4,7 @@
 import axios from "axios";
 import haversine from "haversine-distance";
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 
@@ -25,7 +26,6 @@ import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
 import { userCreatedChat, userClosedChat } from "../chat/chatSlice";
-
 
 const StyledToilet = styled.div`
   width: 100%;
@@ -73,10 +73,12 @@ function Toilet() {
   const { toilet_id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
+  const dispatch = useDispatch();
   const toilet = location.state;
 
   const [toiletLongitude, toiletLatitude] = toilet.location.coordinates;
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
+  // eslint-disable-next-line no-unused-vars
   const myChat = useSelector((state) => state.chat.myChat);
 
   const [reviews, setReviews] = useState([]);
@@ -309,6 +311,7 @@ function Toilet() {
           rating={review.rating}
           isMyReview={false}
           reviewId={review._id}
+          toilet={review.toilet}
           key={review._id}
         />
       ))}
