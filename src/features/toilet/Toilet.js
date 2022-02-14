@@ -1,5 +1,5 @@
-/* eslint-disable no-console */
 /* eslint-disable no-underscore-dangle */
+/* eslint-disable no-console */
 /* eslint-disable camelcase */
 import axios from "axios";
 import haversine from "haversine-distance";
@@ -73,8 +73,8 @@ const SOS_AVAILABLE_METER = 500;
 function Toilet() {
   const { toilet_id } = useParams();
   const navigate = useNavigate();
-  const location = useLocation();
   const dispatch = useDispatch();
+  const location = useLocation();
   const toilet = location.state;
 
   const [toiletLongitude, toiletLatitude] = toilet.location.coordinates;
@@ -143,6 +143,7 @@ function Toilet() {
       }
     }
     checkLiveChatAndSetRescueButton();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn, toilet_id]);
 
   async function onClickSOSButton() {
@@ -200,7 +201,7 @@ function Toilet() {
   }
 
   function onClickCreatReview() {
-    navigate("/editReview/", { toilet_id });
+    navigate("/editReview/", { state: { toilet_id } });
   }
 
   function blablablabla() {} // TODO: 애매한 함수 처리를 위해 세팅해두었습니다. 해당 함수 적용은 정리 필요!!

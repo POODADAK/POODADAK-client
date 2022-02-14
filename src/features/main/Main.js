@@ -247,21 +247,18 @@ function Main() {
         }
       }
     }
-
     getNearToilets();
   }, [currentLocation, dispatch]);
 
   // 2초마다 맵의 center를 체크하고 값이 변경됐을 경우 주변 화장실을 다시 가져와 핀을 찍습니다.
   useEffect(() => {
     async function drawToiletMarkers(toiletsArray, anitype) {
-      // eslint-disable-next-line no-restricted-syntax
-      for (const item of adjToiletMarkers) {
-        item.setMap(null);
-      }
+      adjToiletMarkers.forEach((marker) => {
+        marker.setMap(null);
+      });
       setToiletMarkers([]);
       if (toiletsArray) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const toilet of toiletsArray) {
+        toiletsArray.forEach((toilet) => {
           const lat = toilet.location.coordinates[1];
           const lng = toilet.location.coordinates[0];
           const marker = new Tmapv2.Marker({
@@ -279,7 +276,7 @@ function Main() {
               (current) => !current.includes(marker) && [...current, marker]
             );
           }
-        }
+        });
       }
     }
 
@@ -319,17 +316,15 @@ function Main() {
 
     async function makeDrawInfo() {
       if (adjDrawPathResults.length > 0) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const result of adjDrawPathResults) {
+        adjDrawPathResults.forEach((result) => {
           if (result) result.setMap(null);
-        }
+        });
         setDrawPathResults([]);
       }
       if (adjPathMarkers.length > 0) {
-        // eslint-disable-next-line no-restricted-syntax
-        for (const marker of adjPathMarkers) {
+        adjPathMarkers.forEach((marker) => {
           if (marker) marker.setMap(null);
-        }
+        });
         setPathMarkers([]);
       }
       setDrawPathInfos([]);
@@ -395,7 +390,7 @@ function Main() {
     if (selectedToilet) {
       makeDrawInfo();
     }
-    // *중요* 티맵 Call 수량을 결정하는 중요한 세팅 입니다. 변경이 필요하다 싶으면 팀원소집 필수!!!
+    // 중요 ** 티맵 Call 수량을 결정하는 중요한 세팅 입니다. 변경이 필요하다 싶으면 팀원소집 필수!!!
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedToilet, adjPolyline]);
 
