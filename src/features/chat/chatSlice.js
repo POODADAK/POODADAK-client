@@ -1,46 +1,99 @@
-import { createSlice } from "@reduxjs/toolkit";
+/* eslint-disable no-underscore-dangle */
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+const BASE_URL = process.env.REACT_APP_AXIOS_BASE_URL;
+
+export const getMyChatroom = createAsyncThunk(
+  "chat/getMyChatroom",
+  async (userId) => {
+    try {
+      const myChatroom = axios.get(
+        `${BASE_URL}/chatroom/live-chatroom-list?userId=${userId}`
+      );
+
+      return myChatroom;
+    } catch (error) {
+      return error;
+    }
+  }
+);
+
+export const chatStatusOptions = {
+  disconnected: "disconnected",
+  connected: "connected",
+  connecting: "connecting",
+  error: "error",
+};
 
 export const chatSlice = createSlice({
   name: "chat",
   initialState: {
-    currentSocket: null,
-    currentChatroomId: null,
-    lastCheckedChatNumber: null,
-    hasUncheckedChat: null,
+    chatStatus: chatStatusOptions.disconnected,
+    chatroomId: null,
+    chatList: [],
+    owner: null,
+    error: null,
   },
   reducers: {
-    userCreatedChat: (state, action) => {
-      state.currentSocket = action.payload.socket;
-      state.currentChatroomId = action.payload.chatroomId;
+    userEnteredChatroom: (state, action) => {
+      state.status = chatStatusOptions.connected;
+      state.chatroomId = action.payload._id;
+      state.chatList = action.payload.chatList;
+      state.owner = action.payload.owner;
     },
-    userCheckedChat: (state, action) => {
-      state.lastCheckedChatNumber = action.payload;
+    userLeftChatroom: (state) => {
+      state.status = chatStatusOptions.disconnected;
+      state.chatroomId = null;
+      state.chatList = null;
+      state.owner = null;
+      state.participant = null;
+      state.error = null;
     },
-    userReceivedChat: (state, action) => {
-      state.hasUncheckedChat = state.lastCheckedChatNumber < action.payload;
+    chatListLoaded: (state, action) => {
+      state.chatList = action.payload;
     },
-    userClosedChat: (state) => {
-      state.currentSocket = null;
-      state.currentChatroomId = null;
-      state.lastCheckedChatNumber = null;
-      state.hasUncheckedChat = null;
+    chatConnectionFailed: (state, action) => {
+      state.chatStatus = chatStatusOptions.error;
+      state.error = action.payload;
+    },
+    chatConnectionRequestSent: (state) => {
+      state.chatList = chatStatusOptions.connecting;
+      state.error = null;
+    },
+  },
+  extraReducers: {
+    [getMyChatroom.pending]: (state) => {
+      state.chatStatus = chatStatusOptions.disconnected;
+      state.chatroomId = null;
+      state.chatList = [];
+      state.owner = null;
+      state.error = null;
+    },
+    [getMyChatroom.fulfilled]: (state, action) => {
+      state.chatStatus = chatStatusOptions.connected;
+      state.chatroomId = action.payload._id;
+      state.chatList = action.payload.chatList;
+      state.owner = action.payload.owner;
+      state.error = null;
+    },
+    [getMyChatroom.error]: (state, action) => {
+      state.chatStatus = chatStatusOptions.disconnected;
+      state.chatroomId = null;
+      state.chatList = [];
+      state.owner = null;
+      state.error = action.payload;
     },
   },
 });
 
-export function disconnectExistingSocket(dispatch, getState) {
-  const { myChat } = getState().chat;
-
-  if (myChat) {
-    myChat.disconnect();
-  }
-}
-
 export const {
-  userCreatedChat,
-  userClosedChat,
-  userCheckedChat,
-  userReceivedChat,
+  userEnteredChatroom,
+  userLeftChatroom,
+  chatListLoaded,
+  participantJoined,
+  chatConnectionFailed,
+  chatConnectionRequestSent,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;
