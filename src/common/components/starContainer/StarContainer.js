@@ -7,26 +7,22 @@ import starFull from "../../../assets/icon-star-full.png";
 import starHalf from "../../../assets/icon-star-half.png";
 
 const StyledDiv = styled.div`
-  margin: 3% 0;
   display: flex;
   align-items: center;
   width: ${(props) => props.width};
 
   .star {
-    width: 100%;
-    height: 100%;
+    width: 2rem;
   }
 
   .rating-number {
-    font-size: 0.8rem;
-    margin: 0 0.7rem;
+    font-size: 1rem;
   }
 `;
 
 const ImageContainer = styled.div`
   display: flex;
   align-items: center;
-  width: 17%;
 `;
 
 function StarContainer({ rating, showRatingNumber, onClick, width }) {
