@@ -291,7 +291,7 @@ function Toilet() {
     socket.on("joinChatroom", (chatroomId) => {
       dispatch(disconnectExistingSocket);
       dispatch(userCreatedChat({ socket, chatroomId }));
-      navigate("/chatroom");
+      navigate("/chats");
     });
 
     socket.on("receiveChat", (chat) => {

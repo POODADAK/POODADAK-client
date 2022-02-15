@@ -8,7 +8,7 @@ import store from "./app/store";
 import GlobalStyle from "./common/components/GlobalStyle";
 import Ui from "./common/components/Sidebar";
 import Chatroom from "./features/chat/Chatroom";
-import Chats from "./features/chat/Chats";
+import ChatroomList from "./features/chat/ChatroomList";
 import ErrorPage from "./features/error/ErrorPage";
 import Login from "./features/login/Login";
 import { checkToken } from "./features/login/loginSlice";
@@ -31,8 +31,8 @@ ReactDOM.render(
           <Route path="/" element={<Main />} />
           <Route path="/toilets" element={<Toilets />} />
           <Route path="/toilets/:toilet_id" element={<Toilet />} />
-          <Route path="/chatList" element={<Chats />} />
-          <Route path="/chatroom" element={<Chatroom />} />
+          <Route path="/chatroomList" element={<ChatroomList />} />
+          <Route path="/chatroomList/:chatroomId" element={<Chatroom />} />
           <Route path="/editReview" element={<ReviewEdit />} />
           <Route path="/editReview/:reviewId" element={<ReviewEdit />} />
           <Route path="/users/:userId" element={<Profile />} />
