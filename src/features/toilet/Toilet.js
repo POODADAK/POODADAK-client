@@ -2,6 +2,7 @@
 /* eslint-disable no-console */
 /* eslint-disable camelcase */
 import axios from "axios";
+import dayjs from "dayjs";
 import haversine from "haversine-distance";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -376,7 +377,8 @@ function Toilet() {
             secondary={toilet.latestToiletPaperInfo.isToiletPaper ? "O" : "X"}
           />
           <div className="lastToiletPaterProvideTime">
-            마지막 확인 : {toilet.latestToiletPaperInfo.lastDate}
+            마지막 확인 :{" "}
+            {dayjs(toilet.latestToiletPaperInfo.lastDate).format("YYYY/MM/DD")}
           </div>
         </div>
         <ListDefault
