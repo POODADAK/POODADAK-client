@@ -5,7 +5,7 @@ import styled from "styled-components";
 import HeaderChat from "../../common/components/headers/HeaderChat";
 import InputChat from "../../common/components/inputs/InputChat";
 import ChatBubbleList from "./ChatBubbleList";
-import { userCheckedChat, userClosedChat } from "./chatSlice";
+import { userClosedChat } from "./chatSlice";
 
 const StyledChat = styled.div`
   height: 100%;
@@ -33,10 +33,6 @@ function Chatroom() {
   const [enteredChat, setEnteredChat] = useState("");
   const [chatList, setChatList] = useState([]);
   const [isChatEnd, setIsChatEnd] = useState(false);
-
-  useEffect(() => {
-    dispatch(userCheckedChat(chatList.length));
-  }, [chatList]);
 
   // eslint-disable-next-line consistent-return
   useEffect(() => {

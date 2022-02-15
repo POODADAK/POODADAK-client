@@ -1,12 +1,10 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useRef } from "react";
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 import ChatBubbleReceive from "../../common/components/chats/ChatBubbleReceive";
 import ChatBubbleSend from "../../common/components/chats/ChatBubbleSend";
 import { COLOR } from "../../common/util/constants";
-import { userCheckedChat } from "./chatSlice";
 
 const StyledDiv = styled.div`
   width: 100%;
@@ -22,12 +20,7 @@ const StyledDiv = styled.div`
 
 function ChatBubbleList({ chatList, userId, isConnection, isChatEnd }) {
   const bubbleList = [];
-  const dispatch = useDispatch();
   const scrollMarker = useRef();
-
-  useEffect(() => {
-    dispatch(userCheckedChat(chatList.length));
-  }, [chatList]);
 
   // eslint-disable-next-line no-restricted-syntax
   for (const chat of chatList) {

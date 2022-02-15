@@ -3,10 +3,10 @@ import { createSlice } from "@reduxjs/toolkit";
 export const chatSlice = createSlice({
   name: "chat",
   initialState: {
-    currentSocket: null,
-    currentChatroomId: null,
-    lastCheckedChatNumber: null,
-    hasUncheckedChat: null,
+    chatroomId: null,
+    chatList: null,
+    owner: null,
+    participant: null,
   },
   reducers: {
     userCreatedChat: (state, action) => {
@@ -15,15 +15,6 @@ export const chatSlice = createSlice({
     },
     userCheckedChat: (state, action) => {
       state.lastCheckedChatNumber = action.payload;
-    },
-    userReceivedChat: (state, action) => {
-      state.hasUncheckedChat = state.lastCheckedChatNumber < action.payload;
-    },
-    userClosedChat: (state) => {
-      state.currentSocket = null;
-      state.currentChatroomId = null;
-      state.lastCheckedChatNumber = null;
-      state.hasUncheckedChat = null;
     },
   },
 });
@@ -36,11 +27,6 @@ export function disconnectExistingSocket(dispatch, getState) {
   }
 }
 
-export const {
-  userCreatedChat,
-  userClosedChat,
-  userCheckedChat,
-  userReceivedChat,
-} = chatSlice.actions;
+export const { userCreatedChat, userClosedChat } = chatSlice.actions;
 
 export default chatSlice.reducer;

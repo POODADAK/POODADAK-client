@@ -1,5 +1,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 
+import socketMiddleware from "../common/middlewares/socketMiddleware";
 import chatReducer from "../features/chat/chatSlice";
 import loginReducer from "../features/login/loginSlice";
 import mainReducer from "../features/main/mainSlice";
@@ -12,6 +13,8 @@ const store = configureStore({
     main: mainReducer,
     toilet: toiletReducer,
   },
+  middleware: (getDefaultMiddleware) =>
+    getDefaultMiddleware().concat(socketMiddleware),
 });
 
 export default store;

@@ -29,7 +29,6 @@ import Title from "../../common/components/Title";
 import {
   userCreatedChat,
   userClosedChat,
-  userReceivedChat,
   disconnectExistingSocket,
 } from "../chat/chatSlice";
 
@@ -294,10 +293,6 @@ function Toilet() {
       dispatch(disconnectExistingSocket);
       dispatch(userCreatedChat({ socket, chatroomId }));
       navigate("/chatroom");
-    });
-
-    socket.on("receiveChat", (chat) => {
-      dispatch(userReceivedChat(chat.updatedChatListLength));
     });
 
     socket.on("db-error", (error) => {
