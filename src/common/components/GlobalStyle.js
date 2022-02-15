@@ -3,6 +3,7 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
   html {
     width: auto;
+    height: 90%;
     display: flex;
     flex-direction: column;
     align-items: center;

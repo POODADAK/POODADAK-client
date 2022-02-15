@@ -35,6 +35,7 @@ import {
 
 const StyledToilet = styled.div`
   width: 100%;
+  flex-grow: 1;
   display: flex;
   flex-direction: column;
   background-color: black;
@@ -170,6 +171,7 @@ function Toilet() {
     }
 
     checkLiveChatAndSetRescueButton();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
   useEffect(() => () => {
