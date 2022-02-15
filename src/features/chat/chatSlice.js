@@ -1,6 +1,8 @@
 /* eslint-disable no-underscore-dangle */
 import { createSlice } from "@reduxjs/toolkit";
 
+import createChatroom from "../../common/api/createChatroom";
+
 export const chatStatusOptions = {
   disconnected: "disconnected",
   connected: "connected",
@@ -14,45 +16,58 @@ export const chatSlice = createSlice({
     chatStatus: chatStatusOptions.disconnected,
     chatroomId: null,
     chatList: [],
+    nameSpace: null,
     owner: null,
-    error: null,
+    error: { status: null, message: null },
   },
   reducers: {
     userEnteredChatroom: (state, action) => {
-      state.status = chatStatusOptions.connected;
+      state.chatStatus = chatStatusOptions.connected;
       state.chatroomId = action.payload._id;
       state.chatList = action.payload.chatList;
       state.owner = action.payload.owner;
+      state.nameSpace = action.payload.toilet;
     },
     userLeftChatroom: (state) => {
-      state.status = chatStatusOptions.disconnected;
+      state.chatStatus = chatStatusOptions.disconnected;
       state.chatroomId = null;
-      state.chatList = null;
+      state.chatList = [];
       state.owner = null;
       state.participant = null;
       state.error = null;
+      state.nameSpace = null;
     },
     chatListLoaded: (state, action) => {
       state.chatList = action.payload;
     },
     chatConnectionFailed: (state, action) => {
       state.chatStatus = chatStatusOptions.error;
-      state.error = action.payload;
+      state.error.status = action.payload.status;
+      state.error.message = action.payload.message;
     },
     chatConnectionRequestSent: (state) => {
       state.chatList = chatStatusOptions.connecting;
       state.error = null;
     },
+    errorChecked: (state) => {
+      state.error = { status: null, message: null };
+      state.chatStatus = chatStatusOptions.disconnected;
+    },
   },
 });
 
-export function disconnectExistingSocket(dispatch, getState) {
-  const { myChat } = getState().chat;
+export const createdChatroom = (toiletId) => async (dispatch) => {
+  try {
+    const newChatroom = await createChatroom(toiletId);
 
-  if (myChat) {
-    myChat.disconnect();
+    dispatch({ type: "chat/userEnteredChatroom", payload: newChatroom });
+  } catch (error) {
+    dispatch({
+      type: "chat/chatConnectionFailed",
+      payload: { status: error.status, message: error.message },
+    });
   }
-}
+};
 
 export const {
   userEnteredChatroom,
@@ -61,6 +76,7 @@ export const {
   participantJoined,
   chatConnectionFailed,
   chatConnectionRequestSent,
+  errorChecked,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

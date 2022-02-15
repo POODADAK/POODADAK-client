@@ -25,9 +25,13 @@ import Modal from "../../common/components/modal/Modal";
 import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
-import { socketConnected } from "../../common/middlewares/socketMiddleware";
 import mockLoadingToiletData from "../../common/util/mockLoadingToiletData";
-import { chatStatusOptions } from "../chat/chatSlice";
+import {
+  chatStatusOptions,
+  createdChatroom,
+  errorChecked,
+  userEnteredChatroom,
+} from "../chat/chatSlice";
 
 const StyledToilet = styled.div`
   width: 100%;
@@ -77,8 +81,7 @@ function Toilet() {
 
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   // eslint-disable-next-line no-unused-vars
-  const chatStatus = useSelector((state) => state.chat.status);
-  const userId = useSelector((state) => state.login.userId);
+  const chatStatus = useSelector((state) => state.chat.chatStatus);
   const nearToilets = useSelector((state) => state.toilet.nearToilets);
   const chatError = useSelector((state) => state.chat.error);
 
@@ -89,9 +92,9 @@ function Toilet() {
   const [showRescueButton, setShowRescueButton] = useState(false);
   const [toilet, setToilet] = useState(mockLoadingToiletData);
 
-  const isChatDisconnected = chatStatus === chatStatusOptions.disconnected;
-  const isChatConnected = chatStatus === chatStatusOptions.connected;
-  const isChatError = chatStatus === chatStatusOptions.error;
+  const isChatroomDisconnected = chatStatus === chatStatusOptions.disconnected;
+  const isChatroomConnected = chatStatus === chatStatusOptions.connected;
+  const isChatroomError = chatStatus === chatStatusOptions.error;
 
   useEffect(() => {
     async function getReviews() {
@@ -132,36 +135,34 @@ function Toilet() {
   useEffect(() => {
     async function checkLiveChatAndSetRescueButton() {
       if (isLoggedIn) {
-        const { liveChatList, myChatroom } = await getLiveChatByToilet(
+        const { liveChatroomList, myChatroom } = await getLiveChatByToilet(
           toilet_id
         );
 
-        if (myChatroom) {
-          dispatch(
-            socketConnected("toiletId", toilet_id, userId, myChatroom._id)
-          );
+        console.log(liveChatroomList);
 
-          if (isChatError) {
-            setContentAndShowModal(
-              <>
-                <p>채팅방 연결에 실패 했습니다!</p>
-                <p>{`${chatError.status} :  ${chatError.message}`}</p>
-              </>
-            );
-          }
+        if (myChatroom) {
+          dispatch(userEnteredChatroom(myChatroom));
         }
 
-        if (
-          liveChatList.length &&
-          !myChatroom &&
-          chatStatus === chatStatusOptions.disconnected
-        ) {
+        if (liveChatroomList.length && !myChatroom && isChatroomDisconnected) {
           setShowRescueButton(true);
         }
       }
     }
     checkLiveChatAndSetRescueButton();
-  }, []);
+  }, [isLoggedIn]);
+
+  useEffect(() => {
+    if (isChatroomError) {
+      setContentAndShowModal(
+        <>
+          <p>채팅방 연결에 실패 했습니다!</p>
+          <p>{`${chatError.status} :  ${chatError.message}`}</p>
+        </>
+      );
+    }
+  }, [isChatroomError]);
 
   async function onClickSOSButton() {
     if (!isLoggedIn) {
@@ -178,7 +179,7 @@ function Toilet() {
       return;
     }
 
-    if (chatStatus === chatStatusOptions.connected) {
+    if (isChatroomConnected) {
       setContentAndShowModal(
         <>
           <div>이미 참여중인 구조요청이 있습니다!</div>
@@ -203,16 +204,7 @@ function Toilet() {
       return;
     }
 
-    dispatch(socketConnected("toiletId", toilet_id, userId));
-
-    if (isChatError) {
-      setContentAndShowModal(
-        <>
-          <p>채팅방 연결에 실패 했습니다!</p>
-          <p>{`${chatError.status} :  ${chatError.message}`}</p>
-        </>
-      );
-    }
+    dispatch(createdChatroom(toilet_id));
   }
 
   function handleWaitingSaviorClick() {
@@ -220,47 +212,7 @@ function Toilet() {
   }
 
   function handleRescueClick() {
-    // // 아래의 코드는 SOS 신호를 보낸 사람이 DB에 chatroom을 개설하면 DB에 있는 해당 chatroomId 를 가지고 그 채팅창으로 바로 넘어가게 되어있습니다.
-    // // 진호님이 채팅리스트를 구현하는데 참조하면 도움이 될것같아 남겨 둡니다.
-    // // 진호님이 작업이 완료된 후 PR 하시기 전에 지워 주시면 될거 같습니다.
-    // if (!isLoggedIn) {
-    //   // eslint-disable-next-line no-use-before-define
-    //   setContentAndShowModal(
-    //     <>
-    //       <div>로그인이 필요합니다!</div>
-    //       <ButtonSmall type="button" onClick={() => navigate("/")}>
-    //         메인페이지로
-    //       </ButtonSmall>
-    //     </>
-    //   );
-    //   return;
-    // }
-    // const socket = connectSocketNamespace(
-    //   "toiletId",
-    //   toilet_id,
-    //   "6205b7dc6ca34d732d1bfee9",
-    //   "620a15a581e198dcdb21bbf5"
-    // );
-    // socket.on("joinChatroom", (chatroomId) => {
-    //   dispatch(disconnectExistingSocket);
-    //   dispatch(userCreatedChat({ socket, chatroomId }));
-    //   navigate("/chatroom");
-    // });
-    // socket.on("db-error", (error) => {
-    //   dispatch(userClosedChat());
-    //   // eslint-disable-next-line no-use-before-define
-    //   setContentAndShowModal(
-    //     <>
-    //       <p>현재 연결 할 수 없습니다!</p>
-    //       <p>{`${error.status} :  ${error.message}`}</p>
-    //     </>
-    //   );
-    // });
-    // socket.on("disconnect", () => {
-    //   // eslint-disable-next-line no-console
-    //   console.log("Socket disconnected!");
-    //   dispatch(userClosedChat());
-    // });
+    navigate("/chatroomList");
   }
 
   function onClickCreatReview() {
@@ -272,6 +224,7 @@ function Toilet() {
   function handleModalCloseClick() {
     setModalContent("");
     setShowModal(false);
+    dispatch(errorChecked());
   }
 
   function setContentAndShowModal(content) {
@@ -287,12 +240,13 @@ function Toilet() {
       <HeaderSub onClick={handleWaitingSaviorClick} />
       <div className="titleContainer">
         <Title title={toilet.toiletName} description={toilet.roadNameAddress} />
-        {}
-        <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
+        {isChatroomDisconnected && (
+          <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
+        )}
         <ButtonDefault onClick={blablablabla} icon={viewFinder} />
       </div>
       <div className="fluidButtonWrapper">
-        {isChatDisconnected && showRescueButton && (
+        {isChatroomDisconnected && showRescueButton && (
           <ButtonFluid
             icon={helpIcon}
             color="#EB5757"
@@ -303,7 +257,7 @@ function Toilet() {
         )}
       </div>
       <div className="fluidButtonWrapper">
-        {isChatConnected && (
+        {isChatroomConnected && (
           <ButtonFluid
             icon={waitIcon}
             color="#6FCF97"
