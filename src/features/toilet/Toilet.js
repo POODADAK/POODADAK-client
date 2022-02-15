@@ -84,6 +84,7 @@ function Toilet() {
   const chatStatus = useSelector((state) => state.chat.chatStatus);
   const nearToilets = useSelector((state) => state.toilet.nearToilets);
   const chatError = useSelector((state) => state.chat.error);
+  const chatroomId = useSelector((state) => state.chat.chatroomId);
 
   const [reviews, setReviews] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
@@ -146,7 +147,12 @@ function Toilet() {
         }
 
         if (liveChatroomList.length && !myChatroom && isChatroomDisconnected) {
-          setShowRescueButton(true);
+          for (let i = 0; i < liveChatroomList.length; i++) {
+            if (!liveChatroomList[i].participant) {
+              setShowRescueButton(true);
+              break;
+            }
+          }
         }
       }
     }
@@ -208,11 +214,13 @@ function Toilet() {
   }
 
   function handleWaitingSaviorClick() {
-    navigate("/chatroom");
+    navigate(`/chatroomList/${chatroomId}`);
   }
 
   function handleRescueClick() {
-    navigate("/chatroomList");
+    navigate("/chatroomList", {
+      state: { toiletId: toilet_id, toiletName: toilet.toiletName },
+    });
   }
 
   function onClickCreatReview() {

@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -19,12 +20,16 @@ const StyledChats = styled.div`
 function ChatroomList() {
   const navigate = useNavigate();
   const location = useLocation();
-  const toilet = location.state;
+  const { toiletId, toiletName } = location.state;
   const currentChatroomId = useSelector((state) => state.chat.chatroomId);
 
   const [chatroomList, setChatroomList] = useState([]);
 
   function findLastChat(chatList) {
+    if (!chatList.length) {
+      return null;
+    }
+
     const lastChat = chatList[chatList.length - 1];
 
     return lastChat;
@@ -32,24 +37,40 @@ function ChatroomList() {
 
   useEffect(() => {
     async function getLiveChatroomList() {
-      const liveChatroomList = await getLiveChatByToilet();
-      return liveChatroomList;
+      const { liveChatroomList } = await getLiveChatByToilet(
+        toiletId,
+        "owner",
+        true
+      );
+
+      if (!currentChatroomId) {
+        setChatroomList(liveChatroomList);
+      }
     }
-    if (!currentChatroomId) {
-      setChatroomList(getLiveChatroomList());
-    }
+
+    getLiveChatroomList();
   }, [currentChatroomId]);
 
   return (
     <StyledChats>
       <HeaderSub onClick={() => navigate("/chatroom")} />
-      <Title title={toilet.toiletName} />
-      {chatroomList &&
+      <Title title={toiletName} />
+      {chatroomList.length &&
         chatroomList.map((chatroom) => (
           <List2Lines
-            label={findLastChat(chatroom.chatList).sender}
-            secondary={findLastChat(chatroom.chatList).message}
-            onClick={navigate(`chatroomList/${chatroom.chatroomId}`)}
+            key={chatroom._id}
+            label={
+              findLastChat(chatroom.chatList)?.sender || chatroom.owner.username
+            }
+            secondary={
+              findLastChat(chatroom.chatList)?.message ||
+              "아직 채팅이 없습니다."
+            }
+            onClick={() =>
+              navigate(
+                `/chatroomList/${chatroom._id}?toiletId=${chatroom.toilet}`
+              )
+            }
           />
         ))}
     </StyledChats>

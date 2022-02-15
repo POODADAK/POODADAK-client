@@ -1,8 +1,12 @@
 import axios from "axios";
 
-async function getLiveChatByToilet(toiletId) {
+async function getLiveChatByToilet(
+  toiletId,
+  populate = "",
+  isNullParticipant = false
+) {
   const { data } = await axios.get(
-    `/chatroom/live-chatroom-list?toiletId=${toiletId}`,
+    `/chatroom/live-chatroom-list?toiletId=${toiletId}&populate=${populate}&isNullParticipant=${isNullParticipant}`,
     {
       withCredentials: true,
     }

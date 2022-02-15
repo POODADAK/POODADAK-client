@@ -1,10 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import HeaderChat from "../../common/components/headers/HeaderChat";
 import InputChat from "../../common/components/inputs/InputChat";
+import {
+  socketConnected,
+  socketEmitted,
+} from "../../common/middlewares/socketMiddleware";
 import ChatBubbleList from "./ChatBubbleList";
+import { chatReceived, socketStatusOptions } from "./chatSlice";
 
 const StyledChat = styled.div`
   height: 100%;
@@ -22,85 +28,23 @@ const StyledChat = styled.div`
 `;
 
 function Chatroom() {
-  const currentSocket = useSelector((state) => state.chat.currentSocket);
   const userId = useSelector((state) => state.login.userId);
-  const currentChatroomId = useSelector(
-    (state) => state.chat.currentChatroomId
-  );
+  const socketStatus = useSelector((state) => state.chat.socketStatus);
+  const chatList = useSelector((state) => state.chat.chatList);
   const dispatch = useDispatch();
+  const { chatroomId } = useParams();
 
   const [enteredChat, setEnteredChat] = useState("");
-  const [chatList, setChatList] = useState([]);
-  const [isChatEnd, setIsChatEnd] = useState(false);
+  // const [isChatEnd, setIsChatEnd] = useState(false);
+  const { search } = useLocation();
+  const toiletId = search.split("=")[1];
 
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (currentSocket) {
-      const handler = (emittedChatList) => {
-        setChatList(emittedChatList);
-      };
-
-      currentSocket.once("findExistingChatList", handler);
-
-      return () => {
-        currentSocket.off("findExistingChatList", handler);
-      };
-    }
-  }, [currentSocket]);
-
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (currentSocket) {
-      const handler = (chat) => {
-        setChatList((existingChatList) => [...existingChatList, chat]);
-      };
-
-      currentSocket.on("receiveChat", handler);
-
-      return () => {
-        currentSocket.off("receiveChat", handler);
-      };
-    }
-  }, [currentSocket]);
-
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (currentSocket) {
-      const handler = () => {
-        setIsChatEnd(true);
-        currentSocket.disconnect();
-        dispatch();
-      };
-
-      currentSocket.on("leaveChat", handler);
-
-      return () => {
-        currentSocket.off("leaveChat", handler);
-      };
-    }
-  }, [currentSocket]);
-
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (currentSocket) {
-      const handler = () => {
-        setIsChatEnd(true);
-        dispatch();
-      };
-
-      currentSocket.on("chatTimeout", handler);
-
-      return () => {
-        currentSocket.off("chatTimeout", handler);
-      };
-    }
-  }, [currentSocket]);
+  // console.log(socketStatus);
+  const isSocketConnected = socketStatus === socketStatusOptions.connected;
 
   useEffect(() => {
-    if (currentSocket) {
-      currentSocket.emit("loadChatList", currentChatroomId);
-    }
-  }, [currentSocket]);
+    dispatch(socketConnected("toiletId", toiletId, userId, chatroomId));
+  }, []);
 
   function handleChatInput(event) {
     setEnteredChat(event.target.value);
@@ -122,12 +66,9 @@ function Chatroom() {
     };
 
     setEnteredChat("");
+    dispatch(socketEmitted("sendChat", chat));
 
-    if (currentSocket) {
-      currentSocket.emit("sendChat", chat);
-    }
-
-    setChatList((existingChatList) => [...existingChatList, chat]);
+    dispatch(chatReceived(chat));
   }
 
   return (
@@ -136,8 +77,8 @@ function Chatroom() {
       <ChatBubbleList
         chatList={chatList}
         userId={userId}
-        isConnection={!!currentSocket}
-        isChatEnd={isChatEnd}
+        isConnection={isSocketConnected}
+        // isChatEnd={}
       />
       <InputChat
         chat={enteredChat}
