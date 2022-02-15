@@ -1,5 +1,6 @@
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -20,9 +21,19 @@ function Profile() {
   const { userId } = useParams();
   const [userInfo, setUserInfo] = useState({});
   const [reviewList, setReviewList] = useState([]);
+  const [isMyReview, setIsMyReview] = useState(false);
+  const loggedInUserId = useSelector((state) => state.login.userId);
 
   // eslint-disable-next-line no-unused-vars
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userId === loggedInUserId) {
+      setIsMyReview(true);
+    } else {
+      setIsMyReview(false);
+    }
+  }, []);
 
   useEffect(() => {
     (async function getReviewLit() {
@@ -51,7 +62,7 @@ function Profile() {
           image={review.image}
           description={review.description}
           rating={review.rating}
-          isMyReview={false}
+          isMyReview={isMyReview}
           toilet={review.toilet}
           reviewId={review._id}
           key={review._id}
