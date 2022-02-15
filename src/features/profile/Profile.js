@@ -22,13 +22,13 @@ function Profile() {
   const [userInfo, setUserInfo] = useState({});
   const [reviewList, setReviewList] = useState([]);
   const [isMyReview, setIsMyReview] = useState(false);
-  const loginedUserId = useSelector((state) => state.login.userId);
+  const loggedInUserId = useSelector((state) => state.login.userId);
 
   // eslint-disable-next-line no-unused-vars
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (userId === loginedUserId) {
+    if (userId === loggedInUserId) {
       setIsMyReview(true);
     } else {
       setIsMyReview(false);
