@@ -8,11 +8,7 @@ import store from "./app/store";
 import GlobalStyle from "./common/components/GlobalStyle";
 import Ui from "./common/components/Sidebar";
 import Chatroom from "./features/chat/Chatroom";
-<<<<<<< HEAD
 import ChatroomList from "./features/chat/ChatroomList";
-=======
-import Chats from "./features/chat/Chats";
->>>>>>> 0b2f578 ([67] chatroom 구현)
 import ErrorPage from "./features/error/ErrorPage";
 import Login from "./features/login/Login";
 import { checkToken } from "./features/login/loginSlice";
@@ -35,13 +31,8 @@ ReactDOM.render(
           <Route path="/" element={<Main />} />
           <Route path="/toilets" element={<Toilets />} />
           <Route path="/toilets/:toilet_id" element={<Toilet />} />
-<<<<<<< HEAD
           <Route path="/chatroomList" element={<ChatroomList />} />
           <Route path="/chatroomList/:chatroomId" element={<Chatroom />} />
-=======
-          <Route path="/chatList" element={<Chats />} />
-          <Route path="/chatroom" element={<Chatroom />} />
->>>>>>> 0b2f578 ([67] chatroom 구현)
           <Route path="/editReview" element={<ReviewEdit />} />
           <Route path="/editReview/:reviewId" element={<ReviewEdit />} />
           <Route path="/users/:userId" element={<Profile />} />
