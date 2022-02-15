@@ -5,7 +5,6 @@ import styled from "styled-components";
 import HeaderChat from "../../common/components/headers/HeaderChat";
 import InputChat from "../../common/components/inputs/InputChat";
 import ChatBubbleList from "./ChatBubbleList";
-import { userClosedChat } from "./chatSlice";
 
 const StyledChat = styled.div`
   height: 100%;
@@ -54,7 +53,6 @@ function Chatroom() {
     if (currentSocket) {
       const handler = (chat) => {
         setChatList((existingChatList) => [...existingChatList, chat]);
-        dispatch();
       };
 
       currentSocket.on("receiveChat", handler);
@@ -71,7 +69,7 @@ function Chatroom() {
       const handler = () => {
         setIsChatEnd(true);
         currentSocket.disconnect();
-        dispatch(userClosedChat());
+        dispatch();
       };
 
       currentSocket.on("leaveChat", handler);
@@ -87,7 +85,7 @@ function Chatroom() {
     if (currentSocket) {
       const handler = () => {
         setIsChatEnd(true);
-        dispatch(userClosedChat());
+        dispatch();
       };
 
       currentSocket.on("chatTimeout", handler);

@@ -1,0 +1,36 @@
+const mockLoadingToiletData = {
+  _id: "",
+  toiletType: "로딩중...",
+  toiletName: "로딩중...",
+  roadNameAddress: "로딩중...",
+  indexNameAddress: "로딩중...",
+  isUnisexToilet: true,
+  menToiletBowlNumber: "로딩중...",
+  menUrinalNumber: "로딩중...",
+  menHandicapToiletBowlNumber: "로딩중...",
+  menHandicapUrinalNumber: "로딩중...",
+  menChildrenToiletBowlNumber: "로딩중...",
+  menChildrenUrinalNumber: "로딩중...",
+  ladiesToiletBowlNumber: "로딩중...",
+  ladiesHandicapToiletBowlNumber: "로딩중...",
+  ladiesChildrenToiletBowlNumber: "로딩중...",
+  institutionName: "로딩중...",
+  phoneNumber: "로딩중...",
+  openTime: "로딩중...",
+  installationYear: 2000,
+  referenceDate: new Date().toISOString(),
+  institutionCode: 1,
+  latestToiletPaperInfo: {
+    lastDate: new Date().toISOString(),
+    hasToiletPaper: true,
+  },
+  location: {
+    type: "로딩중...",
+    coordinates: [0, 0],
+  },
+  reviewList: [],
+  chatRoomList: [],
+  isSOS: "로딩중...",
+};
+
+export default mockLoadingToiletData;

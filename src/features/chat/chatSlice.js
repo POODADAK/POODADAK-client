@@ -1,20 +1,47 @@
+/* eslint-disable no-underscore-dangle */
 import { createSlice } from "@reduxjs/toolkit";
+
+export const chatStatusOptions = {
+  disconnected: "disconnected",
+  connected: "connected",
+  connecting: "connecting",
+  error: "error",
+};
 
 export const chatSlice = createSlice({
   name: "chat",
   initialState: {
+    chatStatus: chatStatusOptions.disconnected,
     chatroomId: null,
-    chatList: null,
+    chatList: [],
     owner: null,
-    participant: null,
+    error: null,
   },
   reducers: {
-    userCreatedChat: (state, action) => {
-      state.currentSocket = action.payload.socket;
-      state.currentChatroomId = action.payload.chatroomId;
+    userEnteredChatroom: (state, action) => {
+      state.status = chatStatusOptions.connected;
+      state.chatroomId = action.payload._id;
+      state.chatList = action.payload.chatList;
+      state.owner = action.payload.owner;
     },
-    userCheckedChat: (state, action) => {
-      state.lastCheckedChatNumber = action.payload;
+    userLeftChatroom: (state) => {
+      state.status = chatStatusOptions.disconnected;
+      state.chatroomId = null;
+      state.chatList = null;
+      state.owner = null;
+      state.participant = null;
+      state.error = null;
+    },
+    chatListLoaded: (state, action) => {
+      state.chatList = action.payload;
+    },
+    chatConnectionFailed: (state, action) => {
+      state.chatStatus = chatStatusOptions.error;
+      state.error = action.payload;
+    },
+    chatConnectionRequestSent: (state) => {
+      state.chatList = chatStatusOptions.connecting;
+      state.error = null;
     },
   },
 });
@@ -27,6 +54,13 @@ export function disconnectExistingSocket(dispatch, getState) {
   }
 }
 
-export const { userCreatedChat, userClosedChat } = chatSlice.actions;
+export const {
+  userEnteredChatroom,
+  userLeftChatroom,
+  chatListLoaded,
+  participantJoined,
+  chatConnectionFailed,
+  chatConnectionRequestSent,
+} = chatSlice.actions;
 
 export default chatSlice.reducer;

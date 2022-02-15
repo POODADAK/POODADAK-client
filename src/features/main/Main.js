@@ -72,6 +72,7 @@ function Main() {
   const navigate = useNavigate();
   const defaultLocation = [126.97796919, 37.566535];
 
+  dispatch({ type: "mdtest", payload: 222 });
   const [map, setMap] = useState(null);
   const [mapCenter, setMapCenter] = useState(null);
   const [currentMarker, setCurrentMarker] = useState(null);

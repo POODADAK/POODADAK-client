@@ -77,9 +77,7 @@ function ToiletCard({ toilet, distance, time }) {
   } = toilet;
 
   function moveToiletDetail() {
-    navigate(`/toilets/${toiletId}`, {
-      state: toilet,
-    });
+    navigate(`/toilets/${toiletId}`);
   }
 
   return (

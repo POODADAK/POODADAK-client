@@ -2,13 +2,13 @@ import axios from "axios";
 
 async function getLiveChatByToilet(toiletId) {
   const { data } = await axios.get(
-    `/chatroom/live-chatroom?toiletId=${toiletId}`,
+    `/chatroom/live-chatroom-list?toiletId=${toiletId}`,
     {
       withCredentials: true,
     }
   );
 
-  return data.liveChatRoomInfo;
+  return data.liveChatRoomData;
 }
 
 export default getLiveChatByToilet;
