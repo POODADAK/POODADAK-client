@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
