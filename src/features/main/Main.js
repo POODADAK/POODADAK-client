@@ -154,10 +154,10 @@ function Main() {
     return resultData;
   }
 
-  function getLocation() {
+  async function getLocation() {
     setIsLoading(true);
     try {
-      const [lat, lng] = getMyLongLat();
+      const [lat, lng] = await getMyLongLat();
       dispatch(userLocationUpdated([lng, lat]));
       forceSetMapCenter([lng, lat]);
       setIsLoading(false);
