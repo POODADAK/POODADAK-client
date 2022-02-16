@@ -58,6 +58,9 @@ function Start({ onClick }) {
           onTouchStart={() => {
             onClick();
           }}
+          onTouchEnd={() => {
+            onClick();
+          }}
         >
           <img src={startIcon} alt="시작" />
         </div>
