@@ -2,17 +2,21 @@ import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
 
+import { COLOR } from "../util/constants";
+
 const StyledTitle = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
   background-color: black;
+
   .title {
     font-size: x-large;
     font-weight: 600;
-    color: #bc955c;
+    color: ${COLOR.HEAVY_GOLD};
     margin: 15px 20px 5px 20px;
   }
+
   .description {
     font-size: medium;
     color: white;

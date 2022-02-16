@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 
 import right from "../../../assets/icon-right.png";
+import { COLOR } from "../../util/constants";
 
 const StyledList2Lines = styled.div`
   width: 100%;
@@ -22,7 +23,7 @@ const StyledList2Lines = styled.div`
   .label {
     font-size: medium;
     font-weight: 600;
-    color: #bc955c;
+    color: ${COLOR.HEAVY_GOLD};
     margin-bottom: -8px;
   }
 

@@ -21,7 +21,7 @@ const StyledChatBubbleReceive = styled.div`
   .bubble {
     font-size: small;
     color: white;
-    background-color: #6fcf97;
+    background-color: ${COLOR.CYAN};
     padding: 0.8rem;
     border-radius: 1rem;
     margin-left: 1rem;

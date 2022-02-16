@@ -18,6 +18,7 @@ const StyledSidebar = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
+
   .close {
     width: 240px;
     height: 40px;
@@ -29,15 +30,18 @@ const StyledSidebar = styled.div`
     gap: 0.5rem;
     cursor: pointer;
   }
+
   .description {
     width: 240px;
     font-size: small;
     color: gray;
     margin-bottom: 20px;
   }
+
   .sns-login {
     cursor: pointer;
   }
+
   .list {
     width: 240px;
     display: flex;
@@ -46,10 +50,12 @@ const StyledSidebar = styled.div`
     margin-bottom: 20px;
     cursor: pointer;
   }
+
   .line {
     width: 230px;
     border-top: 1px solid gray;
   }
+
   .list-content {
     color: black;
     display: flex;
@@ -61,8 +67,8 @@ const StyledSidebar = styled.div`
 
 function Sidebar({ onClick }) {
   const navigate = useNavigate();
-  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const dispatch = useDispatch();
+  const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const loggedInUserId = useSelector((state) => state.login.userId);
 
   function kakaoLogin() {

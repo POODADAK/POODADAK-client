@@ -34,6 +34,7 @@ const StyledUi = styled.div`
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
+
   h3 {
     margin-bottom: -10px;
   }
@@ -92,7 +93,6 @@ function Ui() {
         image={toiletSample}
         description="예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰예시리뷰뷰뷰뷰뷰뷰뷰뷰"
         rating="4"
-        // eslint-disable-next-line react/jsx-boolean-value
         isMyReview={true}
       />
       <h3>StarContainer</h3>

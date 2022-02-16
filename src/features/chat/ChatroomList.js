@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useNavigate, useLocation } from "react-router-dom";
@@ -25,16 +24,6 @@ function ChatroomList() {
 
   const [chatroomList, setChatroomList] = useState([]);
 
-  function findLastChat(chatList) {
-    if (!chatList.length) {
-      return null;
-    }
-
-    const lastChat = chatList[chatList.length - 1];
-
-    return lastChat;
-  }
-
   useEffect(() => {
     async function getLiveChatroomList() {
       const { liveChatroomList } = await getLiveChatByToilet(
@@ -50,6 +39,16 @@ function ChatroomList() {
 
     getLiveChatroomList();
   }, [currentChatroomId]);
+
+  function findLastChat(chatList) {
+    if (!chatList.length) {
+      return null;
+    }
+
+    const lastChat = chatList[chatList.length - 1];
+
+    return lastChat;
+  }
 
   return (
     <StyledChats>

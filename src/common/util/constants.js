@@ -1,11 +1,14 @@
+// eslint-disable-next-line import/prefer-default-export
 export const COLOR = {
   LIGHT_GOLD: "#DEC16D",
   HEAVY_GOLD: "#BC955C",
   GREY: "#C0C0C0",
   LINE: "#3E3E3E",
+  LIGHTER_GREY: "828282",
   LIGHT_GREY: "#979797",
+  HEAVY_GREY: "4C4C4C",
+  DARK_GREY: "3C3C3C",
   CARROT: "#F2994A",
+  CYAN: "#6fcf97",
+  SALMON_PINK: "#EB5757",
 };
-
-// eslint 때문에 생성해둔 객체입니다. 나중에 상수로 관리할값이 추가될 경우 지워주시기 바랍니다.
-export const placeholder = {};

@@ -10,6 +10,7 @@ import silver from "../../../assets/icon-rank-silver.png";
 import send from "../../../assets/icon-send-full.png";
 import photoReviewCover from "../../../assets/photo-review-cover.png";
 import deleteReview from "../../api/deleteReview";
+import { COLOR } from "../../util/constants";
 import ButtonFull from "../buttons/ButtonFull";
 import ButtonSmall from "../buttons/ButtonSmall";
 import Modal from "../modal/Modal";
@@ -23,7 +24,7 @@ const ButtonContainer = styled.div`
   left: 0.7rem;
   right: 0.7rem;
   display: flex;
-  border-top: 2px solid #3e3e3e;
+  border-top: 2px solid ${COLOR.LINE};
 
   button {
     border: none;
@@ -31,10 +32,10 @@ const ButtonContainer = styled.div`
   }
 
   .divider {
-    border-left: 1px solid #3e3e3e;
-    border-right: 1px solid #3e3e3e;
+    border-left: 1px solid ${COLOR.LINE};
+    border-right: 1px solid ${COLOR.LINE};
     height: 100%;
-    background-color: #3e3e3e;
+    background-color: ${COLOR.LINE};
   }
 `;
 
@@ -44,7 +45,7 @@ const StyledHeader = styled.div`
   height: 9%;
   padding: 0.4rem;
   display: flex;
-  background-color: #3c3c3c;
+  background-color: ${COLOR.DARK_GREY};
   justify-content: flex-start;
   align-items: center;
 
@@ -58,7 +59,7 @@ const StyledHeader = styled.div`
   }
 
   .date {
-    color: #828282;
+    color: ${COLOR.LIGHTER_GREY};
     font-size: 0.8rem;
     margin-left: auto;
   }
@@ -175,7 +176,6 @@ function ReviewCard({
   }
 
   function handleToiletNameClick() {
-    // eslint-disable-next-line no-underscore-dangle
     navigate(`/toilets/${toilet._id}`, { state: toilet });
   }
 
@@ -189,16 +189,6 @@ function ReviewCard({
     setShowModal(true);
   }
 
-  async function handleReviewDeleteConfirmClick() {
-    try {
-      await deleteReview(reviewId);
-      navigate(-1);
-    } catch (error) {
-      setModalContent("리뷰 삭제가 실패하였습니다.");
-      setShowModal(true);
-    }
-  }
-
   function handleReviewDeleteClick() {
     setContentAndShowModal(
       <>
@@ -208,6 +198,16 @@ function ReviewCard({
         </ButtonSmall>
       </>
     );
+  }
+
+  async function handleReviewDeleteConfirmClick() {
+    try {
+      await deleteReview(reviewId);
+      navigate(-1);
+    } catch (error) {
+      setModalContent("리뷰 삭제가 실패하였습니다.");
+      setShowModal(true);
+    }
   }
 
   return (
