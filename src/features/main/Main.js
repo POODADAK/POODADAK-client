@@ -182,6 +182,12 @@ function Main() {
 
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
+    async function firstCheckMyLngLat() {
+      const [lng, lat] = await getMyLngLat();
+      dispatch(userLocationUpdated([lng, lat]));
+    }
+
+    firstCheckMyLngLat();
     const location = gotUserLocation ? currentLocation : defaultLocation;
     setMap(
       new Tmapv2.Map("TMapApp", {
