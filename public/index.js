@@ -1,3 +1,4 @@
+/* eslint-disable no-alert */
 /* eslint-disable no-console */
 function getLocation() {
   if (navigator.geolocation) {
@@ -6,9 +7,11 @@ function getLocation() {
         const lng = position.coords.longitude;
         const lat = position.coords.latitude;
         console.log("lat:", lat, "lng:", lng);
+        alert("lat:", lat, "lng:", lng);
       },
       (error) => {
         console.log(error);
+        alert(error);
       },
       {
         enableHighAccuracy: false,
@@ -18,6 +21,7 @@ function getLocation() {
     );
   } else {
     console.log("no GPS");
+    alert("no GPS");
   }
 }
 
