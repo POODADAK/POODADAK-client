@@ -5,6 +5,7 @@ import styled from "styled-components";
 import bronze from "../../../assets/icon-rank-bronze.png";
 import gold from "../../../assets/icon-rank-gold.png";
 import silver from "../../../assets/icon-rank-silver.png";
+import { USER_LEVEL } from "../../util/constants";
 
 const UserLevelContainer = styled.div`
   width: 100%;
@@ -42,17 +43,17 @@ function UserLevel({ level }) {
   let userRankImageSrc = bronze;
   let description = "아직 부족한 휴지끈... 분발하세요";
 
-  if (level === "GOLD") {
+  if (level === USER_LEVEL.GOLD) {
     userRankImageSrc = gold;
     description = "🧻  프리미엄 휴지끈 보유자! 👍 ";
   }
 
-  if (level === "SILVER") {
+  if (level === USER_LEVEL.SILVER) {
     userRankImageSrc = silver;
     description = "🧻  당신의 훌륭한 휴지끈 길이!";
   }
 
-  if (level === "BRONZE") {
+  if (level === USER_LEVEL.BRONZE) {
     userRankImageSrc = bronze;
     description = "🧻  아직 부족한 휴지끈... 분발하세요";
   }
@@ -74,7 +75,7 @@ UserLevel.propTypes = {
   level: PropTypes.string,
 };
 UserLevel.defaultProps = {
-  level: "BRONZE",
+  level: USER_LEVEL.BRONZE,
 };
 
 export default UserLevel;

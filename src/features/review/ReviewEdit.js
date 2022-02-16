@@ -164,7 +164,7 @@ function ReviewEdit() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const toiletId = location.state.toilet_id;
+  const { toilet } = location.state;
   const uploadedImageSrc =
     uploadedImage?.constructor.name === "File"
       ? URL.createObjectURL(uploadedImage)
@@ -258,7 +258,7 @@ function ReviewEdit() {
       }
 
       const payload = {
-        toilet: toiletId,
+        toilet,
         rating: enteredRating,
         description: enteredText,
         image: imageUrl,
