@@ -189,16 +189,6 @@ function ReviewCard({
     setShowModal(true);
   }
 
-  async function handleReviewDeleteConfirmClick() {
-    try {
-      await deleteReview(reviewId);
-      navigate(-1);
-    } catch (error) {
-      setModalContent("리뷰 삭제가 실패하였습니다.");
-      setShowModal(true);
-    }
-  }
-
   function handleReviewDeleteClick() {
     setContentAndShowModal(
       <>
@@ -208,6 +198,16 @@ function ReviewCard({
         </ButtonSmall>
       </>
     );
+  }
+
+  async function handleReviewDeleteConfirmClick() {
+    try {
+      await deleteReview(reviewId);
+      navigate(-1);
+    } catch (error) {
+      setModalContent("리뷰 삭제가 실패하였습니다.");
+      setShowModal(true);
+    }
   }
 
   return (
