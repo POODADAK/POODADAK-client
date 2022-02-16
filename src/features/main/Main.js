@@ -180,11 +180,6 @@ function Main() {
     setOnSideBar((current) => !current);
   }
 
-  // eslint-disable-next-line no-alert
-  getMyLongLat()
-    .then((result) => alert(result))
-    .catch((error) => navigate("/error", { state: error }));
-
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
     const location = gotUserLocation ? currentLocation : defaultLocation;
