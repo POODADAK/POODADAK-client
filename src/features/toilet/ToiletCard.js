@@ -77,9 +77,7 @@ function ToiletCard({ toilet, distance, time }) {
   } = toilet;
 
   function moveToiletDetail() {
-    navigate(`/toilets/${toiletId}`, {
-      state: toilet,
-    });
+    navigate(`/toilets/${toiletId}`);
   }
 
   return (
@@ -89,7 +87,7 @@ function ToiletCard({ toilet, distance, time }) {
           <div className="distance">
             {distance}m (도보 {time}분)
           </div>
-          <ButtonDefault moveTo="right" onClick={() => moveToiletDetail()}>
+          <ButtonDefault moveto="right" onClick={() => moveToiletDetail()}>
             상세정보
           </ButtonDefault>
         </div>

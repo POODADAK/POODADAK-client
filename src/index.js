@@ -3,6 +3,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import store from "./app/store";
 import GlobalStyle from "./common/components/GlobalStyle";
@@ -40,6 +41,7 @@ ReactDOM.render(
           <Route path="/error" element={<ErrorPage />} />
           <Route path="/ui" element={<Ui />} />
           <Route path="/login/process" element={<Login />} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>
     </Provider>

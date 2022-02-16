@@ -13,7 +13,7 @@ const StyledListDefault = styled.div`
 
   .label {
     font-size: large;
-    font-weight: 600;
+    font-weight: 400;
     color: #bc955c;
     margin-left: 20px;
     display: flex;
@@ -21,7 +21,7 @@ const StyledListDefault = styled.div`
   }
 
   .btns {
-    margin-right: 20px;
+    margin-right: 10px;
   }
   .secondary {
     font-size: medium;

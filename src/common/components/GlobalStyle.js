@@ -2,22 +2,25 @@ import { createGlobalStyle } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
   html {
-    width: auto;
-    height: 90%;
+    width: 100vw;
+    height: 93.4%;
+    background-color: white;
+    margin: 0;
+    padding: 0;
     display: flex;
     flex-direction: column;
     align-items: center;
-    background-color: white;
   }
 
   body {
     flex-grow: 1;
+    width: 100%;
+    min-width: 320px;
+    max-width: 428px;
+    font-family: Noto Sans KR, sans-serif;
+    margin: 0;
     display: flex;
     flex-direction: column;
-    width: 100%;
-    max-width: 428px;
-    min-width: 320px;
-    font-family: Noto Sans KR, sans-serif;
   }
 
   #root {
