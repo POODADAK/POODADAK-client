@@ -192,10 +192,9 @@ function Main() {
     setOnSideBar((current) => !current);
   }
 
-  getLocation();
-
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
+    getLocation();
     const location = gotUserLocation ? currentLocation : defaultLocation;
     setMap(
       new Tmapv2.Map("TMapApp", {
