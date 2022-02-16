@@ -21,8 +21,6 @@ export const getMyChatroom = createAsyncThunk(
   }
 );
 
-
-
 export const chatStatusOptions = {
   disconnected: "disconnected",
   connected: "connected",
@@ -96,6 +94,7 @@ export const chatSlice = createSlice({
     },
     chatReceived: (state, action) => {
       state.chatList = [...state.chatList, action.payload];
+    },
   },
   extraReducers: {
     [getMyChatroom.pending]: (state) => {
