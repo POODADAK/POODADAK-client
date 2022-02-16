@@ -187,7 +187,6 @@ function Main() {
       dispatch(userLocationUpdated([lng, lat]));
     }
 
-    firstCheckMyLngLat();
     const location = gotUserLocation ? currentLocation : defaultLocation;
     setMap(
       new Tmapv2.Map("TMapApp", {
@@ -197,6 +196,7 @@ function Main() {
         zoom: 17,
       })
     );
+    firstCheckMyLngLat();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
