@@ -386,7 +386,7 @@ function Main() {
           <ButtonFull
             onClick={() => navigate("/toilets", { state: nearToilets })}
           >
-            내 주변 화장실 리스트
+            주변 화장실 리스트
           </ButtonFull>
         </div>
       </div>

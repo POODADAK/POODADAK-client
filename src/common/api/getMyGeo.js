@@ -1,7 +1,7 @@
 const options = {
   enableHighAccuracy: false,
   maximumAge: 0,
-  timeout: Infinity,
+  timeout: 60000 * 60 * 12,
 };
 
 export function getMyLngLat() {
