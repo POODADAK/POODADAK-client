@@ -9,7 +9,7 @@ import styled from "styled-components";
 import pinSosToilet from "../../assets/icon-pin-sos.svg";
 import pinToilet from "../../assets/icon-pin.svg";
 import pinCurrent from "../../assets/pin-current-small.gif";
-import getMyLongLat from "../../common/api/getMyLongLat";
+import getMyLngLat from "../../common/api/getMyLngLat";
 import ButtonFull from "../../common/components/buttons/ButtonFull";
 import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
@@ -162,7 +162,7 @@ function Main() {
   async function getLocation() {
     setIsLoading(true);
     try {
-      const [lng, lat] = await getMyLongLat();
+      const [lng, lat] = await getMyLngLat();
       dispatch(userLocationUpdated([lng, lat]));
       forceSetMapCenter([lng, lat]);
       setIsLoading(false);
