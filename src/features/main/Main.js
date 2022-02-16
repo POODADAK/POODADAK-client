@@ -74,6 +74,11 @@ const StyledMain = styled.div`
     display: flex;
     justify-content: end;
   }
+  .start-button {
+    .clickable {
+      cursor: pointer;
+    }
+  }
 `;
 
 const { Tmapv2 } = window;
@@ -479,7 +484,7 @@ function Main() {
 
       {!gotUserLocation && (
         <div className="start">
-          <Start onClick={getLocation} />
+          <Start className="start-button" onClick={getLocation} />
         </div>
       )}
 
