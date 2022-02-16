@@ -19,8 +19,13 @@ const GlobalStyle = createGlobalStyle`
     max-width: 428px;
     font-family: Noto Sans KR, sans-serif;
     margin: 0;
+    -ms-overflow-style: none;
     display: flex;
     flex-direction: column;
+  }
+
+  ::-webkit-scrollbar {
+    display: none;
   }
 
   #root {

@@ -18,15 +18,16 @@ import {
 } from "./chatSlice";
 
 const StyledChat = styled.div`
-  height: 100%;
   width: 100%;
+  height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: black;
 
   .chat-container {
+    flex-grow: 1;
     width: 100%;
-    overflow: scroll;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column-reverse;
   }
@@ -96,12 +97,14 @@ function Chatroom() {
   return (
     <StyledChat>
       <HeaderChat />
-      <ChatBubbleList
-        chatList={chatList}
-        userId={userId}
-        isConnection={isSocketConnected}
-        isParticipantLeft={isParticipantLeft}
-      />
+      <div className="chat-container">
+        <ChatBubbleList
+          chatList={chatList}
+          userId={userId}
+          isConnection={isSocketConnected}
+          isParticipantLeft={isParticipantLeft}
+        />
+      </div>
       <InputChat
         chat={enteredChat}
         onChange={handleChatInput}
