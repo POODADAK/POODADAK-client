@@ -369,7 +369,7 @@ function Main() {
             ]);
           }
         } else {
-          const markerImg = "http://topopen.tmap.co.kr/imgs/point.png";
+          const markerImg = "https://topopen.tmap.co.kr/imgs/point.png";
           // eslint-disable-next-line new-cap
           const convertPoint = new Tmapv2.Projection.convertEPSG3857ToWGS84GEO(
             new Tmapv2.Point(geometry.coordinates[0], geometry.coordinates[1])
