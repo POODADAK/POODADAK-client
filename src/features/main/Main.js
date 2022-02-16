@@ -118,80 +118,6 @@ function Main() {
     [adjMap]
   );
 
-  async function getToilets(center) {
-    const sendQueryUrl = `${BASE_URL}/toilets?lat=${center[0]}&lng=${center[1]}`;
-    const response = await axios.get(sendQueryUrl);
-    const newToilets = response.data.toiletList;
-
-    return newToilets;
-  }
-
-  async function getPathToToiletInfo(start, end) {
-    const sendQueryUrl = `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&appKey=l7xx66e7421614a24fb5b811213de86ca032`;
-    const data = JSON.stringify({
-      startName: "현재위치",
-      startX: start[0],
-      startY: start[1],
-      endName: "화장실",
-      endX: end[0],
-      endY: end[1],
-      reqCoordType: "WGS84GEO",
-      resCoordType: "EPSG3857",
-    });
-    const config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-    const response = await axios.post(sendQueryUrl, data, config);
-    const resultData = response.data;
-    setSelectedToiletDistance(resultData.features[0].properties.totalDistance);
-    setSelectedToiletTime(
-      (resultData.features[0].properties.totalTime / 60).toFixed(0)
-    );
-
-    return resultData;
-  }
-
-  function getLocation() {
-    if (navigator.geolocation) {
-      setIsLoading(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lng = position.coords.longitude;
-          const lat = position.coords.latitude;
-          dispatch(userLocationUpdated([lng, lat]));
-          forceSetMapCenter([lng, lat]);
-          setIsLoading(false);
-        },
-        (error) => {
-          const newErr = {
-            title: "에러가 발생했습니다.",
-            description: "메인으로 이동해주세요.",
-            errorMsg: error.message,
-          };
-          navigate("/error", { state: newErr });
-        },
-        {
-          enableHighAccuracy: false,
-          maximumAge: 0,
-          timeout: Infinity,
-        }
-      );
-    } else {
-      dispatch(userLocationRemoved());
-      const newErr = {
-        title: "GPS를 지원하지 않습니다",
-        description: "위치정보 제공에 동의해주셔야 앱을 사용하실 수 있습니다.",
-      };
-      navigate("/error", { state: newErr });
-    }
-  }
-
-  function toggleSidebar() {
-    setOnSideBar((current) => !current);
-  }
-
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
     const location = gotUserLocation ? currentLocation : defaultLocation;
@@ -445,6 +371,80 @@ function Main() {
       clearInterval(getLocationForTracking);
     };
   }, [dispatch, navigate, selectedToilet]);
+
+  async function getToilets(center) {
+    const sendQueryUrl = `${BASE_URL}/toilets?lat=${center[0]}&lng=${center[1]}`;
+    const response = await axios.get(sendQueryUrl);
+    const newToilets = response.data.toiletList;
+
+    return newToilets;
+  }
+
+  async function getPathToToiletInfo(start, end) {
+    const sendQueryUrl = `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&appKey=l7xx66e7421614a24fb5b811213de86ca032`;
+    const data = JSON.stringify({
+      startName: "현재위치",
+      startX: start[0],
+      startY: start[1],
+      endName: "화장실",
+      endX: end[0],
+      endY: end[1],
+      reqCoordType: "WGS84GEO",
+      resCoordType: "EPSG3857",
+    });
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+      },
+    };
+    const response = await axios.post(sendQueryUrl, data, config);
+    const resultData = response.data;
+    setSelectedToiletDistance(resultData.features[0].properties.totalDistance);
+    setSelectedToiletTime(
+      (resultData.features[0].properties.totalTime / 60).toFixed(0)
+    );
+
+    return resultData;
+  }
+
+  function getLocation() {
+    if (navigator.geolocation) {
+      setIsLoading(true);
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const lng = position.coords.longitude;
+          const lat = position.coords.latitude;
+          dispatch(userLocationUpdated([lng, lat]));
+          forceSetMapCenter([lng, lat]);
+          setIsLoading(false);
+        },
+        (error) => {
+          const newErr = {
+            title: "에러가 발생했습니다.",
+            description: "메인으로 이동해주세요.",
+            errorMsg: error.message,
+          };
+          navigate("/error", { state: newErr });
+        },
+        {
+          enableHighAccuracy: false,
+          maximumAge: 0,
+          timeout: Infinity,
+        }
+      );
+    } else {
+      dispatch(userLocationRemoved());
+      const newErr = {
+        title: "GPS를 지원하지 않습니다",
+        description: "위치정보 제공에 동의해주셔야 앱을 사용하실 수 있습니다.",
+      };
+      navigate("/error", { state: newErr });
+    }
+  }
+
+  function toggleSidebar() {
+    setOnSideBar((current) => !current);
+  }
 
   return (
     <StyledMain>
