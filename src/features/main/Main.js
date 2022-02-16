@@ -115,9 +115,7 @@ function Main() {
     [adjMap]
   );
 
-  setInterval(() => {
-    getLocation();
-  }, 5000);
+  getLocation();
 
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
