@@ -115,6 +115,10 @@ function Main() {
     [adjMap]
   );
 
+  setInterval(() => {
+    getLocation();
+  }, 5000);
+
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
     async function makeMap() {
@@ -130,9 +134,6 @@ function Main() {
     }
     makeMap();
 
-    setInterval(() => {
-      getLocation();
-    }, 5000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
