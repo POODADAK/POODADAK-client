@@ -182,6 +182,7 @@ function Main() {
 
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
+    getMyLngLat().then((result) => dispatch(userLocationUpdated(result)));
     const location = gotUserLocation ? currentLocation : defaultLocation;
     setMap(
       new Tmapv2.Map("TMapApp", {
@@ -191,12 +192,6 @@ function Main() {
         zoom: 17,
       })
     );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
-  // 초기 랜더링 시 내 위치추적을 알리고 결과를 리덕스에 저장합니다.
-  useEffect(() => {
-    getMyLngLat().then((result) => dispatch(userLocationUpdated(result)));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
