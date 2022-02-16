@@ -4,6 +4,7 @@ import styled from "styled-components";
 
 import left from "../../../assets/icon-left.png";
 import right from "../../../assets/icon-right.png";
+import { COLOR } from "../../util/constants";
 
 const StyledButtonDefault = styled.div`
   width: fit-content;
@@ -12,7 +13,7 @@ const StyledButtonDefault = styled.div`
   justify-content: center;
   align-items: center;
   font-size: medium;
-  color: #bc955c;
+  color: ${COLOR.HEAVY_GOLD};
   background-color: black;
   border-radius: 3px;
   padding: 4px 10px;
@@ -24,6 +25,7 @@ const StyledButtonDefault = styled.div`
     justify-content: center;
     align-items: center;
   }
+
   .icon {
     background-color: black;
     display: flex;

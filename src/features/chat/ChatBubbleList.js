@@ -23,7 +23,6 @@ function ChatBubbleList({ chatList, userId, isConnection, isParticipantLeft }) {
   const bubbleList = [];
   const scrollMarker = useRef();
 
-  // eslint-disable-next-line no-restricted-syntax
   for (const chat of chatList) {
     if (chat.sender === userId) {
       bubbleList.push(<ChatBubbleSend key={chat.date} chat={chat} />);

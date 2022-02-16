@@ -16,17 +16,21 @@ const StyledErrorPage = styled.div`
   align-items: center;
   justify-content: center;
   gap: 1rem;
+
   img {
     width: 300px;
   }
+
   .error {
     text-align: center;
     display: flex;
     flex-direction: column;
     justify-content: center;
+
     .error-title {
       font-size: x-large;
     }
+
     .error-message {
       color: gray;
     }

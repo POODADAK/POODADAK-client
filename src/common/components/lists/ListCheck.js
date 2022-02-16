@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
 
+import { COLOR } from "../../util/constants";
+
 const StyledListCheck = styled.div`
   width: 100%;
   height: 44px;
@@ -13,7 +15,7 @@ const StyledListCheck = styled.div`
   .label {
     font-size: large;
     font-weight: 600;
-    color: #bc955c;
+    color: ${COLOR.HEAVY_GOLD};
     margin-left: 20px;
     display: flex;
     align-items: center;

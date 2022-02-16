@@ -239,7 +239,6 @@ function Main() {
         const lng = currentLocation[0];
         const newToilets = await getToilets([lat, lng]);
         if (newToilets) {
-          // eslint-disable-next-line no-restricted-syntax
           for (const toilet of newToilets) {
             const tlat = toilet.location.coordinates[0];
             const tlng = toilet.location.coordinates[1];
@@ -357,14 +356,12 @@ function Main() {
             setDrawPathInfos((current) => [
               ...current,
               new Tmapv2.LatLng(
-                // eslint-disable-next-line no-underscore-dangle
                 new Tmapv2.Projection.convertEPSG3857ToWGS84GEO(
                   new Tmapv2.Point(
                     geometry.coordinates[j][0],
                     geometry.coordinates[j][1]
                   )
                 )._lat,
-                // eslint-disable-next-line no-underscore-dangle
                 new Tmapv2.Projection.convertEPSG3857ToWGS84GEO(
                   new Tmapv2.Point(
                     geometry.coordinates[j][0],
@@ -382,9 +379,7 @@ function Main() {
           );
           const pathInfoObj = {
             markerImg,
-            // eslint-disable-next-line no-underscore-dangle
             lat: convertPoint._lat,
-            // eslint-disable-next-line no-underscore-dangle
             lng: convertPoint._lng,
             pointType: "P",
           };

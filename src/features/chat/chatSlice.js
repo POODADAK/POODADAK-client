@@ -1,4 +1,3 @@
-/* eslint-disable no-underscore-dangle */
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 
@@ -37,18 +36,20 @@ export const participantStatusOptions = {
   participantLeft: "participantLeft",
 };
 
+const initialState = {
+  chatStatus: chatStatusOptions.disconnected,
+  socketStatus: socketStatusOptions.disconnected,
+  participantStatus: null,
+  chatroomId: null,
+  chatList: [],
+  nameSpace: null,
+  owner: null,
+  error: { status: null, message: null },
+};
+
 export const chatSlice = createSlice({
   name: "chat",
-  initialState: {
-    chatStatus: chatStatusOptions.disconnected,
-    socketStatus: socketStatusOptions.disconnected,
-    participantStatus: null,
-    chatroomId: null,
-    chatList: [],
-    nameSpace: null,
-    owner: null,
-    error: { status: null, message: null },
-  },
+  initialState,
   reducers: {
     userEnteredChatroom: (state, action) => {
       state.chatStatus = chatStatusOptions.connected;

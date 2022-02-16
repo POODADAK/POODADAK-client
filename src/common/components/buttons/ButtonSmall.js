@@ -2,14 +2,16 @@ import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
 
+import { COLOR } from "../../util/constants";
+
 const StyledButtonSmall = styled.button`
   width: fit-content;
   display: flex;
   flex-direction: row;
   align-items: center;
   font-size: small;
-  color: #bc955c;
-  background-color: #4c4c4c;
+  color: ${COLOR.HEAVY_GOLD};
+  background-color: ${COLOR.HEAVY_GREY};
   padding: 4px 8px;
   border-radius: 3px;
   cursor: pointer;

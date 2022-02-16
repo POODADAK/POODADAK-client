@@ -31,13 +31,13 @@ ReactDOM.render(
         <Routes>
           <Route path="/" element={<Main />} />
           <Route path="/toilets" element={<Toilets />} />
-          <Route path="/toilets/:toilet_id" element={<Toilet />} />
+          <Route path="/toilets/:toiletId" element={<Toilet />} />
           <Route path="/chatroomList" element={<ChatroomList />} />
           <Route path="/chatroomList/:chatroomId" element={<Chatroom />} />
           <Route path="/editReview" element={<ReviewEdit />} />
           <Route path="/editReview/:reviewId" element={<ReviewEdit />} />
           <Route path="/users/:userId" element={<Profile />} />
-          <Route path="/editProfile/:user_id" element={<ProfileEdit />} />
+          <Route path="/editProfile/:userId" element={<ProfileEdit />} />
           <Route path="/error" element={<ErrorPage />} />
           <Route path="/ui" element={<Ui />} />
           <Route path="/login/process" element={<Login />} />

@@ -13,9 +13,11 @@ const StyledToilets = styled.div`
   flex-direction: column;
   align-items: center;
   background-color: black;
+
   .title {
     width: 90%;
   }
+
   .list {
     width: 100%;
     display: flex;

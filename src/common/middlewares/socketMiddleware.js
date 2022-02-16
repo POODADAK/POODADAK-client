@@ -62,7 +62,7 @@ const socketMiddleware = () => {
 
       socket.on("connect", () => {
         // eslint-disable-next-line no-console
-        console.log(`client socketid ${socket.id} is now connected`);
+        console.log(`client socketid ${socket.id} connected`);
         storeAPI.dispatch(socketOpened());
       });
 
@@ -84,7 +84,7 @@ const socketMiddleware = () => {
 
       socket.on("disconnect", () => {
         // eslint-disable-next-line no-console
-        console.log(`client socketid ${socket.id} is now disconnected`);
+        console.log(`client socketid ${socket.id} is disconnected`);
         storeAPI.dispatch(userLeftChatroom());
       });
 
@@ -104,6 +104,7 @@ const socketMiddleware = () => {
     if (action.type === socketActionType.emit) {
       socket.emit(action.payload.socketEvent, action.payload.socketPayload);
     }
+
     next(action);
   };
 };
