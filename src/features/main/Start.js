@@ -55,6 +55,9 @@ function Start({ onClick }) {
           onKeyDown={() => {
             onClick();
           }}
+          onTouchStart={() => {
+            onClick();
+          }}
         >
           <img src={startIcon} alt="시작" />
         </div>
