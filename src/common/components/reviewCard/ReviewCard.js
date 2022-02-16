@@ -10,7 +10,7 @@ import silver from "../../../assets/icon-rank-silver.png";
 import send from "../../../assets/icon-send-full.png";
 import photoReviewCover from "../../../assets/photo-review-cover.png";
 import deleteReview from "../../api/deleteReview";
-import { COLOR } from "../../util/constants";
+import { COLOR, USER_LEVEL } from "../../util/constants";
 import ButtonFull from "../buttons/ButtonFull";
 import ButtonSmall from "../buttons/ButtonSmall";
 import Modal from "../modal/Modal";
@@ -146,15 +146,15 @@ function ReviewCard({
 
   let userRankImageSrc = bronze;
 
-  if (level === "GOLD") {
+  if (level === USER_LEVEL.GOLD) {
     userRankImageSrc = gold;
   }
 
-  if (level === "SILVER") {
+  if (level === USER_LEVEL.SILVER) {
     userRankImageSrc = silver;
   }
 
-  if (level === "BRONZE") {
+  if (level === USER_LEVEL.BRONZE) {
     userRankImageSrc = bronze;
   }
 
@@ -289,7 +289,11 @@ function ReviewCard({
 ReviewCard.propTypes = {
   userId: PropTypes.string.isRequired,
   username: PropTypes.string.isRequired,
-  level: PropTypes.oneOf(["GOLD", "SILVER", "BRONZE"]).isRequired,
+  level: PropTypes.oneOf([
+    USER_LEVEL.GOLD,
+    USER_LEVEL.SILVER,
+    USER_LEVEL.BRONZE,
+  ]).isRequired,
   updatedAt: PropTypes.string.isRequired,
   image: PropTypes.string.isRequired,
   description: PropTypes.string.isRequired,

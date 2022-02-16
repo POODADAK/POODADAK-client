@@ -12,3 +12,9 @@ export const COLOR = {
   CYAN: "#6fcf97",
   SALMON_PINK: "#EB5757",
 };
+
+export const USER_LEVEL = {
+  GOLD: "GOLD",
+  SILVER: "SILVER",
+  BRONZE: "BRONZE",
+};

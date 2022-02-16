@@ -243,7 +243,7 @@ function Toilet() {
   }
 
   function onClickCreatReview() {
-    navigate("/editReview/", { state: { toiletId } });
+    navigate("/editReview", { state: { toilet } });
   }
 
   function handleModalCloseClick() {
