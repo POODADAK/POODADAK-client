@@ -1,11 +1,21 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
+import getChatroom from "../../common/api/getChatroom";
 import HeaderChat from "../../common/components/headers/HeaderChat";
 import InputChat from "../../common/components/inputs/InputChat";
+import {
+  socketConnected,
+  socketEmitted,
+} from "../../common/middlewares/socketMiddleware";
 import ChatBubbleList from "./ChatBubbleList";
-import { userCheckedChat, userClosedChat } from "./chatSlice";
+import {
+  chatReceived,
+  participantStatusOptions,
+  socketStatusOptions,
+} from "./chatSlice";
 
 const StyledChat = styled.div`
   height: 100%;
@@ -16,97 +26,46 @@ const StyledChat = styled.div`
 
   .chat-container {
     width: 100%;
-    overflow-y: scroll;
+    overflow: scroll;
     display: flex;
     flex-direction: column-reverse;
   }
 `;
 
 function Chatroom() {
-  const currentSocket = useSelector((state) => state.chat.currentSocket);
   const userId = useSelector((state) => state.login.userId);
-  const currentChatroomId = useSelector(
-    (state) => state.chat.currentChatroomId
+  const socketStatus = useSelector((state) => state.chat.socketStatus);
+  const participantStatus = useSelector(
+    (state) => state.chat.participantStatus
   );
+  const chatList = useSelector((state) => state.chat.chatList);
   const dispatch = useDispatch();
+  const { chatroomId } = useParams();
 
   const [enteredChat, setEnteredChat] = useState("");
-  const [chatList, setChatList] = useState([]);
-  const [isChatEnd, setIsChatEnd] = useState(false);
+
+  const isSocketConnected = socketStatus === socketStatusOptions.connected;
+  const isParticipantLeft =
+    participantStatus === participantStatusOptions.participantLeft;
 
   useEffect(() => {
-    dispatch(userCheckedChat(chatList.length));
-  }, [chatList]);
+    async function checkIsChatroomLiveAndConnect() {
+      const chatroom = await getChatroom(chatroomId);
 
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (currentSocket) {
-      const handler = (emittedChatList) => {
-        setChatList(emittedChatList);
-      };
-
-      currentSocket.once("findExistingChatList", handler);
-
-      return () => {
-        currentSocket.off("findExistingChatList", handler);
-      };
+      if (chatroom.isLive) {
+        dispatch(
+          socketConnected(
+            "toiletId",
+            chatroom.toilet,
+            chatroom.owner,
+            chatroomId
+          )
+        );
+      }
     }
-  }, [currentSocket]);
 
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (currentSocket) {
-      const handler = (chat) => {
-        setChatList((existingChatList) => [...existingChatList, chat]);
-        dispatch();
-      };
-
-      currentSocket.on("receiveChat", handler);
-
-      return () => {
-        currentSocket.off("receiveChat", handler);
-      };
-    }
-  }, [currentSocket]);
-
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (currentSocket) {
-      const handler = () => {
-        setIsChatEnd(true);
-        currentSocket.disconnect();
-        dispatch(userClosedChat());
-      };
-
-      currentSocket.on("leaveChat", handler);
-
-      return () => {
-        currentSocket.off("leaveChat", handler);
-      };
-    }
-  }, [currentSocket]);
-
-  // eslint-disable-next-line consistent-return
-  useEffect(() => {
-    if (currentSocket) {
-      const handler = () => {
-        setIsChatEnd(true);
-        dispatch(userClosedChat());
-      };
-
-      currentSocket.on("chatTimeout", handler);
-
-      return () => {
-        currentSocket.off("chatTimeout", handler);
-      };
-    }
-  }, [currentSocket]);
-
-  useEffect(() => {
-    if (currentSocket) {
-      currentSocket.emit("loadChatList", currentChatroomId);
-    }
-  }, [currentSocket]);
+    checkIsChatroomLiveAndConnect();
+  }, []);
 
   function handleChatInput(event) {
     setEnteredChat(event.target.value);
@@ -128,12 +87,9 @@ function Chatroom() {
     };
 
     setEnteredChat("");
+    dispatch(socketEmitted("sendChat", chat));
 
-    if (currentSocket) {
-      currentSocket.emit("sendChat", chat);
-    }
-
-    setChatList((existingChatList) => [...existingChatList, chat]);
+    dispatch(chatReceived(chat));
   }
 
   return (
@@ -142,8 +98,8 @@ function Chatroom() {
       <ChatBubbleList
         chatList={chatList}
         userId={userId}
-        isConnection={!!currentSocket}
-        isChatEnd={isChatEnd}
+        isConnection={isSocketConnected}
+        isParticipantLeft={isParticipantLeft}
       />
       <InputChat
         chat={enteredChat}

@@ -41,6 +41,7 @@ ReactDOM.render(
           <Route path="/error" element={<ErrorPage />} />
           <Route path="/ui" element={<Ui />} />
           <Route path="/login/process" element={<Login />} />
+          <Route path="*" element={<ErrorPage />} />
         </Routes>
       </BrowserRouter>
     </Provider>

@@ -4,10 +4,10 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
-import chatFull from "../../../assets/icon-chat-full.png";
 import chatEmpty from "../../../assets/icon-chat.png";
 import menu from "../../../assets/icon-menu.png";
 import logo from "../../../assets/logo-main.svg";
+import { socketStatusOptions } from "../../../features/chat/chatSlice";
 import ButtonDefault from "../buttons/ButtonDefault";
 
 const StyledHeaderMain = styled.div`
@@ -33,11 +33,11 @@ const StyledHeaderMain = styled.div`
 
 function HeaderMain({ onClick }) {
   const navigate = useNavigate();
+  const chatroomId = useSelector((state) => state.chat.chatroomId);
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
-  const currentSocket = useSelector((state) => state.chat.currentSocket);
-  const hasUncheckedChat = useSelector((state) => state.chat.hasUncheckedChat);
+  const socketStatus = useSelector((state) => state.chat.socketStatus);
 
-  const chatIcon = hasUncheckedChat ? chatFull : chatEmpty;
+  const isSocketConnected = socketStatus === socketStatusOptions.connected;
 
   return (
     <StyledHeaderMain>
@@ -45,10 +45,10 @@ function HeaderMain({ onClick }) {
         <img src={logo} alt="로고" />
       </div>
       <div className="btns">
-        {isLoggedIn && currentSocket && (
+        {isLoggedIn && isSocketConnected && (
           <ButtonDefault
-            icon={chatIcon}
-            onClick={() => navigate("/chatroom")}
+            icon={chatEmpty}
+            onClick={() => navigate(`/chatroomList/${chatroomId}`)}
           />
         )}
         <ButtonDefault icon={menu} onClick={onClick} />

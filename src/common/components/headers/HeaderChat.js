@@ -1,9 +1,11 @@
 import React from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import close from "../../../assets/icon-close.png";
+import { socketStatusOptions } from "../../../features/chat/chatSlice";
+import { socketDisconnected } from "../../middlewares/socketMiddleware";
 import ButtonDefault from "../buttons/ButtonDefault";
 
 const StyledHeaderChat = styled.div`
@@ -29,23 +31,32 @@ const StyledHeaderChat = styled.div`
 
 function HeaderChat() {
   const navigate = useNavigate();
-  const currentSocket = useSelector((state) => state.chat.currentSocket);
+  const socketStatus = useSelector((state) => state.chat.socketStatus);
+  const lastVisitedToilet = useSelector(
+    (state) => state.login.lastVisitedToilet
+  );
+  const dispatch = useDispatch();
+
+  const isSocketOpen = socketStatus === socketStatusOptions.connected;
 
   function handleChatEndClick() {
-    if (currentSocket) {
-      currentSocket.disconnect();
-    }
+    dispatch(socketDisconnected());
+    navigate(-1);
+  }
+
+  function handleGoBackClick() {
+    navigate(`/toilets/${lastVisitedToilet}`);
   }
 
   return (
     <StyledHeaderChat>
       <div className="back">
-        <ButtonDefault moveTo="left" onClick={() => navigate(-1)}>
+        <ButtonDefault moveto="left" onClick={handleGoBackClick}>
           채팅창 나가기
         </ButtonDefault>
       </div>
       <div className="btns">
-        {currentSocket && (
+        {isSocketOpen && (
           <ButtonDefault icon={close} onClick={handleChatEndClick}>
             완전종료
           </ButtonDefault>

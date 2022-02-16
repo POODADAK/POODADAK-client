@@ -45,14 +45,14 @@ function ErrorPage() {
       </div>
       <div className="error">
         <div className="error-title">
-          {error ? error.title : "{error.title}"}
+          {error ? error.title : "404 Not Found!"}
         </div>
         <div className="error-message">
-          {error ? error.errorMsg : "{error.errorMsg}"}
+          {error ? error.errorMsg : "잘못된 접근입니다!"}
         </div>
       </div>
       <div className="error-description">
-        {error ? error.description : "{error.description}"}
+        {error ? error.description : "url을 확인해 주세요!"}
       </div>
       <ButtonSmall onClick={() => navigate("/")}>메인으로 가기</ButtonSmall>
     </StyledErrorPage>

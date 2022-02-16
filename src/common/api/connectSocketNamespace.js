@@ -1,8 +1,8 @@
 import { io } from "socket.io-client";
 
-function connectSocketNamespace(prefix, namespace, roomName, roomDBId) {
+function connectSocketNamespace(prefix, namespace, userId, roomDBId) {
   const socket = io(
-    `${process.env.REACT_APP_AXIOS_BASE_URL}/${prefix}-${namespace}?room=${roomName}&roomDBId=${roomDBId}`,
+    `${process.env.REACT_APP_AXIOS_BASE_URL}/${prefix}-${namespace}?room=${userId}&roomDBId=${roomDBId}`,
     {
       withCredentials: true,
     }
