@@ -162,7 +162,7 @@ function Main() {
   async function getLocation() {
     setIsLoading(true);
     try {
-      const [lat, lng] = await getMyLongLat();
+      const [lng, lat] = await getMyLongLat();
       dispatch(userLocationUpdated([lng, lat]));
       forceSetMapCenter([lng, lat]);
       setIsLoading(false);
@@ -182,11 +182,6 @@ function Main() {
 
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
-    getMyLongLat()
-      // eslint-disable-next-line no-alert
-      .then((result) => alert(result))
-      // eslint-disable-next-line no-alert
-      .catch((error) => alert(error));
     const location = gotUserLocation ? currentLocation : defaultLocation;
     setMap(
       new Tmapv2.Map("TMapApp", {
