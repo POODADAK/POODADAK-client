@@ -38,21 +38,33 @@ import { visitedToiletComponent } from "../login/loginSlice";
 
 const StyledToilet = styled.div`
   width: 100%;
-  flex-grow: 1;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: black;
   color: white;
 
   .titleContainer {
+    padding: 0rem 1rem;
     display: flex;
-    align-items: center;
+    .buttonContainer {
+      margin-top: 0.5rem;
+      display: flex;
+    }
   }
 
   .rankContainer {
+    font-size: large;
+    font-weight: 400;
+    padding: 1rem;
     display: flex;
+    justify-content: center;
     align-items: center;
-    justify-content: space-evenly;
+    gap: 1rem;
+  }
+
+  .toiletInfoContainer {
+    padding: 1rem;
   }
 
   .toiletPaperContainer {
@@ -66,6 +78,10 @@ const StyledToilet = styled.div`
     font-size: small;
     color: gray;
     margin-right: 1rem;
+  }
+
+  .reviewContainer {
+    padding: 1rem;
   }
 
   .fluidButtonWrapper {
@@ -254,10 +270,12 @@ function Toilet() {
       <HeaderSub isGoBackButtonMain={true} />
       <div className="titleContainer">
         <Title title={toilet.toiletName} description={toilet.roadNameAddress} />
-        {isChatroomDisconnected && (
-          <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
-        )}
-        <ButtonDefault icon={viewFinder} />
+        <div className="buttonContainer">
+          {isChatroomDisconnected && (
+            <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
+          )}
+          <ButtonDefault icon={viewFinder} />
+        </div>
       </div>
       <div className="fluidButtonWrapper">
         {isChatroomDisconnected && showRescueButton && (
@@ -283,7 +301,13 @@ function Toilet() {
       </div>
       <div className="rankContainer">
         <div>청결도 평균 ( {avgRating} ) </div>
-        <StarContainer rating={avgRating} showRatingNumber={false} />
+        <div>
+          <StarContainer
+            className="star"
+            rating={avgRating}
+            showRatingNumber={false}
+          />
+        </div>
       </div>
       <div className="toiletInfoContainer">
         <ListDefault label="개방시간" secondary={toilet.openTime} />
@@ -314,34 +338,36 @@ function Toilet() {
           secondary={`남아 : ${toilet.menChildrenToiletBowlNumber}  /  여아 : ${toilet.ladiesChildrenToiletBowlNumber}`}
         />
       </div>
-      <Title
-        title="리뷰"
-        description={`총 ${reviews.length}개의 리뷰가 있습니다.`}
-      />
-      <div className="fluidButtonWrapper">
-        <ButtonFluid
-          icon={docuIcon}
-          color="#bc955c"
-          onClick={onClickCreatReview}
-        >
-          리뷰 남기기
-        </ButtonFluid>
-      </div>
-      {reviews.map((review) => (
-        <ReviewCard
-          userId={review.writer._id}
-          username={review.writer.username}
-          level={review.writer.level}
-          updatedAt={review.updatedAt}
-          image={review.image}
-          description={review.description}
-          rating={review.rating}
-          isMyReview={false}
-          reviewId={review._id}
-          toilet={review.toilet}
-          key={review._id}
+      <div className="reviewContainer">
+        <Title
+          title="리뷰"
+          description={`총 ${reviews.length}개의 리뷰가 있습니다.`}
         />
-      ))}
+        <div className="fluidButtonWrapper">
+          <ButtonFluid
+            icon={docuIcon}
+            color="#bc955c"
+            onClick={onClickCreatReview}
+          >
+            리뷰 남기기
+          </ButtonFluid>
+        </div>
+        {reviews.map((review) => (
+          <ReviewCard
+            userId={review.writer._id}
+            username={review.writer.username}
+            level={review.writer.level}
+            updatedAt={review.updatedAt}
+            image={review.image}
+            description={review.description}
+            rating={review.rating}
+            isMyReview={false}
+            reviewId={review._id}
+            toilet={review.toilet}
+            key={review._id}
+          />
+        ))}
+      </div>
     </StyledToilet>
   );
 }

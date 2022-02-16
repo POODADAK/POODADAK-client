@@ -1,6 +1,7 @@
 /* eslint-disable new-cap */
 import axios from "axios";
 import React, { useEffect, useState, useCallback } from "react";
+import { Rings } from "react-loader-spinner";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -23,11 +24,22 @@ const StyledMain = styled.div`
   height: 100%;
   min-height: 568px;
   max-height: 100%;
+  .loader {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
   .map-container {
     position: absolute;
-    z-index: 0;
     top: 40;
     left: 0;
+    z-index: 0;
     width: 100%;
     height: 100%;
     display: flex;
@@ -39,9 +51,9 @@ const StyledMain = styled.div`
   }
   .card {
     position: absolute;
-    z-index: 1;
     bottom: 0;
     width: 100%;
+    z-index: 1;
     margin-bottom: 4px;
     .close {
       display: flex;
@@ -85,6 +97,7 @@ function Main() {
   const [pathMarkers, setPathMarkers] = useState([]);
   const [polyline, setPolyline] = useState(null);
   const [onSideBar, setOnSideBar] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
   const gotUserLocation = useSelector((state) => state.main.gotUserLocation);
   const currentLocation = useSelector((state) => state.main.userLocation);
@@ -143,12 +156,14 @@ function Main() {
 
   function getLocation() {
     if (navigator.geolocation) {
+      setIsLoading(true);
       navigator.geolocation.getCurrentPosition(
         (position) => {
           const lng = position.coords.longitude;
           const lat = position.coords.latitude;
           dispatch(userLocationUpdated([lng, lat]));
           forceSetMapCenter([lng, lat]);
+          setIsLoading(false);
         },
         (error) => {
           const newErr = {
@@ -451,6 +466,17 @@ function Main() {
           </ButtonFull>
         </div>
       </div>
+
+      {isLoading && (
+        <div className="loader">
+          <Rings
+            height="100%"
+            width="200%"
+            color="#bc955c"
+            ariaLabel="loading"
+          />
+        </div>
+      )}
 
       {selectedToilet && (
         <div className="card">

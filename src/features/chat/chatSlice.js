@@ -1,7 +1,27 @@
 /* eslint-disable no-underscore-dangle */
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
 
 import createChatroom from "../../common/api/createChatroom";
+
+const BASE_URL = process.env.REACT_APP_AXIOS_BASE_URL;
+
+export const getMyChatroom = createAsyncThunk(
+  "chat/getMyChatroom",
+  async (userId) => {
+    try {
+      const myChatroom = axios.get(
+        `${BASE_URL}/chatroom/live-chatroom-list?userId=${userId}`
+      );
+
+      return myChatroom;
+    } catch (error) {
+      return error;
+    }
+  }
+);
+
+
 
 export const chatStatusOptions = {
   disconnected: "disconnected",
@@ -76,6 +96,28 @@ export const chatSlice = createSlice({
     },
     chatReceived: (state, action) => {
       state.chatList = [...state.chatList, action.payload];
+  },
+  extraReducers: {
+    [getMyChatroom.pending]: (state) => {
+      state.chatStatus = chatStatusOptions.disconnected;
+      state.chatroomId = null;
+      state.chatList = [];
+      state.owner = null;
+      state.error = null;
+    },
+    [getMyChatroom.fulfilled]: (state, action) => {
+      state.chatStatus = chatStatusOptions.connected;
+      state.chatroomId = action.payload._id;
+      state.chatList = action.payload.chatList;
+      state.owner = action.payload.owner;
+      state.error = null;
+    },
+    [getMyChatroom.error]: (state, action) => {
+      state.chatStatus = chatStatusOptions.disconnected;
+      state.chatroomId = null;
+      state.chatList = [];
+      state.owner = null;
+      state.error = action.payload;
     },
   },
 });

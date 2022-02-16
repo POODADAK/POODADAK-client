@@ -20,7 +20,7 @@ import { COLOR } from "../../common/util/constants";
 const StyledDiv = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   background-color: black;
@@ -94,11 +94,15 @@ const StyledMain = styled.main`
   textarea {
     box-sizing: border-box;
     width: 100%;
-    height: 30%;
+    min-height: 10rem;
     resize: none;
     font-family: inherit;
     font-size: inherit;
     margin-bottom: 1rem;
+    padding: 0.5rem;
+    ::placeholder {
+      font-size: medium;
+    }
   }
 `;
 
