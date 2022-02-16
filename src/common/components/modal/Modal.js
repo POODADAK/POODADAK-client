@@ -3,48 +3,56 @@ import React from "react";
 import ReactDOM from "react-dom";
 import styled from "styled-components";
 
+import iconClose from "../../../assets/icon-close.svg";
 import { COLOR } from "../../util/constants";
 
 const ModalWrapper = styled.div`
+  z-index: 3;
   position: absolute;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 80%;
-  height: 40%;
+  width: 100%;
+  min-width: 280px;
+  max-width: 390px;
+  height: fit-content;
   background-color: black;
   color: ${COLOR.HEAVY_GOLD};
-  z-index: 3;
-  border-radius: 10px;
+  border-radius: 0.5rem;
   overflow: hidden;
   text-align: center;
-  font-size: 1.5rem;
-  font-weight: bold;
-
-  .close-button {
-    position: relative;
-    left: 90%;
-    width: 1rem;
-    height: 1rem;
-    background-color: transparent;
-    color: black;
-    font-size: 1.5rem;
-    font-weight: bolder;
-    text-decoration: none;
-    cursor: pointer;
-  }
+  font-size: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 
   header {
     width: 100%;
-    height: 10%;
-    top: 0;
-    left: 0;
+    height: 3rem;
     background-color: ${COLOR.HEAVY_GOLD};
-    position: sticky;
-    transform: translateY(-4px);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    .close-button {
+      width: 3rem;
+      height: 3rem;
+      color: black;
+      font-size: 1.2rem;
+      cursor: pointer;
+      margin-right: 0.5rem;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+  }
+
+  body {
+    padding: 2rem 1rem 3rem 1rem;
+    min-height: 4rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
   }
 `;
 
@@ -78,10 +86,10 @@ function Modal({ children, onModalCloseClick }) {
             role="button"
             tabIndex={0}
           >
-            X
+            <img src={iconClose} alt="닫기" />
           </div>
         </header>
-        {children}
+        <body>{children}</body>
       </ModalWrapper>
     </>,
     $rootElement

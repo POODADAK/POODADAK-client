@@ -9,21 +9,23 @@ import styled from "styled-components";
 import pinSosToilet from "../../assets/icon-pin-sos.svg";
 import pinToilet from "../../assets/icon-pin.svg";
 import pinCurrent from "../../assets/pin-current-small.gif";
+import { getMyLngLat, makePosionToLngLat } from "../../common/api/getMyGeo";
+import getToilets from "../../common/api/getToilets";
 import ButtonFull from "../../common/components/buttons/ButtonFull";
 import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
 import Sidebar from "../../common/components/Sidebar";
 import ToiletCard from "../toilet/ToiletCard";
 import { nearToiletsUpdated } from "../toilet/toiletSlice";
-import { userLocationUpdated, userLocationRemoved } from "./mainSlice";
+import { userLocationUpdated } from "./mainSlice";
 import Start from "./Start";
 
 const StyledMain = styled.div`
   position: relative;
   width: 100%;
-  height: 100%;
-  min-height: 568px;
-  max-height: 100%;
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
   .loader {
     position: absolute;
     top: 30%;
@@ -36,10 +38,6 @@ const StyledMain = styled.div`
     align-items: center;
   }
   .map-container {
-    position: absolute;
-    top: 40;
-    left: 0;
-    z-index: 0;
     width: 100%;
     height: 100%;
     display: flex;
@@ -51,7 +49,7 @@ const StyledMain = styled.div`
   }
   .card {
     position: absolute;
-    bottom: 0;
+    bottom: 60px;
     width: 100%;
     z-index: 1;
     margin-bottom: 4px;
@@ -65,10 +63,10 @@ const StyledMain = styled.div`
   .sidebar {
     position: absolute;
     z-index: 2;
-    top: 20;
+    top: 48px;
     right: 0;
     width: 100%;
-    height: 100%;
+    height: calc(100% - 48px);
     background-color: #0000004b;
     display: flex;
     justify-content: end;
@@ -77,7 +75,6 @@ const StyledMain = styled.div`
 
 const { Tmapv2 } = window;
 const ANI_TYPE = Tmapv2.MarkerOptions.ANIMATE_BOUNCE_ONCE;
-const BASE_URL = process.env.REACT_APP_AXIOS_BASE_URL;
 
 function Main() {
   const dispatch = useDispatch();
@@ -120,15 +117,18 @@ function Main() {
 
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
-    const location = gotUserLocation ? currentLocation : defaultLocation;
-    setMap(
-      new Tmapv2.Map("TMapApp", {
+    async function makeMap() {
+      const location = gotUserLocation ? currentLocation : defaultLocation;
+      const tMap = await new Tmapv2.Map("TMapApp", {
         center: new Tmapv2.LatLng(location[1], location[0]),
         width: "100%",
         height: "100%",
         zoom: 17,
-      })
-    );
+        draggable: true,
+      });
+      setMap(tMap);
+    }
+    makeMap();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -165,12 +165,12 @@ function Main() {
         const lng = currentLocation[0];
         const newToilets = await getToilets([lat, lng]);
         if (newToilets) {
-          for (const toilet of newToilets) {
+          newToilets.forEach((toilet) => {
             const tlat = toilet.location.coordinates[0];
             const tlng = toilet.location.coordinates[1];
             const data = getPathToToiletInfo(currentLocation, [tlat, tlng]);
             tInfos.push(data);
-          }
+          });
 
           const newPathToToiletInfos = await Promise.all(tInfos);
           for (let i = 0; i < newToilets.length; i += 1) {
@@ -209,6 +209,9 @@ function Main() {
             map: adjMap,
           });
           marker.addListener("click", () => {
+            setSelectedToilet(toilet);
+          });
+          marker.addListener("touchstart", () => {
             setSelectedToilet(toilet);
           });
           if (!adjToiletMarkers.includes(marker)) {
@@ -274,29 +277,23 @@ function Main() {
       const result = await getPathToToiletInfo(currentLocation, [lat, lng]);
       const data = result.features;
 
-      for (let i = 0; i < data.length; i += 1) {
-        const { geometry } = data[i];
+      data.forEach((feature) => {
+        const { geometry } = feature;
 
         if (geometry.type === "LineString") {
-          for (let j = 0; j < geometry.coordinates.length; j += 1) {
+          geometry.coordinates.forEach((element) => {
             setDrawPathInfos((current) => [
               ...current,
               new Tmapv2.LatLng(
                 new Tmapv2.Projection.convertEPSG3857ToWGS84GEO(
-                  new Tmapv2.Point(
-                    geometry.coordinates[j][0],
-                    geometry.coordinates[j][1]
-                  )
+                  new Tmapv2.Point(element[0], element[1])
                 )._lat,
                 new Tmapv2.Projection.convertEPSG3857ToWGS84GEO(
-                  new Tmapv2.Point(
-                    geometry.coordinates[j][0],
-                    geometry.coordinates[j][1]
-                  )
+                  new Tmapv2.Point(element[0], element[1])
                 )._lng
               ),
             ]);
-          }
+          });
         } else {
           const markerImg = "http://topopen.tmap.co.kr/imgs/point.png";
           // eslint-disable-next-line new-cap
@@ -319,7 +316,7 @@ function Main() {
             }),
           ]);
         }
-      }
+      });
       drawLine(adjDrawPathInfos);
     }
 
@@ -330,58 +327,8 @@ function Main() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedToilet, adjPolyline]);
 
-  // 선택한 화장실이 있으면 매 5초마다 사용자의 위치를 추적합니다.
-  useEffect(() => {
-    const getLocationForTracking = setInterval(() => {
-      if (selectedToilet) {
-        if (navigator.geolocation) {
-          navigator.geolocation.getCurrentPosition(
-            (position) => {
-              const lng = position.coords.longitude;
-              const lat = position.coords.latitude;
-              dispatch(userLocationUpdated([lng, lat]));
-            },
-            (error) => {
-              const newErr = {
-                title: "에러가 발생했습니다.",
-                description: "메인으로 이동해주세요.",
-                errorMsg: error.message,
-              };
-              navigate("/error", { state: newErr });
-            },
-            {
-              enableHighAccuracy: false,
-              maximumAge: 0,
-              timeout: Infinity,
-            }
-          );
-        } else {
-          dispatch(userLocationRemoved());
-          const newErr = {
-            title: "GPS를 지원하지 않습니다",
-            description:
-              "위치정보 제공에 동의해주셔야 앱을 사용하실 수 있습니다.",
-          };
-          navigate("/error", { state: newErr });
-        }
-      }
-    }, 5000);
-
-    return () => {
-      clearInterval(getLocationForTracking);
-    };
-  }, [dispatch, navigate, selectedToilet]);
-
-  async function getToilets(center) {
-    const sendQueryUrl = `${BASE_URL}/toilets?lat=${center[0]}&lng=${center[1]}`;
-    const response = await axios.get(sendQueryUrl);
-    const newToilets = response.data.toiletList;
-
-    return newToilets;
-  }
-
   async function getPathToToiletInfo(start, end) {
-    const sendQueryUrl = `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&appKey=l7xx66e7421614a24fb5b811213de86ca032`;
+    const queryUrl = `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&appKey=l7xx66e7421614a24fb5b811213de86ca032`;
     const data = JSON.stringify({
       startName: "현재위치",
       startX: start[0],
@@ -397,7 +344,7 @@ function Main() {
         "Content-Type": "application/json",
       },
     };
-    const response = await axios.post(sendQueryUrl, data, config);
+    const response = await axios.post(queryUrl, data, config);
     const resultData = response.data;
     setSelectedToiletDistance(resultData.features[0].properties.totalDistance);
     setSelectedToiletTime(
@@ -407,36 +354,19 @@ function Main() {
     return resultData;
   }
 
-  function getLocation() {
-    if (navigator.geolocation) {
-      setIsLoading(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lng = position.coords.longitude;
-          const lat = position.coords.latitude;
-          dispatch(userLocationUpdated([lng, lat]));
-          forceSetMapCenter([lng, lat]);
-          setIsLoading(false);
-        },
-        (error) => {
-          const newErr = {
-            title: "에러가 발생했습니다.",
-            description: "메인으로 이동해주세요.",
-            errorMsg: error.message,
-          };
-          navigate("/error", { state: newErr });
-        },
-        {
-          enableHighAccuracy: false,
-          maximumAge: 0,
-          timeout: Infinity,
-        }
-      );
-    } else {
-      dispatch(userLocationRemoved());
+  async function getLocation() {
+    setIsLoading(true);
+    try {
+      const position = await getMyLngLat();
+      const lngLat = makePosionToLngLat(position);
+      dispatch(userLocationUpdated(lngLat));
+      forceSetMapCenter(lngLat);
+      setIsLoading(false);
+    } catch (error) {
       const newErr = {
-        title: "GPS를 지원하지 않습니다",
-        description: "위치정보 제공에 동의해주셔야 앱을 사용하실 수 있습니다.",
+        title: "에러가 발생했습니다.",
+        description: "메인으로 이동해주세요.",
+        errorMsg: error.message,
       };
       navigate("/error", { state: newErr });
     }

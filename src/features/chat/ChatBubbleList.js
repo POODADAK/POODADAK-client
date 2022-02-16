@@ -8,7 +8,7 @@ import { COLOR } from "../../common/util/constants";
 
 const StyledDiv = styled.div`
   width: 100%;
-  height: 700px;
+  height: 100%;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
