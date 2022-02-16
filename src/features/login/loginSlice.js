@@ -1,13 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+const initialState = {
+  isLoggedIn: false,
+  userId: null,
+  lastVisitedToilet: null,
+};
+
 export const loginSlice = createSlice({
   name: "login",
-  initialState: {
-    isLoggedIn: false,
-    userId: null,
-    lastVisitedToilet: null,
-  },
+  initialState,
   reducers: {
     userLoggedIn: (state, action) => {
       state.isLoggedIn = true;

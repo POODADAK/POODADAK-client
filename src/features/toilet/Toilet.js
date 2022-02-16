@@ -1,9 +1,3 @@
-/* eslint-disable react/jsx-boolean-value */
-/* eslint-disable no-plusplus */
-/* eslint-disable no-use-before-define */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable no-console */
-/* eslint-disable camelcase */
 import dayjs from "dayjs";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -26,6 +20,7 @@ import Modal from "../../common/components/modal/Modal";
 import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
+import { COLOR } from "../../common/util/constants";
 import mockLoadingToiletData from "../../common/util/mockLoadingToiletData";
 import {
   chatStatusOptions,
@@ -47,6 +42,7 @@ const StyledToilet = styled.div`
   .titleContainer {
     padding: 0rem 1rem;
     display: flex;
+
     .buttonContainer {
       margin-top: 0.5rem;
       display: flex;
@@ -94,7 +90,7 @@ const StyledToilet = styled.div`
 `;
 
 function Toilet() {
-  const { toilet_id } = useParams();
+  const { toiletId } = useParams();
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -120,7 +116,7 @@ function Toilet() {
   useEffect(() => {
     async function getReviews() {
       try {
-        const toiletData = await getToiletById(toilet_id);
+        const toiletData = await getToiletById(toiletId);
 
         setReviews(toiletData.reviewList);
         setToilet(toiletData);
@@ -157,10 +153,8 @@ function Toilet() {
     async function checkLiveChatAndSetRescueButton() {
       if (isLoggedIn) {
         const { liveChatroomList, myChatroom } = await getLiveChatByToilet(
-          toilet_id
+          toiletId
         );
-
-        console.log(liveChatroomList);
 
         if (myChatroom) {
           dispatch(userEnteredChatroom(myChatroom));
@@ -177,6 +171,7 @@ function Toilet() {
       }
     }
     checkLiveChatAndSetRescueButton();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isLoggedIn]);
 
   useEffect(() => {
@@ -188,15 +183,15 @@ function Toilet() {
         </>
       );
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isChatroomError]);
 
   useEffect(() => {
-    dispatch(visitedToiletComponent(toilet_id));
+    dispatch(visitedToiletComponent(toiletId));
   });
 
   async function onClickSOSButton() {
     if (!isLoggedIn) {
-      // eslint-disable-next-line no-use-before-define
       setContentAndShowModal(
         <>
           <div>로그인이 필요합니다!</div>
@@ -234,7 +229,7 @@ function Toilet() {
       return;
     }
 
-    dispatch(createdChatroom(toilet_id));
+    dispatch(createdChatroom(toiletId));
   }
 
   function handleWaitingSaviorClick() {
@@ -243,12 +238,12 @@ function Toilet() {
 
   function handleRescueClick() {
     navigate("/chatroomList", {
-      state: { toiletId: toilet_id, toiletName: toilet.toiletName },
+      state: { toiletId, toiletName: toilet.toiletName },
     });
   }
 
   function onClickCreatReview() {
-    navigate("/editReview/", { state: { toilet_id } });
+    navigate("/editReview/", { state: { toiletId } });
   }
 
   function handleModalCloseClick() {
@@ -281,7 +276,7 @@ function Toilet() {
         {isChatroomDisconnected && showRescueButton && (
           <ButtonFluid
             icon={helpIcon}
-            color="#EB5757"
+            color={COLOR.SALMON_PINK}
             onClick={handleRescueClick}
           >
             SOS 보낸사람 구조하기
@@ -292,7 +287,7 @@ function Toilet() {
         {isChatroomConnected && !isSocketConnected && (
           <ButtonFluid
             icon={waitIcon}
-            color="#6FCF97"
+            color={COLOR.CYAN}
             onClick={handleWaitingSaviorClick}
           >
             도와줄 사람 기다리기
@@ -346,7 +341,7 @@ function Toilet() {
         <div className="fluidButtonWrapper">
           <ButtonFluid
             icon={docuIcon}
-            color="#bc955c"
+            color={COLOR.HEAVY_GOLD}
             onClick={onClickCreatReview}
           >
             리뷰 남기기

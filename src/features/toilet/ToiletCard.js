@@ -6,6 +6,7 @@ import styled from "styled-components";
 import sosPin from "../../assets/icon-pin-sos.svg";
 import pin from "../../assets/icon-pin.svg";
 import ButtonDefault from "../../common/components/buttons/ButtonDefault";
+import { COLOR } from "../../common/util/constants";
 
 const StyledToiletCard = styled.div`
   width: 100%;
@@ -24,22 +25,25 @@ const StyledToiletCard = styled.div`
     gap: 10px;
     padding: 0.5rem 1rem 1rem 1rem;
   }
+
   .header {
     width: 100%;
     height: 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+
     .distance {
       padding: 0.3rem 0.8rem;
       margin-left: 11%;
       margin-bottom: -0.5rem;
       border-radius: 0.3rem;
-      background-color: #c0c0c0;
+      background-color: ${COLOR.GREY};
       font-size: small;
       color: black;
     }
   }
+
   .name {
     width: 100%;
     display: flex;
@@ -50,11 +54,13 @@ const StyledToiletCard = styled.div`
     color: white;
     gap: 10px;
     margin-bottom: -0.3rem;
+
     .toilet-pin {
       width: 30px;
       height: 30px;
     }
   }
+
   .toilet-info {
     width: 100%;
     margin-left: 80px;

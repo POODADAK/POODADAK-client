@@ -66,6 +66,7 @@ const StyledMain = styled.main`
     .icon {
       margin-right: 0.5rem;
     }
+
     input {
       display: none;
     }
@@ -100,6 +101,7 @@ const StyledMain = styled.main`
     font-size: inherit;
     margin-bottom: 1rem;
     padding: 0.5rem;
+
     ::placeholder {
       font-size: medium;
     }
@@ -175,6 +177,7 @@ function ReviewEdit() {
       (async () => {
         try {
           setExistingReview(reviewId);
+
           const response = await getReview(reviewId);
           const isImage = response.image !== "none";
 

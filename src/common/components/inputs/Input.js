@@ -18,6 +18,7 @@ const StyledInput = styled.form`
     color: beige;
     padding: 10px 10px 10px 10px;
   }
+
   input {
     height: 30px;
     font-size: large;
@@ -28,6 +29,7 @@ const StyledInput = styled.form`
     padding: 0px 10px 10px 10px;
     border: none;
     outline: none;
+
     ::placeholder {
       font-size: medium;
       color: gray;

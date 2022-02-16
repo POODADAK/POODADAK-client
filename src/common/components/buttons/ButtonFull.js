@@ -2,6 +2,8 @@ import PropTypes from "prop-types";
 import React from "react";
 import styled from "styled-components";
 
+import { COLOR } from "../../util/constants";
+
 const StyledButtonFull = styled.button`
   width: 100%;
   height: 50px;
@@ -10,7 +12,7 @@ const StyledButtonFull = styled.button`
   align-items: center;
   font-size: large;
   font-weight: 400;
-  color: #bc955c;
+  color: ${COLOR.HEAVY_GOLD};
   background-color: black;
   cursor: pointer;
 

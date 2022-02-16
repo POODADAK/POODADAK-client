@@ -3,6 +3,7 @@ import React from "react";
 import styled from "styled-components";
 
 import startIcon from "../../assets/icon-start.svg";
+import { COLOR } from "../../common/util/constants";
 
 const StyledStart = styled.div`
   width: 100%;
@@ -12,6 +13,7 @@ const StyledStart = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+
   .wrapper {
     display: flex;
     flex-direction: column;
@@ -19,17 +21,19 @@ const StyledStart = styled.div`
     align-items: center;
     gap: 1rem;
   }
+
   .start-button {
     display: flex;
     justify-content: center;
     align-items: center;
     cursor: pointer;
   }
+
   .description {
     width: 100%;
     font-size: small;
     text-align: center;
-    color: #bc955c;
+    color: ${COLOR.HEAVY_GOLD};
     display: flex;
     flex-direction: column;
     justify-content: center;

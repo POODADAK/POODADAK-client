@@ -22,7 +22,7 @@ const StyledChatBubbleSend = styled.div`
     font-size: small;
     font-weight: bold;
     color: white;
-    background-color: #bc955c;
+    background-color: ${COLOR.HEAVY_GOLD};
     padding: 0.8rem;
     border: none;
     border-radius: 1rem;

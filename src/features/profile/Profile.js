@@ -1,8 +1,6 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-underscore-dangle */
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
 import getUserReviewList from "../../common/api/getUserReviewList";
@@ -26,15 +24,13 @@ function Profile() {
   const [isMyReview, setIsMyReview] = useState(false);
   const loggedInUserId = useSelector((state) => state.login.userId);
 
-  // eslint-disable-next-line no-unused-vars
-  const navigate = useNavigate();
-
   useEffect(() => {
     if (userId === loggedInUserId) {
       setIsMyReview(true);
     } else {
       setIsMyReview(false);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {

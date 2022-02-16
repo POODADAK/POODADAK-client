@@ -1,5 +1,4 @@
 import React from "react";
-// import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 import HeaderSub from "../../common/components/headers/HeaderSub";
@@ -12,8 +11,6 @@ const StyledProfileEdit = styled.div`
 `;
 
 function ProfileEdit() {
-  // const navigate = useNavigate();
-
   return (
     <StyledProfileEdit>
       <HeaderSub />
