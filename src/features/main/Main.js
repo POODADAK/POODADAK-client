@@ -327,6 +327,10 @@ function Main() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedToilet, adjPolyline]);
 
+  setInterval(() => {
+    getLocation();
+  }, 5000);
+
   async function getPathToToiletInfo(start, end) {
     const queryUrl = `https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result&appKey=l7xx66e7421614a24fb5b811213de86ca032`;
     const data = JSON.stringify({
