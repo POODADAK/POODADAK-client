@@ -115,8 +115,6 @@ function Main() {
     [adjMap]
   );
 
-  getLocation();
-
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
     async function makeMap() {
