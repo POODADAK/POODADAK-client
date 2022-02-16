@@ -32,7 +32,7 @@ const StyledButtonDefault = styled.div`
   }
 `;
 
-function ButtonDefault({ onClick, moveTo, icon, children }) {
+function ButtonDefault({ onClick, moveto, icon, children }) {
   return (
     <StyledButtonDefault>
       <div
@@ -45,16 +45,16 @@ function ButtonDefault({ onClick, moveTo, icon, children }) {
         onKeyDown={() => {
           onClick();
         }}
-        moveTo={moveTo}
+        moveto={moveto}
       >
-        {moveTo === "left" && <img src={left} alt="뒤로가기" />}
+        {moveto === "left" && <img src={left} alt="뒤로가기" />}
         {icon && (
           <div className="icon">
             <img src={icon} alt="아이콘" />
           </div>
         )}
         {children && children}
-        {moveTo === "right" && <img src={right} alt="앞으로가기" />}
+        {moveto === "right" && <img src={right} alt="앞으로가기" />}
       </div>
     </StyledButtonDefault>
   );
@@ -62,13 +62,13 @@ function ButtonDefault({ onClick, moveTo, icon, children }) {
 
 ButtonDefault.propTypes = {
   onClick: PropTypes.func.isRequired,
-  moveTo: PropTypes.string,
+  moveto: PropTypes.string,
   icon: PropTypes.element,
   children: PropTypes.string,
 };
 
 ButtonDefault.defaultProps = {
-  moveTo: "none",
+  moveto: "none",
   icon: null,
   children: null,
 };

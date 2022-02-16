@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import styled from "styled-components";
 
+import getChatroom from "../../common/api/getChatroom";
 import HeaderChat from "../../common/components/headers/HeaderChat";
 import InputChat from "../../common/components/inputs/InputChat";
 import {
@@ -10,7 +11,11 @@ import {
   socketEmitted,
 } from "../../common/middlewares/socketMiddleware";
 import ChatBubbleList from "./ChatBubbleList";
-import { chatReceived, socketStatusOptions } from "./chatSlice";
+import {
+  chatReceived,
+  participantStatusOptions,
+  socketStatusOptions,
+} from "./chatSlice";
 
 const StyledChat = styled.div`
   height: 100%;
@@ -21,7 +26,7 @@ const StyledChat = styled.div`
 
   .chat-container {
     width: 100%;
-    overflow-y: scroll;
+    overflow: scroll;
     display: flex;
     flex-direction: column-reverse;
   }
@@ -30,20 +35,36 @@ const StyledChat = styled.div`
 function Chatroom() {
   const userId = useSelector((state) => state.login.userId);
   const socketStatus = useSelector((state) => state.chat.socketStatus);
+  const participantStatus = useSelector(
+    (state) => state.chat.participantStatus
+  );
   const chatList = useSelector((state) => state.chat.chatList);
   const dispatch = useDispatch();
   const { chatroomId } = useParams();
 
   const [enteredChat, setEnteredChat] = useState("");
-  // const [isChatEnd, setIsChatEnd] = useState(false);
-  const { search } = useLocation();
-  const toiletId = search.split("=")[1];
 
-  // console.log(socketStatus);
   const isSocketConnected = socketStatus === socketStatusOptions.connected;
+  const isParticipantLeft =
+    participantStatus === participantStatusOptions.participantLeft;
 
   useEffect(() => {
-    dispatch(socketConnected("toiletId", toiletId, userId, chatroomId));
+    async function checkIsChatroomLiveAndConnect() {
+      const chatroom = await getChatroom(chatroomId);
+
+      if (chatroom.isLive) {
+        dispatch(
+          socketConnected(
+            "toiletId",
+            chatroom.toilet,
+            chatroom.owner,
+            chatroomId
+          )
+        );
+      }
+    }
+
+    checkIsChatroomLiveAndConnect();
   }, []);
 
   function handleChatInput(event) {
@@ -78,7 +99,7 @@ function Chatroom() {
         chatList={chatList}
         userId={userId}
         isConnection={isSocketConnected}
-        // isChatEnd={}
+        isParticipantLeft={isParticipantLeft}
       />
       <InputChat
         chat={enteredChat}

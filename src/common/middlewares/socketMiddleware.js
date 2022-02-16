@@ -7,7 +7,6 @@ import {
   chatConnectionFailed,
   chatConnectionRequestSent,
   socketOpened,
-  // socketClosed,
   chatReceived,
 } from "../../features/chat/chatSlice";
 
@@ -44,15 +43,13 @@ const socketMiddleware = () => {
   let socket = null;
 
   return (storeAPI) => (next) => (action) => {
-    // console.log("ac", action);
     if (action.type === socketActionType.connected) {
       const { prefix, namespace, userId, roomDBId } = action.payload;
 
       if (socket) {
-        socket.disconnect();
+        next();
+        return;
       }
-
-      // console.log(roomDBId);
 
       socket = io(
         `${process.env.REACT_APP_AXIOS_BASE_URL}/${prefix}-${namespace}?room=${userId}&roomDBId=${roomDBId}`,
@@ -70,7 +67,6 @@ const socketMiddleware = () => {
       });
 
       socket.on("joinChatroom", (chatroom) => {
-        // console.log("jc", chatroom);
         storeAPI.dispatch(userEnteredChatroom(chatroom));
       });
 
@@ -79,8 +75,11 @@ const socketMiddleware = () => {
       });
 
       socket.on("receiveChat", (chat) => {
-        // console.log("chatreceived", chat);
         storeAPI.dispatch(chatReceived(chat));
+      });
+
+      socket.on("leaveChat", () => {
+        socket.disconnect();
       });
 
       socket.on("disconnect", () => {
@@ -96,6 +95,10 @@ const socketMiddleware = () => {
       socket.on("connect_error", (error) => {
         storeAPI.dispatch(chatConnectionFailed(error));
       });
+    }
+
+    if (action.type === socketActionType.disconnected) {
+      socket.disconnect();
     }
 
     if (action.type === socketActionType.emit) {

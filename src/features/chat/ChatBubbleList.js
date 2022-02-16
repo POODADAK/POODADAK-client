@@ -8,6 +8,7 @@ import { COLOR } from "../../common/util/constants";
 
 const StyledDiv = styled.div`
   width: 100%;
+  height: 700px;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;
@@ -18,7 +19,7 @@ const StyledDiv = styled.div`
   }
 `;
 
-function ChatBubbleList({ chatList, userId, isConnection, isChatEnd }) {
+function ChatBubbleList({ chatList, userId, isConnection, isParticipantLeft }) {
   const bubbleList = [];
   const scrollMarker = useRef();
 
@@ -38,7 +39,7 @@ function ChatBubbleList({ chatList, userId, isConnection, isChatEnd }) {
   return (
     <StyledDiv>
       {bubbleList}
-      {isChatEnd && (
+      {isParticipantLeft && (
         <p className="chat-announcement">상대방이 채팅을 종료 했습니다.</p>
       )}
       {!isConnection && (
@@ -59,7 +60,7 @@ ChatBubbleList.propTypes = {
   ).isRequired,
   userId: PropTypes.string.isRequired,
   isConnection: PropTypes.bool.isRequired,
-  isChatEnd: PropTypes.bool.isRequired,
+  isParticipantLeft: PropTypes.bool.isRequired,
 };
 
 export default ChatBubbleList;

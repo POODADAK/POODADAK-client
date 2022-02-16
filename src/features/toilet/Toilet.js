@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-boolean-value */
 /* eslint-disable no-plusplus */
 /* eslint-disable no-use-before-define */
 /* eslint-disable no-underscore-dangle */
@@ -30,8 +31,10 @@ import {
   chatStatusOptions,
   createdChatroom,
   errorChecked,
+  socketStatusOptions,
   userEnteredChatroom,
 } from "../chat/chatSlice";
+import { visitedToiletComponent } from "../login/loginSlice";
 
 const StyledToilet = styled.div`
   width: 100%;
@@ -80,8 +83,8 @@ function Toilet() {
   const dispatch = useDispatch();
 
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
-  // eslint-disable-next-line no-unused-vars
   const chatStatus = useSelector((state) => state.chat.chatStatus);
+  const socketStatus = useSelector((state) => state.chat.socketStatus);
   const nearToilets = useSelector((state) => state.toilet.nearToilets);
   const chatError = useSelector((state) => state.chat.error);
   const chatroomId = useSelector((state) => state.chat.chatroomId);
@@ -96,6 +99,7 @@ function Toilet() {
   const isChatroomDisconnected = chatStatus === chatStatusOptions.disconnected;
   const isChatroomConnected = chatStatus === chatStatusOptions.connected;
   const isChatroomError = chatStatus === chatStatusOptions.error;
+  const isSocketConnected = socketStatus === socketStatusOptions.connected;
 
   useEffect(() => {
     async function getReviews() {
@@ -170,6 +174,10 @@ function Toilet() {
     }
   }, [isChatroomError]);
 
+  useEffect(() => {
+    dispatch(visitedToiletComponent(toilet_id));
+  });
+
   async function onClickSOSButton() {
     if (!isLoggedIn) {
       // eslint-disable-next-line no-use-before-define
@@ -227,8 +235,6 @@ function Toilet() {
     navigate("/editReview/", { state: { toilet_id } });
   }
 
-  function blablablabla() {} // TODO: 애매한 함수 처리를 위해 세팅해두었습니다. 해당 함수 적용은 정리 필요!!
-
   function handleModalCloseClick() {
     setModalContent("");
     setShowModal(false);
@@ -245,13 +251,13 @@ function Toilet() {
       {showModal && (
         <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
       )}
-      <HeaderSub onClick={handleWaitingSaviorClick} />
+      <HeaderSub isGoBackButtonMain={true} />
       <div className="titleContainer">
         <Title title={toilet.toiletName} description={toilet.roadNameAddress} />
         {isChatroomDisconnected && (
           <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
         )}
-        <ButtonDefault onClick={blablablabla} icon={viewFinder} />
+        <ButtonDefault icon={viewFinder} />
       </div>
       <div className="fluidButtonWrapper">
         {isChatroomDisconnected && showRescueButton && (
@@ -265,7 +271,7 @@ function Toilet() {
         )}
       </div>
       <div className="fluidButtonWrapper">
-        {isChatroomConnected && (
+        {isChatroomConnected && !isSocketConnected && (
           <ButtonFluid
             icon={waitIcon}
             color="#6FCF97"

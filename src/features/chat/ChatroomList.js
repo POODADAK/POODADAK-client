@@ -59,18 +59,12 @@ function ChatroomList() {
         chatroomList.map((chatroom) => (
           <List2Lines
             key={chatroom._id}
-            label={
-              findLastChat(chatroom.chatList)?.sender || chatroom.owner.username
-            }
+            label={chatroom.owner.username}
             secondary={
               findLastChat(chatroom.chatList)?.message ||
               "아직 채팅이 없습니다."
             }
-            onClick={() =>
-              navigate(
-                `/chatroomList/${chatroom._id}?toiletId=${chatroom.toilet}`
-              )
-            }
+            onClick={() => navigate(`/chatroomList/${chatroom._id}`)}
           />
         ))}
     </StyledChats>

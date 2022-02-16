@@ -13,8 +13,10 @@ export const chatStatusOptions = {
 export const socketStatusOptions = {
   disconnected: "disconnected",
   connected: "connected",
-  connecting: "connecting",
-  error: "error",
+};
+
+export const participantStatusOptions = {
+  participantLeft: "participantLeft",
 };
 
 export const chatSlice = createSlice({
@@ -22,6 +24,7 @@ export const chatSlice = createSlice({
   initialState: {
     chatStatus: chatStatusOptions.disconnected,
     socketStatus: socketStatusOptions.disconnected,
+    participantStatus: null,
     chatroomId: null,
     chatList: [],
     nameSpace: null,
@@ -35,6 +38,7 @@ export const chatSlice = createSlice({
       state.chatList = action.payload.chatList;
       state.owner = action.payload.owner;
       state.nameSpace = action.payload.toilet;
+      state.participantStatus = null;
     },
     userLeftChatroom: (state) => {
       state.chatStatus = chatStatusOptions.disconnected;
@@ -44,6 +48,8 @@ export const chatSlice = createSlice({
       state.participant = null;
       state.error = null;
       state.nameSpace = null;
+      state.participantStatus = participantStatusOptions.participantLeft;
+      state.socketStatus = socketStatusOptions.disconnected;
     },
     chatListLoaded: (state, action) => {
       state.chatList = action.payload;
@@ -52,9 +58,10 @@ export const chatSlice = createSlice({
       state.chatStatus = chatStatusOptions.error;
       state.error.status = action.payload.status;
       state.error.message = action.payload.message;
+      state.participantStatus = null;
     },
     chatConnectionRequestSent: (state) => {
-      state.chatList = chatStatusOptions.connecting;
+      state.chatStatus = chatStatusOptions.connecting;
       state.error = null;
     },
     errorChecked: (state) => {
@@ -97,6 +104,7 @@ export const {
   socketOpened,
   socketClosed,
   chatReceived,
+  participantLeft,
 } = chatSlice.actions;
 
 export default chatSlice.reducer;

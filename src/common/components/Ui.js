@@ -56,7 +56,7 @@ function Ui() {
     <StyledUi>
       <h3>Buttons</h3>
       <ButtonSmall>ButtonSmall</ButtonSmall>
-      <ButtonDefault moveTo="left">ButtonDefault</ButtonDefault>
+      <ButtonDefault moveto="left">ButtonDefault</ButtonDefault>
       <ButtonFull icon={check}>ButtonFull</ButtonFull>
       <ButtonFluid icon={help} color="#EB5757">
         ButtonFluid
