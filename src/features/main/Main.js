@@ -182,6 +182,11 @@ function Main() {
 
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
+    getMyLongLat()
+      // eslint-disable-next-line no-alert
+      .then((result) => alert(result))
+      // eslint-disable-next-line no-alert
+      .catch((error) => alert(error));
     const location = gotUserLocation ? currentLocation : defaultLocation;
     setMap(
       new Tmapv2.Map("TMapApp", {
@@ -191,11 +196,6 @@ function Main() {
         zoom: 17,
       })
     );
-    getMyLongLat()
-      // eslint-disable-next-line no-alert
-      .then((result) => alert(result))
-      // eslint-disable-next-line no-alert
-      .catch((error) => alert(error));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
