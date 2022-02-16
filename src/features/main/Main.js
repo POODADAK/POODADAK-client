@@ -9,6 +9,7 @@ import styled from "styled-components";
 import pinSosToilet from "../../assets/icon-pin-sos.svg";
 import pinToilet from "../../assets/icon-pin.svg";
 import pinCurrent from "../../assets/pin-current-small.gif";
+import getMyLongLat from "../../common/api/getMyLongLat";
 import ButtonFull from "../../common/components/buttons/ButtonFull";
 import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
@@ -154,35 +155,17 @@ function Main() {
   }
 
   function getLocation() {
-    if (navigator.geolocation) {
-      setIsLoading(true);
-      navigator.geolocation.getCurrentPosition(
-        (position) => {
-          const lng = position.coords.longitude;
-          const lat = position.coords.latitude;
-          dispatch(userLocationUpdated([lng, lat]));
-          forceSetMapCenter([lng, lat]);
-          setIsLoading(false);
-        },
-        (error) => {
-          const newErr = {
-            title: "에러가 발생했습니다.",
-            description: "메인으로 이동해주세요.",
-            errorMsg: error.message,
-          };
-          navigate("/error", { state: newErr });
-        },
-        {
-          enableHighAccuracy: false,
-          maximumAge: 0,
-          timeout: Infinity,
-        }
-      );
-    } else {
-      dispatch(userLocationRemoved());
+    setIsLoading(true);
+    try {
+      const [lat, lng] = getMyLongLat();
+      dispatch(userLocationUpdated([lng, lat]));
+      forceSetMapCenter([lng, lat]);
+      setIsLoading(false);
+    } catch (error) {
       const newErr = {
-        title: "GPS를 지원하지 않습니다",
-        description: "위치정보 제공에 동의해주셔야 앱을 사용하실 수 있습니다.",
+        title: "에러가 발생했습니다.",
+        description: "메인으로 이동해주세요.",
+        errorMsg: error.message,
       };
       navigate("/error", { state: newErr });
     }
@@ -194,7 +177,6 @@ function Main() {
 
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
-    getLocation();
     const location = gotUserLocation ? currentLocation : defaultLocation;
     setMap(
       new Tmapv2.Map("TMapApp", {
