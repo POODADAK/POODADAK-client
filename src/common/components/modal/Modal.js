@@ -26,7 +26,7 @@ const ModalWrapper = styled.div`
   flex-direction: column;
   align-items: center;
 
-  header {
+  .header {
     width: 100%;
     height: 3rem;
     background-color: ${COLOR.HEAVY_GOLD};
@@ -46,7 +46,7 @@ const ModalWrapper = styled.div`
     }
   }
 
-  body {
+  .body {
     padding: 2rem 1rem 3rem 1rem;
     min-height: 4rem;
     display: flex;
@@ -78,7 +78,7 @@ function Modal({ children, onModalCloseClick }) {
     <>
       <Backdrop onClick={handleCloseClick} />
       <ModalWrapper>
-        <header>
+        <div className="header">
           <div
             className="close-button"
             onClick={handleCloseClick}
@@ -88,8 +88,8 @@ function Modal({ children, onModalCloseClick }) {
           >
             <img src={iconClose} alt="닫기" />
           </div>
-        </header>
-        <body>{children}</body>
+        </div>
+        <div className="body">{children}</div>
       </ModalWrapper>
     </>,
     $rootElement
