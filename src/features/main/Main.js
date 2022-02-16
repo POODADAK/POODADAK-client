@@ -200,6 +200,17 @@ function Main() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // 초기 랜더링 시 티맵을 불러옵니다.
+  useEffect(() => {
+    async function firstCheckMyLngLat() {
+      const [lng, lat] = await getMyLngLat();
+      dispatch(userLocationUpdated([lng, lat]));
+    }
+
+    firstCheckMyLngLat();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   // 최초로 현재 내 위치 마커를 찍고 지도를 내 위치로 이동합니다.
   useEffect(() => {
     setCurrentMarker(
