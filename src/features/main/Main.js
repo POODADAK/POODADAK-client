@@ -87,6 +87,7 @@ function Main() {
   const [map, setMap] = useState(null);
   const [mapCenter, setMapCenter] = useState(null);
   const [watchId, setWatchId] = useState(null);
+  const [useCurrent, setUseCurrent] = useState([]);
   const [currentMarker, setCurrentMarker] = useState(null);
   const [toiletMarkers, setToiletMarkers] = useState([]);
   const [selectedToilet, setSelectedToilet] = useState(null);
@@ -129,7 +130,6 @@ function Main() {
     }
     makeMap();
     getMyLocation();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
