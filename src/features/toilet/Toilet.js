@@ -97,7 +97,6 @@ function Toilet() {
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const chatStatus = useSelector((state) => state.chat.chatStatus);
   const socketStatus = useSelector((state) => state.chat.socketStatus);
-  const nearToilets = useSelector((state) => state.toilet.nearToilets);
   const chatError = useSelector((state) => state.chat.error);
   const chatroomId = useSelector((state) => state.chat.chatroomId);
 
@@ -112,6 +111,12 @@ function Toilet() {
   const isChatroomConnected = chatStatus === chatStatusOptions.connected;
   const isChatroomError = chatStatus === chatStatusOptions.error;
   const isSocketConnected = socketStatus === socketStatusOptions.connected;
+
+  const lastToiletPaperCheckDate =
+    dayjs(toilet.latestToiletPaperInfo.lastDate).format("YYYY/MM/DD") ===
+    "Invalid Date"
+      ? "알 수 없음"
+      : dayjs(toilet.latestToiletPaperInfo.lastDate).format("YYYY/MM/DD");
 
   useEffect(() => {
     async function getReviews() {
@@ -215,20 +220,6 @@ function Toilet() {
       );
     }
 
-    let isNearToilet = false;
-
-    for (let i = 0; i < nearToilets.length; i++) {
-      if (nearToilets[i]._id === toilet._id) {
-        isNearToilet = true;
-        break;
-      }
-    }
-
-    if (!isNearToilet) {
-      setContentAndShowModal(<p>현재 위치가 해당 화장실 근처가 아닙니다!</p>);
-      return;
-    }
-
     dispatch(createdChatroom(toiletId));
   }
 
@@ -312,8 +303,7 @@ function Toilet() {
             secondary={toilet.latestToiletPaperInfo?.hasToiletPaper ? "O" : "X"}
           />
           <div className="lastToiletPaterProvideTime">
-            마지막 확인 :{" "}
-            {dayjs(toilet.latestToiletPaperInfo.lastDate).format("YYYY/MM/DD")}
+            마지막 확인 : {lastToiletPaperCheckDate}
           </div>
         </div>
         <ListDefault
