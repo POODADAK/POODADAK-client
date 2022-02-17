@@ -131,26 +131,30 @@ function Main() {
         navigator.geolocation.clearWatch(watchId);
       });
       setMap(tMap);
-      setWatchId(
-        navigator.geolocation.watchPosition(
-          (position) => {
-            const lng = position.coords.longitude;
-            const lat = position.coords.latitude;
-            dispatch(userLocationUpdated([lng, lat]));
-          },
-          (error) => {
-            const newErr = {
-              title: "에러가 발생했습니다.",
-              description: "메인으로 이동해주세요.",
-              errorMsg: error.message,
-            };
-            navigate("/error", { state: newErr });
-          }
-        )
-      );
     }
     makeMap();
 
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  useEffect(() => {
+    setWatchId(
+      navigator.geolocation.watchPosition(
+        (position) => {
+          const lng = position.coords.longitude;
+          const lat = position.coords.latitude;
+          dispatch(userLocationUpdated([lng, lat]));
+        },
+        (error) => {
+          const newErr = {
+            title: "에러가 발생했습니다.",
+            description: "메인으로 이동해주세요.",
+            errorMsg: error.message,
+          };
+          navigate("/error", { state: newErr });
+        }
+      )
+    );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
