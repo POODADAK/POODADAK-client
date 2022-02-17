@@ -108,13 +108,10 @@ function Main() {
   const adjPathMarkers = pathMarkers;
   const adjPolyline = polyline;
 
-  const forceSetMapCenter = useCallback(
-    async (center) => {
-      const newLocation = new Tmapv2.LatLng(center[1], center[0]);
-      await adjMap.setCenter(newLocation);
-    },
-    [adjMap]
-  );
+  const forceSetMapCenter = useCallback(async (center) => {
+    const newLocation = new Tmapv2.LatLng(center[1], center[0]);
+    await adjMap.setCenter(newLocation);
+  }, []);
 
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
