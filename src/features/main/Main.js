@@ -18,6 +18,7 @@ import ButtonFull from "../../common/components/buttons/ButtonFull";
 import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
 import Sidebar from "../../common/components/Sidebar";
+import usePosition from "../../common/hooks/usePosition";
 import ToiletCard from "../toilet/ToiletCard";
 import { nearToiletsUpdated } from "../toilet/toiletSlice";
 import { userLocationUpdated } from "./mainSlice";
@@ -83,6 +84,7 @@ function Main() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const defaultLocation = [126.97796919, 37.566535];
+  const { latitude, longitude, error } = usePosition();
 
   const [map, setMap] = useState(null);
   const [mapCenter, setMapCenter] = useState(null);
@@ -133,8 +135,9 @@ function Main() {
   }, []);
 
   useEffect(() => {
-    if (gotUserLocation) setIsStarted(true);
-  }, [gotUserLocation]);
+    dispatch(userLocationUpdated([longitude, latitude]));
+    console.log(latitude, longitude, error);
+  }, [latitude, longitude]);
 
   // TODO: 모니터링용 유즈이펙트!!!!
   useEffect(() => {
@@ -151,11 +154,11 @@ function Main() {
       const position = await getMyLngLat();
       const lngLat = makePosionToLngLat(position);
       dispatch(userLocationUpdated(lngLat));
-    } catch (error) {
+    } catch (err) {
       const newErr = {
         title: "에러가 발생했습니다.",
         description: "메인으로 이동해주세요.",
-        errorMsg: error.message,
+        errorMsg: err.message,
       };
       navigate("/error", { state: newErr });
     }
