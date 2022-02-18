@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -226,7 +227,9 @@ function ReviewCard({
         >
           {username}
         </div>
-        <div className="date">{updatedAt}</div>
+        <div className="date">
+          {dayjs(updatedAt).format("YYYY.MM.DD HH.mm")}
+        </div>
       </StyledHeader>
       <div
         className="toiletName"
