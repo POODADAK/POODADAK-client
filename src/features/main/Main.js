@@ -112,6 +112,7 @@ function Main() {
   const currentLocation = useSelector((state) => state.main.userLocation);
   const nearToilets = useSelector((state) => state.toilet.nearToilets);
 
+  const adjMap = map;
   const adjCurrentMarker = currentMarker;
   const adjToiletMarkers = toiletMarkers;
   const adjDrawPathInfos = drawPathInfos;
@@ -123,20 +124,23 @@ function Main() {
   useEffect(() => {
     async function makeMap() {
       const location = gotUserLocation ? currentLocation : defaultLocation;
-      const tMap = await new Tmapv2.Map("TMapApp", {
-        center: new Tmapv2.LatLng(location[1], location[0]),
-        width: "100%",
-        height: "100%",
-        zoom: 17,
-        draggable: true,
-      });
-      tMap.addListener("drag", () => {
-        navigator.geolocation.clearWatch(watchId);
-      });
-      setMap(tMap);
+      setMap(
+        await new Tmapv2.Map("TMapApp", {
+          center: new Tmapv2.LatLng(location[1], location[0]),
+          width: "100%",
+          height: "100%",
+          zoom: 17,
+          draggable: true,
+        })
+      );
       getMyLocation();
     }
     makeMap();
+    if (adjMap) {
+      adjMap.addListener("drag", () => {
+        navigator.geolocation.clearWatch(watchId);
+      });
+    }
   }, []);
 
   // TODO: 모니터링용 유즈이펙트!!!!
