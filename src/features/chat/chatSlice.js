@@ -3,14 +3,12 @@ import axios from "axios";
 
 import createChatroom from "../../common/api/createChatroom";
 
-const BASE_URL = process.env.REACT_APP_AXIOS_BASE_URL;
-
 export const getMyChatroom = createAsyncThunk(
   "chat/getMyChatroom",
   async (userId) => {
     try {
       const myChatroom = axios.get(
-        `${BASE_URL}/chatroom/live-chatroom-list?userId=${userId}`
+        `/chatroom/live-chatroom-list?userId=${userId}`
       );
 
       return myChatroom;
@@ -65,7 +63,7 @@ export const chatSlice = createSlice({
       state.chatList = [];
       state.owner = null;
       state.participant = null;
-      state.error = null;
+      state.error = { status: null, message: null };
       state.nameSpace = null;
       state.participantStatus = participantStatusOptions.participantLeft;
       state.socketStatus = socketStatusOptions.disconnected;
@@ -81,7 +79,7 @@ export const chatSlice = createSlice({
     },
     chatConnectionRequestSent: (state) => {
       state.chatStatus = chatStatusOptions.connecting;
-      state.error = null;
+      state.error = { status: null, message: null };
     },
     errorChecked: (state) => {
       state.error = { status: null, message: null };
@@ -103,21 +101,24 @@ export const chatSlice = createSlice({
       state.chatroomId = null;
       state.chatList = [];
       state.owner = null;
-      state.error = null;
+      state.error = { status: null, message: null };
     },
     [getMyChatroom.fulfilled]: (state, action) => {
       state.chatStatus = chatStatusOptions.connected;
       state.chatroomId = action.payload._id;
       state.chatList = action.payload.chatList;
       state.owner = action.payload.owner;
-      state.error = null;
+      state.error = { status: null, message: null };
     },
     [getMyChatroom.error]: (state, action) => {
       state.chatStatus = chatStatusOptions.disconnected;
       state.chatroomId = null;
       state.chatList = [];
       state.owner = null;
-      state.error = action.payload;
+      state.error = {
+        status: action.payload.status,
+        message: action.payload.message,
+      };
     },
   },
 });
