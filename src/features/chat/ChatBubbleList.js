@@ -7,8 +7,8 @@ import ChatBubbleSend from "../../common/components/chats/ChatBubbleSend";
 import { COLOR } from "../../common/util/constants";
 
 const StyledDiv = styled.div`
+  flex-grow: 1;
   width: 100%;
-  height: 100%;
   overflow-y: scroll;
   display: flex;
   flex-direction: column;

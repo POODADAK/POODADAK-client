@@ -20,14 +20,14 @@ import {
 
 const StyledChat = styled.div`
   width: 100%;
-  height: calc(100vh - 4rem);
+  height: calc(100vh - 4.5rem);
   display: flex;
   flex-direction: column;
   background-color: black;
 
   .chat-container {
-    width: 100%;
-    height: 100%;
+    width: auto;
+    flex-grow: 1;
     margin-bottom: 20px;
     display: flex;
     flex-direction: column-reverse;

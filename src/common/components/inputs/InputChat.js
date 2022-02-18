@@ -36,6 +36,7 @@ const StyledInputChat = styled.form`
   }
 
   .btn {
+    width: fit-content;
     margin-left: -65px;
   }
 `;
