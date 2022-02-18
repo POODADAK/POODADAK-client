@@ -134,7 +134,7 @@ function Main() {
           httpsMode: true,
         })
       );
-      getMyLocation();
+      // gettingStart();
     }
     makeMap();
     // eslint-disable-next-line no-alert
@@ -151,20 +151,22 @@ function Main() {
   }
 
   async function getMyLocation() {
-    setIsLoading(true);
     try {
       const position = await getMyLngLat();
       const lngLat = makePosionToLngLat(position);
       dispatch(userLocationUpdated(lngLat));
-      setIsLoading(false);
-      setIsStarted(true);
     } catch (err) {
-      const newChildren =
-        "위치정보 제공 동의를 진행하지 않으면 정확한 거리정보를 제공받을 수 없습니다. 그래도 지도를 통해 화장실들을 볼 수는 있습니다.";
-      setIsLoading(false);
+      const newChildren = `위치정보 제공 동의를 진행하지 않으면 정확한 거리정보를 제공받을 수 없습니다. 그래도 지도를 통해 화장실들을 볼 수는 있습니다. 위치정보 제공 동의를 다시 하시려면 페이지에 다시 접속해주시기 바랍니다.`;
       setModal(newChildren);
       setOpenModal(true);
     }
+  }
+
+  async function gettingStart() {
+    setIsLoading(true);
+    getMyLocation()
+      .then(() => setIsLoading(false))
+      .then(() => setIsStarted(true));
   }
 
   function toggleSidebar() {
@@ -233,7 +235,8 @@ function Main() {
 
       {!isStarted && (
         <div className="start">
-          <Start onClick={() => setIsStarted(true)} />
+          {/* <Start onClick={() => setIsStarted(true)} /> */}
+          <Start onClick={() => gettingStart()} />
         </div>
       )}
 
