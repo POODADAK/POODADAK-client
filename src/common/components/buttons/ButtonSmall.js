@@ -5,7 +5,7 @@ import styled from "styled-components";
 import { COLOR } from "../../util/constants";
 
 const StyledButtonSmall = styled.button`
-  width: fit-content;
+  width: auto;
   display: flex;
   flex-direction: row;
   align-items: center;

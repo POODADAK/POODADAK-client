@@ -20,17 +20,16 @@ import {
 
 const StyledChat = styled.div`
   width: 100%;
-  height: calc(100vh - 4.5rem);
+  min-height: calc(100vh - 4.5rem);
   display: flex;
   flex-direction: column;
   background-color: black;
 
   .chat-container {
     width: auto;
-    flex-grow: 1;
-    margin-bottom: 20px;
+    min-height: calc(100vh - 4.5rem - 50px);
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
   }
 `;
 
@@ -128,12 +127,12 @@ function Chatroom() {
           isConnection={isSocketConnected}
           isParticipantLeft={isParticipantLeft}
         />
+        <InputChat
+          chat={enteredChat}
+          onChange={handleChatInput}
+          onSubmit={handleChatSubmit}
+        />
       </div>
-      <InputChat
-        chat={enteredChat}
-        onChange={handleChatInput}
-        onSubmit={handleChatSubmit}
-      />
     </StyledChat>
   );
 }
