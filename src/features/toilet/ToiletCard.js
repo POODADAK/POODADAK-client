@@ -74,6 +74,10 @@ const StyledToiletCard = styled.div`
 
 function ToiletCard({ toilet, distance, time }) {
   const navigate = useNavigate();
+  const gotUserLocation = useSelector((state) => state.main.gotUserLocation);
+  const nearToilets = useSelector((state) => state.toilet.nearToilets);
+  const [isNear, setIsNear] = useState(false);
+
   const {
     _id: toiletId,
     isSOS,
@@ -82,8 +86,6 @@ function ToiletCard({ toilet, distance, time }) {
     menToiletBowlNumber,
     ladiesToiletBowlNumber,
   } = toilet;
-  const nearToilets = useSelector((state) => state.toilet.nearToilets);
-  const [isNear, setIsNear] = useState(false);
 
   useEffect(() => {
     if (nearToilets) {
@@ -103,7 +105,10 @@ function ToiletCard({ toilet, distance, time }) {
       <div className="wrapper">
         <div className="header">
           <div className="distance">
-            {isNear ? `${distance}m (도보 ${time}분)` : "500m이상...안되요."}
+            {gotUserLocation && isNear
+              ? `${distance}m (도보 ${time}분)`
+              : "500m이상...안되요."}
+            {!gotUserLocation && "😢 어디 계시나요?"}
           </div>
           <ButtonDefault moveto="right" onClick={() => moveToiletDetail()}>
             상세정보

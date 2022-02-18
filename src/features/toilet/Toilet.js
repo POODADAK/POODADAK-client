@@ -105,6 +105,7 @@ function Toilet() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const gotUserLocation = useSelector((state) => state.main.gotUserLocation);
   const nearToilets = useSelector((state) => state.toilet.nearToilets);
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const chatStatus = useSelector((state) => state.chat.chatStatus);
@@ -303,14 +304,19 @@ function Toilet() {
           )}
         </div>
       </div>
-      {isNear && (
+      {gotUserLocation && isNear && (
         <div className="so-near">
           🤣 500m 이내로 가능한 거리! 얼른 가봅시다!
         </div>
       )}
-      {!isNear && (
+      {gotUserLocation && !isNear && (
         <div className="so-far">
           😱 거리 500m 초과! 너무 멀어요... 거기까진... 안되요
+        </div>
+      )}
+      {!gotUserLocation && (
+        <div className="so-far">
+          😢 위치정보 동의를 하지 않아 거리를 알 수 없네요.
         </div>
       )}
       <div className="fluidButtonWrapper">
