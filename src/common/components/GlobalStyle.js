@@ -3,7 +3,7 @@ import { createGlobalStyle } from "styled-components";
 const GlobalStyle = createGlobalStyle`
   html {
     width: 100vw;
-    height: 93.4%;
+    min-height: calc(100vh - 300px);
     background-color: white;
     margin: 0;
     padding: 0;
@@ -26,10 +26,6 @@ const GlobalStyle = createGlobalStyle`
 
   ::-webkit-scrollbar {
     display: none;
-  }
-
-  #root {
-    height: 100%;
   }
 `;
 
