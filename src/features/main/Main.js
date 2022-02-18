@@ -131,16 +131,13 @@ function Main() {
           height: "100%",
           zoom: 17,
           draggable: true,
+          httpsMode: true,
         })
       );
       getMyLocation();
     }
     makeMap();
-    if (adjMap) {
-      adjMap.addListener("drag", () => {
-        navigator.geolocation.clearWatch(watchId);
-      });
-    }
+    // eslint-disable-next-line no-alert
   }, []);
 
   // TODO: 모니터링용 유즈이펙트!!!!
