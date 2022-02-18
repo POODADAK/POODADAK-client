@@ -39,11 +39,11 @@ const StyledToilet = styled.div`
   background-color: black;
   color: white;
 
-  .titleContainer {
+  .title-container {
     padding: 0rem 1rem;
     display: flex;
 
-    .buttonContainer {
+    .button-container {
       margin-top: 0.5rem;
       display: flex;
     }
@@ -56,7 +56,7 @@ const StyledToilet = styled.div`
     margin-top: -0.8rem;
   }
 
-  .rankContainer {
+  .rank-container {
     font-size: large;
     font-weight: 400;
     padding: 1rem;
@@ -70,24 +70,28 @@ const StyledToilet = styled.div`
     padding: 1rem;
   }
 
-  .toiletPaperContainer {
+  .toilet-paper-container {
     width: 100%;
     display: flex;
     align-items: center;
   }
 
-  .lastToiletPaterProvideTime {
+  .last-toilet-pater-provide-time {
     width: 100%;
     font-size: small;
     color: gray;
     margin-right: 1rem;
   }
 
-  .reviewContainer {
+  .review-container {
     padding: 1rem;
   }
 
-  .fluidButtonWrapper {
+  .review-card-container {
+    padding: 0.4rem;
+  }
+
+  .fluid-button-container {
     width: 100%;
     display: flex;
     justify-content: center;
@@ -291,9 +295,9 @@ function Toilet() {
         <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
       )}
       <HeaderSub isGoBackButtonMain={true} />
-      <div className="titleContainer">
+      <div className="title-container">
         <Title title={toilet.toiletName} description={toilet.roadNameAddress} />
-        <div className="buttonContainer">
+        <div className="button-container">
           {isChatroomDisconnected && (
             <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
           )}
@@ -316,7 +320,7 @@ function Toilet() {
           </ButtonFluid>
         )}
       </div>
-      <div className="fluidButtonWrapper">
+      <div className="fluid-button-container">
         {isChatroomConnected && !isSocketConnected && (
           <ButtonFluid
             icon={waitIcon}
@@ -327,7 +331,7 @@ function Toilet() {
           </ButtonFluid>
         )}
       </div>
-      <div className="rankContainer">
+      <div className="rank-container">
         <div>청결도 평균 ( {avgRating} ) </div>
         <div>
           <StarContainer
@@ -339,12 +343,12 @@ function Toilet() {
       </div>
       <div className="toiletInfoContainer">
         <ListDefault label="개방시간" secondary={toilet.openTime} />
-        <div className="toiletPaperContainer">
+        <div className="toilet-paper-container">
           <ListDefault
             label="휴지제공"
             secondary={toilet.latestToiletPaperInfo?.hasToiletPaper ? "O" : "X"}
           />
-          <div className="lastToiletPaterProvideTime">
+          <div className="last-toilet-pater-provide-time">
             마지막 확인 : {lastToiletPaperCheckDate}
           </div>
         </div>
@@ -365,12 +369,12 @@ function Toilet() {
           secondary={`남아 : ${toilet.menChildrenToiletBowlNumber}  /  여아 : ${toilet.ladiesChildrenToiletBowlNumber}`}
         />
       </div>
-      <div className="reviewContainer">
+      <div className="review-container">
         <Title
           title="리뷰"
           description={`총 ${reviews.length}개의 리뷰가 있습니다.`}
         />
-        <div className="fluidButtonWrapper">
+        <div className="fluid-button-container">
           <ButtonFluid
             icon={docuIcon}
             color={COLOR.HEAVY_GOLD}
@@ -379,21 +383,23 @@ function Toilet() {
             리뷰 남기기
           </ButtonFluid>
         </div>
-        {reviews.map((review) => (
-          <ReviewCard
-            userId={review.writer._id}
-            username={review.writer.username}
-            level={review.writer.level}
-            updatedAt={review.updatedAt}
-            image={review.image}
-            description={review.description}
-            rating={review.rating}
-            isMyReview={false}
-            reviewId={review._id}
-            toilet={review.toilet}
-            key={review._id}
-          />
-        ))}
+        <div className="review-card-container">
+          {reviews.map((review) => (
+            <ReviewCard
+              userId={review.writer._id}
+              username={review.writer.username}
+              level={review.writer.level}
+              updatedAt={review.updatedAt}
+              image={review.image}
+              description={review.description}
+              rating={review.rating}
+              isMyReview={false}
+              reviewId={review._id}
+              toilet={review.toilet}
+              key={review._id}
+            />
+          ))}
+        </div>
       </div>
     </StyledToilet>
   );

@@ -27,7 +27,7 @@ import Start from "./Start";
 const StyledMain = styled.div`
   position: relative;
   width: 100%;
-  height: 100vh;
+  height: calc(100vh - 4rem);
   display: flex;
   flex-direction: column;
   .loader {
@@ -42,8 +42,9 @@ const StyledMain = styled.div`
     align-items: center;
   }
   .map-container {
+    flex-grow: 1;
     width: 100%;
-    height: 100%;
+    min-height: 50%;
     display: flex;
     flex-direction: column;
     justify-content: center;

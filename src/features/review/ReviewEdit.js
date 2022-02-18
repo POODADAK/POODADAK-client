@@ -115,6 +115,8 @@ const UploadedImageContainer = styled.div`
   background-image: url(${(props) => props.imageSrc});
   background-size: contain;
   background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
 
   img {
     max-width: 100%;
