@@ -41,7 +41,7 @@ export const participantStatusOptions = {
   participantLeft: "participantLeft",
 };
 
-const initialState = {
+export const initialState = {
   chatStatus: chatStatusOptions.disconnected,
   socketStatus: socketStatusOptions.disconnected,
   participantStatus: null,

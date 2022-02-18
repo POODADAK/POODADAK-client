@@ -79,7 +79,7 @@ function ChatroomList() {
         <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
       )}
       <HeaderSub onClick={() => navigate("/chatroom")} />
-      <Title title={toiletName} />
+      <Title title={toiletName} description="" />
       {chatroomList.length &&
         chatroomList.map((chatroom) => (
           <List2Lines

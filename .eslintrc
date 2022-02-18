@@ -40,6 +40,7 @@
     "no-underscore-dangle": 0,
     "camelcase": [2, { "allow": ["_id"]}],
     "react/jsx-boolean-value": 0,
-    "no-restricted-syntax": [0, "ForOfStatement"]
+    "no-restricted-syntax": [0, "ForOfStatement"],
+    "import/no-extraneous-dependencies": 0
   }
 }
