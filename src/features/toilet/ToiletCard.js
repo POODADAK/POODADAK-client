@@ -105,9 +105,8 @@ function ToiletCard({ toilet, distance, time }) {
       <div className="wrapper">
         <div className="header">
           <div className="distance">
-            {gotUserLocation && isNear
-              ? `${distance}m (도보 ${time}분)`
-              : "500m이상...안되요."}
+            {gotUserLocation && isNear && `${distance}m (도보 ${time}분)`}
+            {gotUserLocation && !isNear && "😱 500m 초과..."}
             {!gotUserLocation && "😢 어디 계시나요?"}
           </div>
           <ButtonDefault moveto="right" onClick={() => moveToiletDetail()}>
