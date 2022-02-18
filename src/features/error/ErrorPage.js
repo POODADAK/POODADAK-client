@@ -58,7 +58,9 @@ function ErrorPage() {
       <div className="error-description">
         {error ? error.description : "url을 확인해 주세요!"}
       </div>
-      <ButtonSmall onClick={() => navigate("/")}>메인으로 가기</ButtonSmall>
+      <ButtonSmall type="button" onClick={() => navigate("/")}>
+        메인으로 가기
+      </ButtonSmall>
     </StyledErrorPage>
   );
 }

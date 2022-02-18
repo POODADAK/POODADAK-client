@@ -22,9 +22,10 @@ const LoginProcessContainer = styled.div`
     color: white;
   }
 
-  .redirectionLink,
-  .redirectionLink:visited {
-    color: white;
+  .redirection-link {
+    :visited {
+      color: white;
+    }
   }
 `;
 
@@ -72,7 +73,7 @@ function Login() {
             (이메일과 비밀번호 모두 동의 해야 이용이 가능합니다...)
           </p>
           <p className="message">{`오류 메세지: ${errorMessage}`}</p>
-          <Link to="/" className="redirectionLink">
+          <Link to="/" className="redirection-link">
             메인으로 돌아가기
           </Link>
         </LoginProcessContainer>

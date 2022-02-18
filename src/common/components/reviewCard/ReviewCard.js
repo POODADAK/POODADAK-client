@@ -53,6 +53,7 @@ const StyledHeader = styled.div`
   .username {
     color: white;
     margin-left: 0.8rem;
+    cursor: pointer;
   }
   .date {
     color: ${COLOR.LIGHTER_GREY};
