@@ -11,7 +11,6 @@ const StyledInputChat = styled.form`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin-top: auto;
 
   .input-container {
     width: 94%;
@@ -36,7 +35,6 @@ const StyledInputChat = styled.form`
   }
 
   .btn {
-    width: fit-content;
     margin-left: -65px;
   }
 `;
