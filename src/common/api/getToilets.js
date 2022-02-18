@@ -1,6 +1,6 @@
 import axios from "axios";
 
-async function getToilets(center) {
+export async function getNearToilets(center) {
   const { data } = await axios.get(
     `/toilets?lat=${center[0]}&lng=${center[1]}`
   );
@@ -8,4 +8,10 @@ async function getToilets(center) {
   return data.toiletList;
 }
 
-export default getToilets;
+export async function getMapToilets([lat, lng, distance]) {
+  const { data } = await axios.get(
+    `/toilets/mapToiletsList?lat=${lat}&lng=${lng}&distance=${distance}`
+  );
+
+  return data.toiletList;
+}

@@ -10,7 +10,7 @@ import pinSosToilet from "../../assets/icon-pin-sos.svg";
 import pinToilet from "../../assets/icon-pin.svg";
 import pinCurrent from "../../assets/pin-current-small.gif";
 import { getMyLngLat, makePosionToLngLat } from "../../common/api/getMyGeo";
-import getToilets from "../../common/api/getToilets";
+import { getNearToilets, getMapToilets } from "../../common/api/getToilets";
 import ButtonFull from "../../common/components/buttons/ButtonFull";
 import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
@@ -86,6 +86,8 @@ function Main() {
   const [mapCenter, setMapCenter] = useState(null);
   const [currentMarker, setCurrentMarker] = useState(null);
   const [toiletMarkers, setToiletMarkers] = useState([]);
+  // eslint-disable-next-line no-unused-vars
+  const [toiletMarkersCluster, setToiletMarkersCluster] = useState(null);
   const [selectedToilet, setSelectedToilet] = useState(null);
   const [selectedToiletDistance, setSelectedToiletDistance] = useState(null);
   const [selectedToiletTime, setSelectedToiletTime] = useState(null);
@@ -130,6 +132,7 @@ function Main() {
         draggable: true,
         httpsMode: true,
       });
+      tMap.setZoomLimit(15, 19);
       setMap(tMap);
     }
     makeMap();
@@ -161,14 +164,14 @@ function Main() {
 
   // 내 현재 위치가 바뀔 때마다 주변 화장실 정보를 redux에 구성합니다. (내 주변 화장실 리스트용)
   useEffect(() => {
-    async function getNearToilets() {
+    async function getNearToiletList() {
       const newNearToilets = [];
       const tInfos = [];
 
       if (currentLocation) {
         const lat = currentLocation[1];
         const lng = currentLocation[0];
-        const newToilets = await getToilets([lat, lng]);
+        const newToilets = await getNearToilets([lat, lng]);
         if (newToilets) {
           newToilets.forEach((toilet) => {
             const tlat = toilet.location.coordinates[0];
@@ -192,10 +195,10 @@ function Main() {
         }
       }
     }
-    getNearToilets();
+    getNearToiletList();
   }, [currentLocation, dispatch]);
 
-  // 2초마다 맵의 center를 체크하고 값이 변경됐을 경우 주변 화장실을 다시 가져와 핀을 찍습니다.
+  // 2초마다 맵의 center를 체크하고 값이 변경됐을 경우 맵 안의 화장실들을 다시 가져와 핀을 찍습니다.
   useEffect(() => {
     async function drawToiletMarkers(toiletsArray, anitype) {
       adjToiletMarkers.forEach((marker) => {
@@ -211,6 +214,7 @@ function Main() {
             icon: toilet.isSOS ? pinSosToilet : pinToilet,
             animation: anitype,
             animationLength: 300,
+            // label: "cluster",
             map: adjMap,
           });
           marker.addListener("click", () => {
@@ -225,6 +229,12 @@ function Main() {
             );
           }
         });
+        setToiletMarkersCluster(
+          new Tmapv2.extension.MarkerCluster({
+            markers: adjToiletMarkers,
+            map: adjMap,
+          })
+        );
       }
     }
 
@@ -235,9 +245,12 @@ function Main() {
         const lng = currentCenter.lng();
         const newMapCenter = [lat, lng];
 
+        const currentBounds = adjMap.getBounds();
+        const distance = currentCenter.distanceTo(currentBounds.getNorthEast());
+
         if (JSON.stringify(mapCenter) !== JSON.stringify(newMapCenter)) {
           setMapCenter(newMapCenter);
-          const newToilets = await getToilets(newMapCenter);
+          const newToilets = await getMapToilets([lat, lng, distance]);
           drawToiletMarkers(newToilets, ANI_TYPE);
         }
       }
