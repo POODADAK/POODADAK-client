@@ -123,12 +123,7 @@ function Main() {
         const position = await getMyLngLat();
         alert(makePosionToLngLat(position));
       } catch (err) {
-        const newErr = {
-          title: "에러가 발생했습니다.",
-          description: "메인으로 이동해주세요.",
-          errorMsg: err.message,
-        };
-        navigate("/error", { state: newErr });
+        alert(err);
       }
     }
     getMyLocation();
