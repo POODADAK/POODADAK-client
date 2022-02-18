@@ -45,6 +45,7 @@ const socketMiddleware = () => {
   return (storeAPI) => (next) => (action) => {
     if (action.type === socketActionType.connected) {
       const { prefix, namespace, userId, roomDBId } = action.payload;
+      const token = localStorage.getItem("POODADAK_TOKEN");
 
       if (socket) {
         next();
@@ -54,7 +55,7 @@ const socketMiddleware = () => {
       socket = io(
         `${process.env.REACT_APP_AXIOS_BASE_URL}/${prefix}-${namespace}?room=${userId}&roomDBId=${roomDBId}`,
         {
-          withCredentials: true,
+          auth: token,
         }
       );
 

@@ -189,7 +189,7 @@ function ReviewEdit() {
           setEnteredText(response.description);
           setEnteredToiletPaper(response.isToiletPaper);
         } catch {
-          setModalContent(
+          setContentAndShowModal(
             <>
               <div>리뷰를 가져오지 못했습니다...</div>
               <ButtonSmall type="button" onClick={() => navigate(-1)}>
@@ -197,7 +197,6 @@ function ReviewEdit() {
               </ButtonSmall>
             </>
           );
-          setShowModal(true);
         }
       })();
     }

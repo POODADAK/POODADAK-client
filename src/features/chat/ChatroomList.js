@@ -6,6 +6,7 @@ import styled from "styled-components";
 import getLiveChatByToilet from "../../common/api/getLiveChatByToilet";
 import HeaderSub from "../../common/components/headers/HeaderSub";
 import List2Lines from "../../common/components/lists/List2Lines";
+import Modal from "../../common/components/modal/Modal";
 import Title from "../../common/components/Title";
 
 const StyledChats = styled.div`
@@ -17,6 +18,9 @@ const StyledChats = styled.div`
 `;
 
 function ChatroomList() {
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
+
   const navigate = useNavigate();
   const location = useLocation();
   const { toiletId, toiletName } = location.state;
@@ -26,14 +30,23 @@ function ChatroomList() {
 
   useEffect(() => {
     async function getLiveChatroomList() {
-      const { liveChatroomList } = await getLiveChatByToilet(
-        toiletId,
-        "owner",
-        true
-      );
+      try {
+        const { liveChatroomList } = await getLiveChatByToilet(
+          toiletId,
+          "owner",
+          true
+        );
 
-      if (!currentChatroomId) {
-        setChatroomList(liveChatroomList);
+        if (!currentChatroomId) {
+          setChatroomList(liveChatroomList);
+        }
+      } catch (error) {
+        setContentAndShowModal(
+          <>
+            <p>구조요청 목록을 불러오지 못했습니다!</p>
+            <p>{`${error.response.data.status} :  ${error.response.data.errMessage}`}</p>
+          </>
+        );
       }
     }
 
@@ -50,8 +63,21 @@ function ChatroomList() {
     return lastChat;
   }
 
+  function handleModalCloseClick() {
+    setModalContent("");
+    setShowModal(false);
+  }
+
+  function setContentAndShowModal(content) {
+    setModalContent(content);
+    setShowModal(true);
+  }
+
   return (
     <StyledChats>
+      {showModal && (
+        <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
+      )}
       <HeaderSub onClick={() => navigate("/chatroom")} />
       <Title title={toiletName} />
       {chatroomList.length &&

@@ -5,6 +5,7 @@ import styled from "styled-components";
 
 import getUserReviewList from "../../common/api/getUserReviewList";
 import HeaderSub from "../../common/components/headers/HeaderSub";
+import Modal from "../../common/components/modal/Modal";
 import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import Title from "../../common/components/Title";
 import UserLevel from "../../common/components/userLevel/UserLevel";
@@ -22,6 +23,8 @@ function Profile() {
   const [userInfo, setUserInfo] = useState({});
   const [reviewList, setReviewList] = useState([]);
   const [isMyReview, setIsMyReview] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
   const loggedInUserId = useSelector((state) => state.login.userId);
 
   useEffect(() => {
@@ -34,16 +37,38 @@ function Profile() {
   }, []);
 
   useEffect(() => {
-    (async function getReviewLit() {
-      const response = await getUserReviewList(userId);
-      setUserInfo(response);
-      setReviewList(response.reviewList);
-    })();
+    try {
+      (async function getReviewLit() {
+        const response = await getUserReviewList(userId);
+        setUserInfo(response);
+        setReviewList(response.reviewList);
+      })();
+    } catch (error) {
+      setContentAndShowModal(
+        <>
+          <div>리뷰를 가져오지 못했습니다...</div>
+          <p>{`에러: ${error.response.data.errMessage}`}</p>
+        </>
+      );
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  function handleModalCloseClick() {
+    setModalContent("");
+    setShowModal(false);
+  }
+
+  function setContentAndShowModal(content) {
+    setModalContent(content);
+    setShowModal(true);
+  }
+
   return (
     <StyledProfile>
+      {showModal && (
+        <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
+      )}
       <HeaderSub />
       <Title title={userInfo.username} />
       <UserLevel level={userInfo.level} />
