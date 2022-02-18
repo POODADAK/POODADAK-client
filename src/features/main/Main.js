@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable no-alert */
 /* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 /* eslint-disable new-cap */
@@ -117,27 +116,68 @@ function Main() {
   const adjPathMarkers = pathMarkers;
   const adjPolyline = polyline;
 
+  // 처음 렌더링하면 내 위치를 불러온다.
   useEffect(() => {
-    async function getMyLocation() {
-      try {
-        const position = await getMyLngLat();
-        alert(makePosionToLngLat(position));
-      } catch (err) {
-        alert(err);
-      }
+    getMyLocation();
+
+    async function makeMap() {
+      const location = gotUserLocation ? currentLocation : defaultLocation;
+      const tMap = await new Tmapv2.Map("TMapApp", {
+        center: new Tmapv2.LatLng(location[1], location[0]),
+        width: "100%",
+        height: "100%",
+        zoom: 17,
+        draggable: true,
+      });
+      tMap.addListener("drag", () => {
+        navigator.geolocation.clearWatch(watchId);
+      });
+      setMap(tMap);
     }
+    makeMap();
     getMyLocation();
   }, []);
 
+  // TODO: 모니터링용 유즈이펙트!!!!
+  useEffect(() => {
+    console.log("map", map);
+  }, [map]);
+
+  async function forceSetMapCenter(center) {
+    const newLocation = new Tmapv2.LatLng(center[1], center[0]);
+    await map.setCenter(newLocation);
+  }
+
+  async function getMyLocation() {
+    try {
+      const position = await getMyLngLat();
+      const lngLat = makePosionToLngLat(position);
+      dispatch(userLocationUpdated(lngLat));
+    } catch (err) {
+      const newErr = {
+        title: "에러가 발생했습니다.",
+        description: "메인으로 이동해주세요.",
+        errorMsg: err.message,
+      };
+      navigate("/error", { state: newErr });
+    }
+  }
+
+  function toggleSidebar() {
+    setOnSideBar((current) => !current);
+  }
+
   return (
     <StyledMain>
-      <HeaderMain />
+      <HeaderMain onClick={toggleSidebar} />
       <div className="map-container">
         <div id="TMapApp" />
         <div className="full-button">
           <ButtonFull
             onClick={() => {
+              console.log("map", map);
               console.log("currentLocation", currentLocation);
+              forceSetMapCenter([currentLocation[1], currentLocation[0]]);
             }}
           >
             내 위치로 이동
@@ -181,8 +221,19 @@ function Main() {
           <Start onClick={() => setIsStarted(true)} />
         </div>
       )}
+
+      {onSideBar && gotUserLocation && (
+        <div className="sidebar">
+          <Sidebar onClick={toggleSidebar} />
+        </div>
+      )}
     </StyledMain>
   );
 }
 
-export default Main;
+export default geolocated({
+  positionOptions: {
+    enableHighAccuracy: false,
+  },
+  userDecisionTimeout: 5000,
+})(Main);
