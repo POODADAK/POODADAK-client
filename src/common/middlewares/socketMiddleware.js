@@ -86,6 +86,7 @@ const socketMiddleware = () => {
         // eslint-disable-next-line no-console
         console.log(`client socketid ${socket.id} is disconnected`);
         storeAPI.dispatch(userLeftChatroom());
+        socket = null;
       });
 
       socket.on("db-error", (error) => {
