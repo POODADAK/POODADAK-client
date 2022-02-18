@@ -1,3 +1,4 @@
+import dayjs from "dayjs";
 import PropTypes from "prop-types";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
@@ -25,12 +26,10 @@ const ButtonContainer = styled.div`
   right: 0.7rem;
   display: flex;
   border-top: 2px solid ${COLOR.LINE};
-
   button {
     border: none;
     height: 100%;
   }
-
   .divider {
     border-left: 1px solid ${COLOR.LINE};
     border-right: 1px solid ${COLOR.LINE};
@@ -48,20 +47,18 @@ const StyledHeader = styled.div`
   background-color: ${COLOR.DARK_GREY};
   justify-content: flex-start;
   align-items: center;
-
   .rank {
     height: 100%;
   }
-
   .username {
     color: white;
-    margin-left: 2%;
+    margin-left: 0.8rem;
   }
-
   .date {
     color: ${COLOR.LIGHTER_GREY};
     font-size: 0.8rem;
     margin-left: auto;
+    margin-right: 1rem;
   }
 `;
 
@@ -73,9 +70,8 @@ const StyledDiv = styled.div`
   height: 477px;
   background-color: black;
   color: white;
-
   .toiletName {
-    margin: 0.5rem;
+    margin: 1rem 1rem 0.4rem 0.3rem;
     font-size: 1.5rem;
     font-weight: bold;
   }
@@ -88,7 +84,6 @@ const PhotoReviewContainer = styled.div`
   background-image: url(${(props) => props.imageSrc});
   background-size: contain;
   background-repeat: no-repeat;
-
   .photo-cover {
     position: absolute;
     top: 0;
@@ -100,7 +95,6 @@ const PhotoReviewContainer = styled.div`
     display: flex;
     align-items: center;
   }
-
   .photo-cover-background-color {
     display: flex;
     flex-direction: column;
@@ -112,16 +106,15 @@ const PhotoReviewContainer = styled.div`
     width: 100%;
     height: 100%;
     background-color: rgba(0, 0, 0, 0.8);
-
     button {
       border: none;
     }
   }
-
   .warning {
     margin: 2% auto;
     white-space: pre;
     text-align: center;
+    font-size: small;
   }
 `;
 
@@ -226,7 +219,9 @@ function ReviewCard({
         >
           {username}
         </div>
-        <div className="date">{updatedAt}</div>
+        <div className="date">
+          {dayjs(updatedAt).format("YYYY.MM.DD HH.mm")}
+        </div>
       </StyledHeader>
       <div
         className="toiletName"

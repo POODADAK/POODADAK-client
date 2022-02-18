@@ -10,13 +10,15 @@ const StyledDiv = styled.div`
   display: flex;
   align-items: center;
   width: ${(props) => props.width};
+  margin-left: 0.4rem;
 
   .star {
     width: 2rem;
   }
 
   .rating-number {
-    font-size: 1rem;
+    font-size: 1.2rem;
+    margin-left: 1rem;
   }
 `;
 
@@ -82,7 +84,7 @@ function StarContainer({ rating, showRatingNumber, onClick, width }) {
           alt="star"
         />
       </ImageContainer>
-      {showRatingNumber && <div className="rating-number">{rating}</div>}
+      {showRatingNumber && <div className="rating-number">{`(${rating})`}</div>}
     </StyledDiv>
   );
 }
