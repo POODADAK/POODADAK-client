@@ -1,5 +1,6 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
@@ -81,6 +82,17 @@ function ToiletCard({ toilet, distance, time }) {
     menToiletBowlNumber,
     ladiesToiletBowlNumber,
   } = toilet;
+  const nearToilets = useSelector((state) => state.toilet.nearToilets);
+  const [isNear, setIsNear] = useState(false);
+
+  useEffect(() => {
+    if (nearToilets) {
+      for (const nearToilet of nearToilets) {
+        if (nearToilet._id === toiletId) setIsNear(true);
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   function moveToiletDetail() {
     navigate(`/toilets/${toiletId}`);
@@ -91,7 +103,7 @@ function ToiletCard({ toilet, distance, time }) {
       <div className="wrapper">
         <div className="header">
           <div className="distance">
-            {distance}m (도보 {time}분)
+            {isNear ? `${distance}m (도보 ${time}분)` : "500m이상...안되요."}
           </div>
           <ButtonDefault moveto="right" onClick={() => moveToiletDetail()}>
             상세정보

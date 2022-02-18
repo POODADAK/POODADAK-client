@@ -17,7 +17,10 @@ import HeaderMain from "../../common/components/headers/HeaderMain";
 import Modal from "../../common/components/modal/Modal";
 import Sidebar from "../../common/components/Sidebar";
 import ToiletCard from "../toilet/ToiletCard";
-import { nearToiletsUpdated } from "../toilet/toiletSlice";
+import {
+  nearToiletsUpdated,
+  selectedToiletUpdated,
+} from "../toilet/toiletSlice";
 import { userLocationUpdated } from "./mainSlice";
 import Start from "./Start";
 
@@ -88,7 +91,6 @@ function Main() {
   const [toiletMarkers, setToiletMarkers] = useState([]);
   // eslint-disable-next-line no-unused-vars
   const [toiletMarkersCluster, setToiletMarkersCluster] = useState(null);
-  const [selectedToilet, setSelectedToilet] = useState(null);
   const [selectedToiletDistance, setSelectedToiletDistance] = useState(null);
   const [selectedToiletTime, setSelectedToiletTime] = useState(null);
   const [drawPathInfos, setDrawPathInfos] = useState([]);
@@ -103,6 +105,7 @@ function Main() {
   const gotUserLocation = useSelector((state) => state.main.gotUserLocation);
   const currentLocation = useSelector((state) => state.main.userLocation);
   const nearToilets = useSelector((state) => state.toilet.nearToilets);
+  const selectedToilet = useSelector((state) => state.toilet.selectedToilet);
 
   const adjMap = map;
   const adjCurrentMarker = currentMarker;
@@ -218,10 +221,10 @@ function Main() {
             map: adjMap,
           });
           marker.addListener("click", () => {
-            setSelectedToilet(toilet);
+            dispatch(selectedToiletUpdated(toilet));
           });
           marker.addListener("touchstart", () => {
-            setSelectedToilet(toilet);
+            dispatch(selectedToiletUpdated(toilet));
           });
           if (!adjToiletMarkers.includes(marker)) {
             setToiletMarkers(
@@ -259,7 +262,7 @@ function Main() {
     return () => {
       clearInterval(checkMapCenter);
     };
-  }, [adjMap, adjToiletMarkers, gotUserLocation, mapCenter]);
+  }, [adjMap, adjToiletMarkers, dispatch, gotUserLocation, mapCenter]);
 
   // 화장실을 선택할 경우 해당 카드가 노출되고, 현재 위치부터 화장실까지 경로를 그려 안내해 줍니다.
   useEffect(() => {
@@ -338,9 +341,15 @@ function Main() {
       drawLine(adjDrawPathInfos);
     }
 
-    if (selectedToilet) {
-      makeDrawInfo();
+    if (nearToilets && selectedToilet) {
+      for (const toilet of nearToilets) {
+        if (toilet._id === selectedToilet._id) {
+          makeDrawInfo();
+          break;
+        }
+      }
     }
+
     // 중요 ** 티맵 Call 수량을 결정하는 중요한 세팅 입니다. 변경이 필요하다 싶으면 팀원소집 필수!!!
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedToilet, adjPolyline]);
@@ -436,7 +445,7 @@ function Main() {
             time={selectedToiletTime}
           />
           <div className="close">
-            <ButtonSmall onClick={() => setSelectedToilet(null)}>
+            <ButtonSmall onClick={() => dispatch(selectedToiletUpdated(null))}>
               카드 닫기
             </ButtonSmall>
           </div>

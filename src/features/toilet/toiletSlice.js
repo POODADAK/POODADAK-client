@@ -2,6 +2,7 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   nearToilets: [],
+  selectedToilet: null,
 };
 
 export const toiletSlice = createSlice({
@@ -11,9 +12,13 @@ export const toiletSlice = createSlice({
     nearToiletsUpdated: (state, action) => {
       state.nearToilets = action.payload;
     },
+    selectedToiletUpdated: (state, action) => {
+      state.selectedToilet = action.payload;
+    },
   },
 });
 
-export const { nearToiletsUpdated } = toiletSlice.actions;
+export const { nearToiletsUpdated, selectedToiletUpdated } =
+  toiletSlice.actions;
 
 export default toiletSlice.reducer;
