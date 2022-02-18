@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
-const initialState = {
+export const initialState = {
   isLoggedIn: false,
   userId: null,
   lastVisitedToilet: null,

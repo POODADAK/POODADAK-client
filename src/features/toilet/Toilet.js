@@ -21,7 +21,7 @@ import ReviewCard from "../../common/components/reviewCard/ReviewCard";
 import StarContainer from "../../common/components/starContainer/StarContainer";
 import Title from "../../common/components/Title";
 import { COLOR } from "../../common/util/constants";
-import mockLoadingToiletData from "../../common/util/mockLoadingToiletData";
+import mockLoadingToiletData from "../../common/util/mocks/mockLoadingToiletData";
 import {
   chatStatusOptions,
   createdChatroom,
