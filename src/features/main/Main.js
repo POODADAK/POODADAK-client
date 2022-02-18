@@ -133,8 +133,9 @@ function Main() {
         navigator.geolocation.clearWatch(watchId);
       });
       setMap(tMap);
+      getMyLocation();
     }
-    makeMap().then(() => getMyLocation());
+    makeMap();
   }, []);
 
   // TODO: 모니터링용 유즈이펙트!!!!
