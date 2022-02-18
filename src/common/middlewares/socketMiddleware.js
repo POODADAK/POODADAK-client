@@ -55,7 +55,7 @@ const socketMiddleware = () => {
       socket = io(
         `${process.env.REACT_APP_AXIOS_BASE_URL}/${prefix}-${namespace}?room=${userId}&roomDBId=${roomDBId}`,
         {
-          auth: token,
+          auth: { token },
         }
       );
 

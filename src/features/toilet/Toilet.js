@@ -164,7 +164,7 @@ function Toilet() {
       reviews.forEach((review) => {
         totalRating += review.rating;
       });
-      return totalRating / reviews.length;
+      return (totalRating / reviews.length).toFixed(1);
     }
     setAvgRating(getAvgRating());
   }, [reviews]);

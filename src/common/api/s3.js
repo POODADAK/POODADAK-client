@@ -2,7 +2,12 @@ import axios from "axios";
 import imageCompression from "browser-image-compression";
 
 export async function fetchS3Url() {
-  const { data } = await axios.get("/s3Url", { withCredentials: true });
+  const POODADAK_TOKEN = localStorage.getItem("POODADAK_TOKEN");
+  const { data } = await axios.get("/s3Url", {
+    headers: {
+      Authorization: `Bearer ${POODADAK_TOKEN}`,
+    },
+  });
   return data.s3Url;
 }
 

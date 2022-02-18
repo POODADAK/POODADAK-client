@@ -56,7 +56,6 @@ function Chatroom() {
     async function checkIsChatroomLiveAndConnect() {
       try {
         const chatroom = await getChatroom(chatroomId);
-
         if (chatroom.isLive) {
           dispatch(
             socketConnected(

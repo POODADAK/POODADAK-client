@@ -29,9 +29,15 @@ export async function checkToken(dispatch) {
   const POODADAK_TOKEN = localStorage.getItem("POODADAK_TOKEN");
 
   try {
-    const response = await axios.post("/auth/token-verification", {
-      POODADAK_TOKEN,
-    });
+    const response = await axios.post(
+      "/auth/token-verification",
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${POODADAK_TOKEN}`,
+        },
+      }
+    );
 
     if (response.data.result === "verified") {
       dispatch({ type: "login/userLoggedIn", payload: response.data.userId });

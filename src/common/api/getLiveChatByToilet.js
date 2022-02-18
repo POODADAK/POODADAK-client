@@ -5,10 +5,13 @@ async function getLiveChatByToilet(
   populate = "",
   isNullParticipant = false
 ) {
+  const POODADAK_TOKEN = localStorage.getItem("POODADAK_TOKEN");
   const { data } = await axios.get(
     `/chatroom/live-chatroom-list?toiletId=${toiletId}&populate=${populate}&isNullParticipant=${isNullParticipant}`,
     {
-      withCredentials: true,
+      headers: {
+        Authorization: `Bearer ${POODADAK_TOKEN}`,
+      },
     }
   );
 
