@@ -6,9 +6,16 @@ import createChatroom from "../../common/api/createChatroom";
 export const getMyChatroom = createAsyncThunk(
   "chat/getMyChatroom",
   async (userId) => {
+    const POODADAK_TOKEN = localStorage.getItem("POODADAK_TOKEN");
+
     try {
       const myChatroom = axios.get(
-        `/chatroom/live-chatroom-list?userId=${userId}`
+        `/chatroom/live-chatroom-list?userId=${userId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${POODADAK_TOKEN}`,
+          },
+        }
       );
 
       return myChatroom;

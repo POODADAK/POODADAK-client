@@ -138,7 +138,7 @@ function Toilet() {
         setContentAndShowModal(
           <>
             <p>정보를 불러오지 못했습니다!</p>
-            <p>{`${chatError.status} :  ${chatError.message}`}</p>
+            <p>{`${error.response.data.status} :  ${error.response.data.errMessage}`}</p>
           </>
         );
       }
@@ -164,7 +164,7 @@ function Toilet() {
       reviews.forEach((review) => {
         totalRating += review.rating;
       });
-      return totalRating / reviews.length;
+      return (totalRating / reviews.length).toFixed(1);
     }
     setAvgRating(getAvgRating());
   }, [reviews]);

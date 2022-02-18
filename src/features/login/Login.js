@@ -41,6 +41,7 @@ function Login() {
 
       try {
         const { data } = await authenticate(state, code);
+        localStorage.setItem("POODADAK_TOKEN", data.POODADAK_TOKEN);
         dispatch(userLoggedIn(data.userId));
         navigate("/");
       } catch (error) {

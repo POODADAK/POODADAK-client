@@ -25,27 +25,18 @@ export const loginSlice = createSlice({
   },
 });
 
-export async function eraseToken(dispatch) {
-  try {
-    await axios.post("/auth/token-elimination", {}, { withCredentials: true });
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error(
-      "failed to get erase token (clearcookie response) response... you might be using other person's identity from now on. If you don't wan't this behavior, please manually delete cookie from your browser setting.\n",
-      "Original Error:\n",
-      error
-    );
-  }
-
-  dispatch({ type: "login/userLoggedOut" });
-}
-
 export async function checkToken(dispatch) {
+  const POODADAK_TOKEN = localStorage.getItem("POODADAK_TOKEN");
+
   try {
     const response = await axios.post(
       "/auth/token-verification",
       {},
-      { withCredentials: true }
+      {
+        headers: {
+          Authorization: `Bearer ${POODADAK_TOKEN}`,
+        },
+      }
     );
 
     if (response.data.result === "verified") {
@@ -56,7 +47,7 @@ export async function checkToken(dispatch) {
     console.error(
       "Default Token verification failed! Please re-login!\n",
       "Original Error:\n",
-      error
+      error.response.data.errMessage
     );
 
     dispatch({ type: "login/userLoggedOut" });

@@ -8,7 +8,7 @@ import close from "../../assets/icon-close-black.png";
 import right from "../../assets/icon-right-black.png";
 import kakao from "../../assets/kakao.svg";
 import naver from "../../assets/naver.svg";
-import { eraseToken } from "../../features/login/loginSlice";
+import { userLoggedOut } from "../../features/login/loginSlice";
 
 const StyledSidebar = styled.div`
   position: relative;
@@ -80,7 +80,8 @@ function Sidebar({ onClick }) {
   }
 
   function handleLogoutClick() {
-    dispatch(eraseToken);
+    localStorage.removeItem("POODADAK_TOKEN");
+    dispatch(userLoggedOut());
   }
 
   return (

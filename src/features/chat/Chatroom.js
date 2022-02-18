@@ -6,6 +6,7 @@ import styled from "styled-components";
 import getChatroom from "../../common/api/getChatroom";
 import HeaderChat from "../../common/components/headers/HeaderChat";
 import InputChat from "../../common/components/inputs/InputChat";
+import Modal from "../../common/components/modal/Modal";
 import {
   socketConnected,
   socketEmitted,
@@ -44,6 +45,8 @@ function Chatroom() {
   const { chatroomId } = useParams();
 
   const [enteredChat, setEnteredChat] = useState("");
+  const [showModal, setShowModal] = useState(false);
+  const [modalContent, setModalContent] = useState("");
 
   const isSocketConnected = socketStatus === socketStatusOptions.connected;
   const isParticipantLeft =
@@ -51,16 +54,24 @@ function Chatroom() {
 
   useEffect(() => {
     async function checkIsChatroomLiveAndConnect() {
-      const chatroom = await getChatroom(chatroomId);
-
-      if (chatroom.isLive) {
-        dispatch(
-          socketConnected(
-            "toiletId",
-            chatroom.toilet,
-            chatroom.owner,
-            chatroomId
-          )
+      try {
+        const chatroom = await getChatroom(chatroomId);
+        if (chatroom.isLive) {
+          dispatch(
+            socketConnected(
+              "toiletId",
+              chatroom.toilet,
+              chatroom.owner,
+              chatroomId
+            )
+          );
+        }
+      } catch (error) {
+        setContentAndShowModal(
+          <>
+            <p>채팅방을 불러오지 못했습니다!</p>
+            <p>{`${error.response.data.status} :  ${error.response.data.errMessage}`}</p>
+          </>
         );
       }
     }
@@ -94,8 +105,21 @@ function Chatroom() {
     dispatch(chatReceived(chat));
   }
 
+  function handleModalCloseClick() {
+    setModalContent("");
+    setShowModal(false);
+  }
+
+  function setContentAndShowModal(content) {
+    setModalContent(content);
+    setShowModal(true);
+  }
+
   return (
     <StyledChat>
+      {showModal && (
+        <Modal onModalCloseClick={handleModalCloseClick}>{modalContent}</Modal>
+      )}
       <HeaderChat />
       <div className="chat-container">
         <ChatBubbleList
