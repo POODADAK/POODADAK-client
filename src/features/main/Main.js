@@ -134,8 +134,7 @@ function Main() {
       });
       setMap(tMap);
     }
-    makeMap();
-    getMyLocation();
+    makeMap().then(() => getMyLocation());
   }, []);
 
   // TODO: 모니터링용 유즈이펙트!!!!
