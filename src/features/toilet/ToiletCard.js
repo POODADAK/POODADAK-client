@@ -135,7 +135,7 @@ ToiletCard.propTypes = {
     ladiesToiletBowlNumber: PropTypes.number,
   }).isRequired,
   distance: PropTypes.number,
-  time: PropTypes.number,
+  time: PropTypes.string,
 };
 
 ToiletCard.defaultProps = {

@@ -20,7 +20,7 @@ import { COLOR } from "../../common/util/constants";
 const StyledDiv = styled.div`
   position: relative;
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 5rem);
   display: flex;
   flex-direction: column;
   background-color: black;

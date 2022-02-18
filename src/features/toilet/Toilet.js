@@ -7,7 +7,6 @@ import styled from "styled-components";
 import docuIcon from "../../assets/icon-docu-fluid.png";
 import helpIcon from "../../assets/icon-help-fluid.png";
 import squaredSOS from "../../assets/icon-squaredsos.svg";
-import viewFinder from "../../assets/icon-viewfinder.svg";
 import waitIcon from "../../assets/icon-wait-fluid.png";
 import getLiveChatByToilet from "../../common/api/getLiveChatByToilet";
 import getToiletById from "../../common/api/getToiletById";
@@ -33,7 +32,7 @@ import { visitedToiletComponent } from "../login/loginSlice";
 
 const StyledToilet = styled.div`
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 5rem);
   display: flex;
   flex-direction: column;
   background-color: black;
@@ -49,6 +48,7 @@ const StyledToilet = styled.div`
     }
   }
 
+  .so-near,
   .so-far {
     padding: 0rem 2.3rem;
     font-size: small;
@@ -66,7 +66,7 @@ const StyledToilet = styled.div`
     gap: 1rem;
   }
 
-  .toiletInfoContainer {
+  .toilet-info-container {
     padding: 1rem;
   }
 
@@ -301,17 +301,22 @@ function Toilet() {
           {isChatroomDisconnected && (
             <ButtonDefault onClick={onClickSOSButton} icon={squaredSOS} />
           )}
-          <ButtonDefault icon={viewFinder} />
         </div>
       </div>
+      {isNear && (
+        <div className="so-near">
+          🤣 500m 이내로 가능한 거리! 얼른 가봅시다!
+        </div>
+      )}
       {!isNear && (
         <div className="so-far">
-          헉! 500m 이상 멀어요... 거기까진... 안되요 ㅠ
+          😱 헉! 거리 500m 초과! 너무 멀어요... 거기까진... 안되요
         </div>
       )}
       <div className="fluidButtonWrapper">
         {isChatroomDisconnected && showRescueButton && (
           <ButtonFluid
+            type="button"
             icon={helpIcon}
             color={COLOR.SALMON_PINK}
             onClick={handleRescueClick}
@@ -323,6 +328,7 @@ function Toilet() {
       <div className="fluid-button-container">
         {isChatroomConnected && !isSocketConnected && (
           <ButtonFluid
+            type="button"
             icon={waitIcon}
             color={COLOR.CYAN}
             onClick={handleWaitingSaviorClick}
@@ -341,7 +347,7 @@ function Toilet() {
           />
         </div>
       </div>
-      <div className="toiletInfoContainer">
+      <div className="toilet-info-container">
         <ListDefault label="개방시간" secondary={toilet.openTime} />
         <div className="toilet-paper-container">
           <ListDefault
@@ -376,6 +382,7 @@ function Toilet() {
         />
         <div className="fluid-button-container">
           <ButtonFluid
+            type="button"
             icon={docuIcon}
             color={COLOR.HEAVY_GOLD}
             onClick={onClickCreatReview}

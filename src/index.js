@@ -7,7 +7,6 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
 import store from "./app/store";
 import GlobalStyle from "./common/components/GlobalStyle";
-import Ui from "./common/components/Sidebar";
 import Chatroom from "./features/chat/Chatroom";
 import ChatroomList from "./features/chat/ChatroomList";
 import ErrorPage from "./features/error/ErrorPage";
@@ -39,7 +38,6 @@ ReactDOM.render(
           <Route path="/users/:userId" element={<Profile />} />
           <Route path="/editProfile/:userId" element={<ProfileEdit />} />
           <Route path="/error" element={<ErrorPage />} />
-          <Route path="/ui" element={<Ui />} />
           <Route path="/login/process" element={<Login />} />
           <Route path="*" element={<ErrorPage />} />
         </Routes>

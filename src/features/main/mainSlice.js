@@ -3,6 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 export const initialState = {
   gotUserLocation: false,
   userLocation: [],
+  isMainStarted: false,
 };
 
 export const mainSlice = createSlice({
@@ -17,9 +18,13 @@ export const mainSlice = createSlice({
       state.gotUserLocation = false;
       state.userLocation = [];
     },
+    mainStartUpdated: (state) => {
+      state.isMainStarted = true;
+    },
   },
 });
 
-export const { userLocationUpdated, userLocationRemoved } = mainSlice.actions;
+export const { userLocationUpdated, userLocationRemoved, mainStartUpdated } =
+  mainSlice.actions;
 
 export default mainSlice.reducer;
