@@ -49,6 +49,13 @@ const StyledToilet = styled.div`
     }
   }
 
+  .so-far {
+    padding: 0rem 2.3rem;
+    font-size: small;
+    color: gray;
+    margin-top: -0.8rem;
+  }
+
   .rankContainer {
     font-size: large;
     font-weight: 400;
@@ -94,6 +101,7 @@ function Toilet() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
+  const nearToilets = useSelector((state) => state.toilet.nearToilets);
   const isLoggedIn = useSelector((state) => state.login.isLoggedIn);
   const chatStatus = useSelector((state) => state.chat.chatStatus);
   const socketStatus = useSelector((state) => state.chat.socketStatus);
@@ -106,6 +114,7 @@ function Toilet() {
   const [modalContent, setModalContent] = useState("");
   const [showRescueButton, setShowRescueButton] = useState(false);
   const [toilet, setToilet] = useState(mockLoadingToiletData);
+  const [isNear, setIsNear] = useState(false);
 
   const isChatroomDisconnected = chatStatus === chatStatusOptions.disconnected;
   const isChatroomConnected = chatStatus === chatStatusOptions.connected;
@@ -136,6 +145,12 @@ function Toilet() {
     }
 
     getReviews();
+
+    if (nearToilets) {
+      for (const nearToilet of nearToilets) {
+        if (nearToilet._id === toiletId) setIsNear(true);
+      }
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -220,6 +235,28 @@ function Toilet() {
       );
     }
 
+    if (!isNear) {
+      setContentAndShowModal(
+        <>
+          <div>
+            정말 도움을 받고 싶으신가요? 아니어도 어쩔 수 없죠... 채팅은 해봐야
+            하니까요.
+          </div>
+          <ButtonSmall
+            type="button"
+            onClick={() => {
+              setShowModal(false);
+              dispatch(createdChatroom(toiletId));
+            }}
+          >
+            SOS 보내기
+          </ButtonSmall>
+        </>
+      );
+
+      return;
+    }
+
     dispatch(createdChatroom(toiletId));
   }
 
@@ -263,6 +300,11 @@ function Toilet() {
           <ButtonDefault icon={viewFinder} />
         </div>
       </div>
+      {!isNear && (
+        <div className="so-far">
+          헉! 500m 이상 멀어요... 거기까진... 안되요 ㅠ
+        </div>
+      )}
       <div className="fluidButtonWrapper">
         {isChatroomDisconnected && showRescueButton && (
           <ButtonFluid

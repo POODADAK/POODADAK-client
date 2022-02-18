@@ -10,14 +10,17 @@ import pinSosToilet from "../../assets/icon-pin-sos.svg";
 import pinToilet from "../../assets/icon-pin.svg";
 import pinCurrent from "../../assets/pin-current-small.gif";
 import { getMyLngLat, makePosionToLngLat } from "../../common/api/getMyGeo";
-import getToilets from "../../common/api/getToilets";
+import { getNearToilets, getMapToilets } from "../../common/api/getToilets";
 import ButtonFull from "../../common/components/buttons/ButtonFull";
 import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
 import Modal from "../../common/components/modal/Modal";
 import Sidebar from "../../common/components/Sidebar";
 import ToiletCard from "../toilet/ToiletCard";
-import { nearToiletsUpdated } from "../toilet/toiletSlice";
+import {
+  nearToiletsUpdated,
+  selectedToiletUpdated,
+} from "../toilet/toiletSlice";
 import { userLocationUpdated } from "./mainSlice";
 import Start from "./Start";
 
@@ -86,7 +89,8 @@ function Main() {
   const [mapCenter, setMapCenter] = useState(null);
   const [currentMarker, setCurrentMarker] = useState(null);
   const [toiletMarkers, setToiletMarkers] = useState([]);
-  const [selectedToilet, setSelectedToilet] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [toiletMarkersCluster, setToiletMarkersCluster] = useState(null);
   const [selectedToiletDistance, setSelectedToiletDistance] = useState(null);
   const [selectedToiletTime, setSelectedToiletTime] = useState(null);
   const [drawPathInfos, setDrawPathInfos] = useState([]);
@@ -101,6 +105,7 @@ function Main() {
   const gotUserLocation = useSelector((state) => state.main.gotUserLocation);
   const currentLocation = useSelector((state) => state.main.userLocation);
   const nearToilets = useSelector((state) => state.toilet.nearToilets);
+  const selectedToilet = useSelector((state) => state.toilet.selectedToilet);
 
   const adjMap = map;
   const adjCurrentMarker = currentMarker;
@@ -130,6 +135,7 @@ function Main() {
         draggable: true,
         httpsMode: true,
       });
+      tMap.setZoomLimit(15, 19);
       setMap(tMap);
     }
     makeMap();
@@ -161,14 +167,14 @@ function Main() {
 
   // 내 현재 위치가 바뀔 때마다 주변 화장실 정보를 redux에 구성합니다. (내 주변 화장실 리스트용)
   useEffect(() => {
-    async function getNearToilets() {
+    async function getNearToiletList() {
       const newNearToilets = [];
       const tInfos = [];
 
       if (currentLocation) {
         const lat = currentLocation[1];
         const lng = currentLocation[0];
-        const newToilets = await getToilets([lat, lng]);
+        const newToilets = await getNearToilets([lat, lng]);
         if (newToilets) {
           newToilets.forEach((toilet) => {
             const tlat = toilet.location.coordinates[0];
@@ -192,10 +198,10 @@ function Main() {
         }
       }
     }
-    getNearToilets();
+    getNearToiletList();
   }, [currentLocation, dispatch]);
 
-  // 2초마다 맵의 center를 체크하고 값이 변경됐을 경우 주변 화장실을 다시 가져와 핀을 찍습니다.
+  // 2초마다 맵의 center를 체크하고 값이 변경됐을 경우 맵 안의 화장실들을 다시 가져와 핀을 찍습니다.
   useEffect(() => {
     async function drawToiletMarkers(toiletsArray, anitype) {
       adjToiletMarkers.forEach((marker) => {
@@ -211,13 +217,14 @@ function Main() {
             icon: toilet.isSOS ? pinSosToilet : pinToilet,
             animation: anitype,
             animationLength: 300,
+            // label: "cluster",
             map: adjMap,
           });
           marker.addListener("click", () => {
-            setSelectedToilet(toilet);
+            dispatch(selectedToiletUpdated(toilet));
           });
           marker.addListener("touchstart", () => {
-            setSelectedToilet(toilet);
+            dispatch(selectedToiletUpdated(toilet));
           });
           if (!adjToiletMarkers.includes(marker)) {
             setToiletMarkers(
@@ -225,6 +232,12 @@ function Main() {
             );
           }
         });
+        setToiletMarkersCluster(
+          new Tmapv2.extension.MarkerCluster({
+            markers: adjToiletMarkers,
+            map: adjMap,
+          })
+        );
       }
     }
 
@@ -235,9 +248,12 @@ function Main() {
         const lng = currentCenter.lng();
         const newMapCenter = [lat, lng];
 
+        const currentBounds = adjMap.getBounds();
+        const distance = currentCenter.distanceTo(currentBounds.getNorthEast());
+
         if (JSON.stringify(mapCenter) !== JSON.stringify(newMapCenter)) {
           setMapCenter(newMapCenter);
-          const newToilets = await getToilets(newMapCenter);
+          const newToilets = await getMapToilets([lat, lng, distance]);
           drawToiletMarkers(newToilets, ANI_TYPE);
         }
       }
@@ -246,7 +262,7 @@ function Main() {
     return () => {
       clearInterval(checkMapCenter);
     };
-  }, [adjMap, adjToiletMarkers, gotUserLocation, mapCenter]);
+  }, [adjMap, adjToiletMarkers, dispatch, gotUserLocation, mapCenter]);
 
   // 화장실을 선택할 경우 해당 카드가 노출되고, 현재 위치부터 화장실까지 경로를 그려 안내해 줍니다.
   useEffect(() => {
@@ -325,9 +341,15 @@ function Main() {
       drawLine(adjDrawPathInfos);
     }
 
-    if (selectedToilet) {
-      makeDrawInfo();
+    if (nearToilets && selectedToilet) {
+      for (const toilet of nearToilets) {
+        if (toilet._id === selectedToilet._id) {
+          makeDrawInfo();
+          break;
+        }
+      }
     }
+
     // 중요 ** 티맵 Call 수량을 결정하는 중요한 세팅 입니다. 변경이 필요하다 싶으면 팀원소집 필수!!!
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedToilet, adjPolyline]);
@@ -423,7 +445,7 @@ function Main() {
             time={selectedToiletTime}
           />
           <div className="close">
-            <ButtonSmall onClick={() => setSelectedToilet(null)}>
+            <ButtonSmall onClick={() => dispatch(selectedToiletUpdated(null))}>
               카드 닫기
             </ButtonSmall>
           </div>
