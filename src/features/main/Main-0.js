@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 /* eslint-disable new-cap */
 import axios from "axios";
 import React, { useEffect, useState } from "react";
@@ -351,7 +352,7 @@ function Main() {
 
   async function forceSetMapCenter(center) {
     const newLocation = new Tmapv2.LatLng(center[1], center[0]);
-    await adjMap.setCenter(newLocation);
+    await map.setCenter(newLocation);
   }
 
   async function getPathToToiletInfo(start, end) {
