@@ -14,6 +14,15 @@ const handlers = [
       })
     )
   ),
+  rest.get("/chatroom/live-chatroom-list", (req, res, ctx) => {
+    res(
+      ctx.json({
+        liveChatRoomData: {
+          liveChatroomList: [],
+        },
+      })
+    );
+  }),
 ];
 
 export default handlers;
