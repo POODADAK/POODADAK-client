@@ -14,6 +14,7 @@ import getToilets from "../../common/api/getToilets";
 import ButtonFull from "../../common/components/buttons/ButtonFull";
 import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
+import Modal from "../../common/components/modal/Modal";
 import Sidebar from "../../common/components/Sidebar";
 import ToiletCard from "../toilet/ToiletCard";
 import { nearToiletsUpdated } from "../toilet/toiletSlice";
@@ -94,6 +95,8 @@ function Main() {
   const [polyline, setPolyline] = useState(null);
   const [onSideBar, setOnSideBar] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [modal, setModal] = useState("");
+  const [openModal, setOpenModal] = useState(false);
 
   const gotUserLocation = useSelector((state) => state.main.gotUserLocation);
   const currentLocation = useSelector((state) => state.main.userLocation);
@@ -125,6 +128,7 @@ function Main() {
         height: "100%",
         zoom: 17,
         draggable: true,
+        httpsMode: true,
       });
       setMap(tMap);
     }
@@ -364,12 +368,10 @@ function Main() {
       forceSetMapCenter(lngLat);
       setIsLoading(false);
     } catch (error) {
-      const newErr = {
-        title: "에러가 발생했습니다.",
-        description: "메인으로 이동해주세요.",
-        errorMsg: error.message,
-      };
-      navigate("/error", { state: newErr });
+      setIsLoading(false);
+      const newChildren = `위치정보 제공 동의를 진행하지 않으면 정확한 거리정보를 제공받을 수 없습니다. 그래도 지도를 통해 화장실들을 볼 수는 있습니다. 위치정보 제공 동의를 다시 하시려면 페이지에 다시 접속해주시기 바랍니다.`;
+      setModal(newChildren);
+      setOpenModal(true);
     }
   }
 
@@ -401,6 +403,16 @@ function Main() {
             ariaLabel="loading"
           />
         </div>
+      )}
+
+      {openModal && (
+        <Modal
+          onModalCloseClick={() => {
+            setOpenModal(false);
+          }}
+        >
+          {modal}
+        </Modal>
       )}
 
       {selectedToilet && (
