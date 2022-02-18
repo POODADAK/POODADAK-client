@@ -71,7 +71,11 @@ function Profile() {
       )}
       <HeaderSub />
       <Title title={userInfo.username} />
-      <UserLevel level={userInfo.level} />
+      <UserLevel
+        level={userInfo.level}
+        isMyReview={isMyReview}
+        email={userInfo.email}
+      />
       <Title
         title="리뷰"
         description={`총 ${reviewList.length}개의 리뷰가 있습니다.`}

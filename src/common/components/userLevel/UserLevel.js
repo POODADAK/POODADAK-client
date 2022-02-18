@@ -5,7 +5,7 @@ import styled from "styled-components";
 import bronze from "../../../assets/icon-rank-bronze.png";
 import gold from "../../../assets/icon-rank-gold.png";
 import silver from "../../../assets/icon-rank-silver.png";
-import { USER_LEVEL } from "../../util/constants";
+import { USER_LEVEL, COLOR } from "../../util/constants";
 
 const UserLevelContainer = styled.div`
   width: 100%;
@@ -33,13 +33,17 @@ const UserLevelContainer = styled.div`
     margin-bottom: 1rem;
   }
 
+  .email {
+    color: ${COLOR.LIGHTER_GREY};
+  }
+
   .description {
     font-size: 0.75rem;
     font-weight: 100;
   }
 `;
 
-function UserLevel({ level }) {
+function UserLevel({ level, isMyReview, email }) {
   let userRankImageSrc = bronze;
   let description = "아직 부족한 휴지끈... 분발하세요";
 
@@ -65,6 +69,8 @@ function UserLevel({ level }) {
       </div>
       <div className="descriptionContainer">
         <div className="rank">등급 : {level}</div>
+        {isMyReview && <div className="email">{email}</div>}
+        <br />
         <div className="description">{description}</div>
       </div>
     </UserLevelContainer>
@@ -73,9 +79,13 @@ function UserLevel({ level }) {
 
 UserLevel.propTypes = {
   level: PropTypes.string,
+  isMyReview: PropTypes.bool,
+  email: PropTypes.string,
 };
 UserLevel.defaultProps = {
   level: USER_LEVEL.BRONZE,
+  isMyReview: false,
+  email: "",
 };
 
 export default UserLevel;
