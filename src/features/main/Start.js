@@ -64,7 +64,7 @@ function Start({ onClick }) {
           <img src={startIcon} alt="시작" />
         </div>
         <div className="description">
-          버튼을 누르면 가까운 공개 화장실을
+          버튼을 누르면 공개 화장실을
           <div className="poodadak">푸다닥</div>
           찾습니다!
         </div>

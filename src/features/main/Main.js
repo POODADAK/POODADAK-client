@@ -19,6 +19,7 @@ import getToilets from "../../common/api/getToilets";
 import ButtonFull from "../../common/components/buttons/ButtonFull";
 import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
+import Modal from "../../common/components/modal/Modal";
 import Sidebar from "../../common/components/Sidebar";
 import usePosition from "../../common/hooks/usePosition";
 import ToiletCard from "../toilet/ToiletCard";
@@ -104,6 +105,8 @@ function Main() {
   const [onSideBar, setOnSideBar] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isStarted, setIsStarted] = useState(false);
+  const [modal, setModal] = useState("");
+  const [openModal, setOpenModal] = useState(false);
 
   const gotUserLocation = useSelector((state) => state.main.gotUserLocation);
   const currentLocation = useSelector((state) => state.main.userLocation);
@@ -118,8 +121,6 @@ function Main() {
 
   // 처음 렌더링하면 내 위치를 불러온다.
   useEffect(() => {
-    getMyLocation();
-
     async function makeMap() {
       const location = gotUserLocation ? currentLocation : defaultLocation;
       const tMap = await new Tmapv2.Map("TMapApp", {
@@ -149,17 +150,19 @@ function Main() {
   }
 
   async function getMyLocation() {
+    setIsLoading(true);
     try {
       const position = await getMyLngLat();
       const lngLat = makePosionToLngLat(position);
       dispatch(userLocationUpdated(lngLat));
+      setIsLoading(false);
+      setIsStarted(true);
     } catch (err) {
-      const newErr = {
-        title: "에러가 발생했습니다.",
-        description: "메인으로 이동해주세요.",
-        errorMsg: err.message,
-      };
-      navigate("/error", { state: newErr });
+      const newChildren =
+        "위치정보 제공 동의를 진행하지 않으면 정확한 거리정보를 제공받을 수 없습니다. 그래도 지도를 통해 화장실들을 볼 수는 있습니다.";
+      setIsLoading(false);
+      setModal(newChildren);
+      setOpenModal(true);
     }
   }
 
@@ -199,6 +202,17 @@ function Main() {
             ariaLabel="loading"
           />
         </div>
+      )}
+
+      {openModal && (
+        <Modal
+          onModalCloseClick={() => {
+            setOpenModal(false);
+            setIsStarted(true);
+          }}
+        >
+          {modal}
+        </Modal>
       )}
 
       {selectedToilet && (
