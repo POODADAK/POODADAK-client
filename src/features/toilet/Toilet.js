@@ -310,7 +310,7 @@ function Toilet() {
       )}
       {!isNear && (
         <div className="so-far">
-          😱 헉! 거리 500m 초과! 너무 멀어요... 거기까진... 안되요
+          😱 거리 500m 초과! 너무 멀어요... 거기까진... 안되요
         </div>
       )}
       <div className="fluidButtonWrapper">
