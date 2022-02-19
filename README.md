@@ -14,7 +14,7 @@
 
 |               전반적인 구동               |                   SOS 보내기                   |                SOS 돕기                |
 | :------------------------------: | :-----------------------------------------------: | :----------------------------------: |
-| ![general](https://blog.kakaocdn.net/dn/caMrMm/btrtMIQu7mg/iNVSinx9hMnK97y02LklKK/img.gif) | ![SOS](https://blog.kakaocdn.net/dn/OYc5n/btrtIe3Rv26/zMYphcxkKgQAuKZhjAKkKK/img.gif) | ![Help](https://blog.kakaocdn.net/dn/b2VfQ5/btrtHEbfUz8/AZk9PYiCHuSzdD3A6IpHI1/img.gif) |
+| ![all](https://blog.kakaocdn.net/dn/bMAkkq/btrtEwK36lO/gmDRb4WRMayRkGC0yHAKY0/img.gif) | ![SOS](https://blog.kakaocdn.net/dn/Pvvtz/btrtJD3yxMG/xPTcduJEkmSo8lQ8opm4m0/img.gif) | ![Help](https://blog.kakaocdn.net/dn/Uxcr5/btrtGifdfzK/4Mi2Kl3sDSnlRU8akKauek/img.gif) |
 
 
 - 지도에서 내 주변 화장실을 찾아 줍니다.
