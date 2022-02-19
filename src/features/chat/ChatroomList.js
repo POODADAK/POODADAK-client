@@ -51,6 +51,7 @@ function ChatroomList() {
     }
 
     getLiveChatroomList();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [currentChatroomId]);
 
   function findLastChat(chatList) {
