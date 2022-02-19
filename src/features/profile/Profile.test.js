@@ -21,7 +21,7 @@ jest.mock("../../common/api/getUserReviewList", () => ({
         {
           _id: "testReviewId",
           writer: "testId",
-          toilet: "testToiletId",
+          toilet: {},
           rating: 5,
           description: "깨끗해요!",
           image:

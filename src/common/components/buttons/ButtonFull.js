@@ -38,7 +38,7 @@ function ButtonFull({ type, onClick, icon, disabled, children }) {
 ButtonFull.propTypes = {
   type: PropTypes.string.isRequired,
   onClick: PropTypes.func.isRequired,
-  icon: PropTypes.element,
+  icon: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
   disabled: PropTypes.bool,
   children: PropTypes.string.isRequired,
 };

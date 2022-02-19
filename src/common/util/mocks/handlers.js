@@ -25,6 +25,9 @@ const handlers = [
   rest.post("http://localhost/chatroom/new-chatroom", (req, res, ctx) =>
     res(ctx.json({ newLiveChatroom: {} }))
   ),
+  rest.post("http://localhost/login/auth/kakao", (req, res, ctx) =>
+    res(ctx.json({ POODADAK_TOKEN: {}, userId: "testId" }))
+  ),
 ];
 
 export default handlers;
