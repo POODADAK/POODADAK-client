@@ -41,7 +41,7 @@ function ButtonFluid({ type, onClick, icon, color, disabled, children }) {
 ButtonFluid.propTypes = {
   type: PropTypes.string,
   onClick: PropTypes.func.isRequired,
-  icon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
+  icon: PropTypes.oneOfType([PropTypes.node, PropTypes.string]),
   color: PropTypes.string,
   disabled: PropTypes.bool,
   children: PropTypes.string.isRequired,

@@ -53,6 +53,7 @@ const StyledHeader = styled.div`
   .username {
     color: white;
     margin-left: 0.8rem;
+    cursor: pointer;
   }
   .date {
     color: ${COLOR.LIGHTER_GREY};
@@ -245,7 +246,7 @@ function ReviewCard({
               <div className="photo-cover-background-color">
                 <p className="warning">
                   {
-                    "불쾌한 이미지가 있을 수 있어서 흐림 처리 해두었습니다.\n보고 싶으면 클릭해주세요."
+                    "불쾌한 이미지가 있을 수 있어서\n흐림 처리 해두었습니다.\n보고 싶으면 클릭해주세요."
                   }
                 </p>
                 <ButtonSmall type="button" onClick={handleCoverClick}>

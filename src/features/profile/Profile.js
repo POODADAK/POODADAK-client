@@ -12,7 +12,7 @@ import UserLevel from "../../common/components/userLevel/UserLevel";
 
 const StyledProfile = styled.div`
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 5rem);
   display: flex;
   flex-direction: column;
   background-color: black;

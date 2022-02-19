@@ -8,7 +8,7 @@ import ToiletCard from "./ToiletCard";
 
 const StyledToilets = styled.div`
   width: 100%;
-  min-height: 100vh;
+  min-height: calc(100vh - 5rem);
   display: flex;
   flex-direction: column;
   align-items: center;
