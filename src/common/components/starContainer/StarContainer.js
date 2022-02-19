@@ -90,7 +90,7 @@ function StarContainer({ rating, showRatingNumber, onClick, width }) {
 }
 
 StarContainer.propTypes = {
-  rating: PropTypes.number.isRequired,
+  rating: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
   showRatingNumber: PropTypes.bool,
   onClick: PropTypes.func,
   width: PropTypes.string,

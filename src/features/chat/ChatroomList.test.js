@@ -64,10 +64,6 @@ describe("Chatroom", () => {
     </BrowserRouter>
   );
 
-  beforeAll(() => {
-    window.HTMLElement.prototype.scrollIntoView = () => {};
-  });
-
   beforeEach(() => {
     initialReduxState.login.userId = "tester";
     window.history.pushState({}, "", "/chatroomList");

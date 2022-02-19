@@ -39,9 +39,9 @@ function ButtonFluid({ type, onClick, icon, color, disabled, children }) {
 }
 
 ButtonFluid.propTypes = {
-  type: PropTypes.string.isRequired,
+  type: PropTypes.string,
   onClick: PropTypes.func.isRequired,
-  icon: PropTypes.element,
+  icon: PropTypes.oneOfType([PropTypes.element, PropTypes.string]),
   color: PropTypes.string,
   disabled: PropTypes.bool,
   children: PropTypes.string.isRequired,
@@ -51,6 +51,7 @@ ButtonFluid.defaultProps = {
   icon: null,
   color: "gray",
   disabled: false,
+  type: "button",
 };
 
 export default ButtonFluid;

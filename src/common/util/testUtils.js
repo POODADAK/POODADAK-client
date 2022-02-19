@@ -1,5 +1,4 @@
 /* eslint-disable react/prop-types */
-// test-utils.jsx
 import { configureStore } from "@reduxjs/toolkit";
 import { render as rtlRender } from "@testing-library/react";
 import React from "react";
@@ -35,7 +34,5 @@ function render(
   return rtlRender(ui, { wrapper: Wrapper, ...renderOptions });
 }
 
-// re-export everything
 export * from "@testing-library/react";
-// override render method
 export { render };
