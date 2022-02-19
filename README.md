@@ -133,7 +133,7 @@ DB는 [여기](https://github.com/POODADAK/poodadak-database)를 참고 바랍�
 
 **iPhone Browser geolocation**
 - https 통신 규격으로 서비스를 배포 후 PC와 Andoid에서는 문제없이 서비스를 사용할 수 있었으나 iOS 브라우저에서는 geolocation 활용 권한에 제약이 생겨 작동하지 않았습니다.
-- 논리적 정합성 문제나 의존성, 전반적으로 https 규격을 다시 한번 체크하는 등 다양한 시도를 진행했습니다. 초반에 쉽게 풀리지 않았으나 내부적으로 활용하는 Tmap 지도 객체를 https 호출에 응답할 수 있도록 세팅하는 것으로 해결이 완료되었습니다.
+- 논리적 정합성 문제나 의존성, 전반적인 https 규격을 다시 한번 체크하는 등 다양한 시도를 진행했습니다. 초반에 쉽게 풀리지 않았으나 내부적으로 활용하는 Tmap 지도 객체를 https 호출에 응답할 수 있도록 세팅하는 것으로 해결이 완료되었습니다.
 
 **Socket & Redux**
 - 소켓을 redux store에 직접 올리는 방식으로 구현했으나 공식문서 등을 통해 적절한 방법이 아니라는 것을 확인하고 refactoring 진행
