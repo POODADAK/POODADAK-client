@@ -1,8 +1,7 @@
-// src/mocks/handlers.js
 import { rest } from "msw";
 
 const handlers = [
-  rest.get("/chatroom/:chatroomId", (req, res, ctx) =>
+  rest.get("http://localhost/chatroom/:chatroomId", (req, res, ctx) =>
     res(
       ctx.json({
         chatroom: {
@@ -14,15 +13,18 @@ const handlers = [
       })
     )
   ),
-  rest.get("/chatroom/live-chatroom-list", (req, res, ctx) => {
+  rest.get("http://localhost/chatroom/live-chatroom-list", (req, res, ctx) =>
     res(
       ctx.json({
         liveChatRoomData: {
           liveChatroomList: [],
         },
       })
-    );
-  }),
+    )
+  ),
+  rest.post("http://localhost/chatroom/new-chatroom", (req, res, ctx) =>
+    res(ctx.json({ newLiveChatroom: {} }))
+  ),
 ];
 
 export default handlers;

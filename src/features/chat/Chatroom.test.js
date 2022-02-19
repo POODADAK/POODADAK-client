@@ -42,6 +42,7 @@ describe("Chatroom", () => {
     <BrowserRouter>
       <Routes>
         <Route path="/chatroomList/:chatroomId" element={<Chatroom />} />
+        <Route path="/toilets/:toiletId" element={<div />} />
       </Routes>
     </BrowserRouter>
   );
@@ -133,7 +134,5 @@ describe("Chatroom", () => {
     fireEvent.click(screen.getAllByRole("button")[1]);
 
     expect(screen.getByText(testText)).toBeInTheDocument();
-
-    screen.debug();
   });
 });

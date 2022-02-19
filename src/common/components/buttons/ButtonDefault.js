@@ -65,7 +65,7 @@ function ButtonDefault({ onClick, moveto, icon, children }) {
 ButtonDefault.propTypes = {
   onClick: PropTypes.func.isRequired,
   moveto: PropTypes.string,
-  icon: PropTypes.node,
+  icon: PropTypes.oneOfType([PropTypes.string, PropTypes.node]),
   children: PropTypes.string,
 };
 

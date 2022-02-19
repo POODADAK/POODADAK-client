@@ -113,7 +113,7 @@ function Toilet() {
   const chatError = useSelector((state) => state.chat.error);
   const chatroomId = useSelector((state) => state.chat.chatroomId);
 
-  const [reviews, setReviews] = useState([]);
+  const [reviewList, setReviewList] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
   const [showModal, setShowModal] = useState(false);
   const [modalContent, setModalContent] = useState("");
@@ -137,7 +137,7 @@ function Toilet() {
       try {
         const toiletData = await getToiletById(toiletId);
 
-        setReviews(toiletData.reviewList);
+        setReviewList(toiletData.reviewList);
         setToilet(toiletData);
       } catch (error) {
         setContentAndShowModal(
@@ -161,18 +161,18 @@ function Toilet() {
 
   useEffect(() => {
     function getAvgRating() {
-      if (!reviews.length) {
+      if (!reviewList.length) {
         return 0;
       }
 
       let totalRating = 0;
-      reviews.forEach((review) => {
+      reviewList.forEach((review) => {
         totalRating += review.rating;
       });
-      return (totalRating / reviews.length).toFixed(1);
+      return (totalRating / reviewList.length).toFixed(1);
     }
     setAvgRating(getAvgRating());
-  }, [reviews]);
+  }, [reviewList]);
 
   useEffect(() => {
     async function checkLiveChatAndSetRescueButton() {
@@ -384,7 +384,7 @@ function Toilet() {
       <div className="review-container">
         <Title
           title="리뷰"
-          description={`총 ${reviews.length}개의 리뷰가 있습니다.`}
+          description={`총 ${reviewList.length}개의 리뷰가 있습니다.`}
         />
         <div className="fluid-button-container">
           <ButtonFluid
@@ -397,7 +397,7 @@ function Toilet() {
           </ButtonFluid>
         </div>
         <div className="review-card-container">
-          {reviews.map((review) => (
+          {reviewList.map((review) => (
             <ReviewCard
               userId={review.writer._id}
               username={review.writer.username}
