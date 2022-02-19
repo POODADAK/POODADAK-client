@@ -319,7 +319,7 @@ function Toilet() {
           😢 위치정보 동의를 하지 않아 거리를 알 수 없네요.
         </div>
       )}
-      <div className="fluidButtonWrapper">
+      <div className="fluid-button-container">
         {isChatroomDisconnected && showRescueButton && (
           <ButtonFluid
             type="button"
