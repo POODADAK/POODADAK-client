@@ -13,10 +13,6 @@ describe("ErrorPage", () => {
     </BrowserRouter>
   );
 
-  beforeAll(() => {
-    window.HTMLElement.prototype.scrollIntoView = () => {};
-  });
-
   beforeEach(() => {
     window.history.pushState({}, "", "/error");
   });
