@@ -284,16 +284,27 @@ function Main() {
   // 화장실을 선택할 경우 해당 카드가 노출되고, 현재 위치부터 화장실까지 경로를 그려 안내해 줍니다.
   useEffect(() => {
     async function drawLine(arrPoint) {
-      const newPolyline = await new Tmapv2.Polyline({
-        path: await arrPoint,
-        strokeColor: "#DD0000",
-        strokeWeight: 6,
-        map: adjMap,
-        httpsMode: true,
-      });
-      setPolyline(newPolyline);
-      setDrawPathResults((current) => [...current, newPolyline]);
+      setPolyline(
+        new Tmapv2.Polyline({
+          path: await arrPoint,
+          strokeColor: "#DD0000",
+          strokeWeight: 6,
+          map: adjMap,
+        })
+      );
+      setDrawPathResults((current) => [...current, adjPolyline]);
     }
+    // async function drawLine(arrPoint) {
+    //   const newPolyline = new Tmapv2.Polyline({
+    //     path: await arrPoint,
+    //     strokeColor: "#DD0000",
+    //     strokeWeight: 6,
+    //     map: adjMap,
+    //     httpsMode: true,
+    //   });
+    //   setPolyline(newPolyline);
+    //   setDrawPathResults((current) => [...current, newPolyline]);
+    // }
 
     async function makeDrawInfo() {
       if (adjDrawPathResults.length > 0) {
@@ -343,14 +354,12 @@ function Main() {
             lat: convertPoint._lat,
             lng: convertPoint._lng,
             pointType: "P",
-            httpsMode: true,
           };
           const newPathMarker = new Tmapv2.Marker({
             position: new Tmapv2.LatLng(pathInfoObj.lat, pathInfoObj.lng),
             icon: pathInfoObj.markerImg,
             iconSize: new Tmapv2.Size(8, 8),
             map: adjMap,
-            httpsMode: true,
           });
           setPathMarkers((current) => [...current, newPathMarker]);
         }
@@ -358,14 +367,15 @@ function Main() {
       drawLine(adjDrawPathInfos);
     }
 
-    if (nearToilets && selectedToilet) {
-      for (const toilet of nearToilets) {
-        if (toilet._id === selectedToilet._id) {
-          makeDrawInfo();
-          break;
-        }
-      }
-    }
+    makeDrawInfo();
+
+    // if (nearToilets && selectedToilet) {
+    //   for (const toilet of nearToilets) {
+    //     if (toilet._id === selectedToilet._id) {
+    //       makeDrawInfo();
+    //     }
+    //   }
+    // }
 
     // 중요 ** 티맵 Call 수량을 결정하는 중요한 세팅 입니다. 변경이 필요하다 싶으면 팀원소집 필수!!!
     // eslint-disable-next-line react-hooks/exhaustive-deps
