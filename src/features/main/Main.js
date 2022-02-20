@@ -294,6 +294,17 @@ function Main() {
       setPolyline(newPolyline);
       setDrawPathResults((current) => [...current, adjPolyline]);
     }
+    // async function drawLine(arrPoint) {
+    //   const newPolyline = new Tmapv2.Polyline({
+    //     path: await arrPoint,
+    //     strokeColor: "#DD0000",
+    //     strokeWeight: 6,
+    //     map: adjMap,
+    //     httpsMode: true,
+    //   });
+    //   setPolyline(newPolyline);
+    //   setDrawPathResults((current) => [...current, newPolyline]);
+    // }
 
     async function makeDrawInfo() {
       if (adjDrawPathResults.length > 0) {
@@ -343,14 +354,12 @@ function Main() {
             lat: convertPoint._lat,
             lng: convertPoint._lng,
             pointType: "P",
-            httpsMode: true,
           };
           const newPathMarker = new Tmapv2.Marker({
             position: new Tmapv2.LatLng(pathInfoObj.lat, pathInfoObj.lng),
             icon: pathInfoObj.markerImg,
             iconSize: new Tmapv2.Size(8, 8),
             map: adjMap,
-            httpsMode: true,
           });
           setPathMarkers((current) => [...current, newPathMarker]);
         }
