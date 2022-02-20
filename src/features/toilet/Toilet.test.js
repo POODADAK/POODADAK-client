@@ -21,7 +21,10 @@ jest.mock("../chat/chatSlice", () => {
     __esModule: true,
     ...originalModule,
     createdChatroom: () => (dispatch) => {
-      dispatch({ type: "chat/userEnteredChatroom", payload: {} });
+      dispatch({
+        type: "chat/userEnteredChatroom",
+        payload: { toilet: "test" },
+      });
     },
   };
 });
@@ -33,7 +36,7 @@ jest.mock("../../common/api/getLiveChatByToilet", () => ({
 
 jest.mock("../../common/api/getToiletById", () => {
   const mockLoadingToiletData = {
-    _id: "",
+    _id: "test",
     toiletType: "로딩중...",
     toiletName: "testToiletName",
     roadNameAddress: "로딩중...",
@@ -109,7 +112,7 @@ describe("Chatroom", () => {
 
   beforeEach(() => {
     initialReduxState.login.userId = "tester";
-    window.history.pushState({}, "", "/toilets/mockTestId");
+    window.history.pushState({}, "", "/toilets/test");
     document.body.appendChild(root);
   });
 
@@ -138,7 +141,8 @@ describe("Chatroom", () => {
 
   test("should render WaitingSavior button when loggedin user clicked SOS button.", async () => {
     initialReduxState.login.isLoggedIn = true;
-    initialReduxState.toilet.nearToilets = [{ _id: "mockTestId" }];
+    initialReduxState.chat.nameSpace = "test";
+    initialReduxState.toilet.nearToilets = [{ _id: "test" }];
 
     await waitFor(() =>
       render(wrappedToiletComponent, {
