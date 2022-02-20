@@ -1,29 +1,6 @@
-import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
+import { createSlice } from "@reduxjs/toolkit";
 
 import createChatroom from "../../common/api/createChatroom";
-
-export const getMyChatroom = createAsyncThunk(
-  "chat/getMyChatroom",
-  async (userId) => {
-    const POODADAK_TOKEN = localStorage.getItem("POODADAK_TOKEN");
-
-    try {
-      const myChatroom = axios.get(
-        `/chatroom/live-chatroom-list?userId=${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${POODADAK_TOKEN}`,
-          },
-        }
-      );
-
-      return myChatroom;
-    } catch (error) {
-      return error;
-    }
-  }
-);
 
 export const chatStatusOptions = {
   disconnected: "disconnected",
@@ -100,32 +77,6 @@ export const chatSlice = createSlice({
     },
     chatReceived: (state, action) => {
       state.chatList = [...state.chatList, action.payload];
-    },
-  },
-  extraReducers: {
-    [getMyChatroom.pending]: (state) => {
-      state.chatStatus = chatStatusOptions.disconnected;
-      state.chatroomId = null;
-      state.chatList = [];
-      state.owner = null;
-      state.error = { status: null, message: null };
-    },
-    [getMyChatroom.fulfilled]: (state, action) => {
-      state.chatStatus = chatStatusOptions.connected;
-      state.chatroomId = action.payload._id;
-      state.chatList = action.payload.chatList;
-      state.owner = action.payload.owner;
-      state.error = { status: null, message: null };
-    },
-    [getMyChatroom.error]: (state, action) => {
-      state.chatStatus = chatStatusOptions.disconnected;
-      state.chatroomId = null;
-      state.chatList = [];
-      state.owner = null;
-      state.error = {
-        status: action.payload.status,
-        message: action.payload.message,
-      };
     },
   },
 });
