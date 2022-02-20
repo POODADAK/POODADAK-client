@@ -8,6 +8,7 @@ import styled from "styled-components";
 import pinSosToilet from "../../assets/icon-pin-sos.svg";
 import pinToilet from "../../assets/icon-pin.svg";
 import pinCurrent from "../../assets/pin-current-small.gif";
+import getLiveChatroomByUserId from "../../common/api/getLiveChatroomByUserId";
 import { getMyLngLat, makePosionToLngLat } from "../../common/api/getMyGeo";
 import getPathToToiletInfo from "../../common/api/getPathToToiletInfo";
 import { getNearToilets, getMapToilets } from "../../common/api/getToilets";
@@ -16,6 +17,7 @@ import ButtonSmall from "../../common/components/buttons/ButtonSmall";
 import HeaderMain from "../../common/components/headers/HeaderMain";
 import Modal from "../../common/components/modal/Modal";
 import Sidebar from "../../common/components/Sidebar";
+import { userEnteredChatroom } from "../chat/chatSlice";
 import ToiletCard from "../toilet/ToiletCard";
 import {
   nearToiletsUpdated,
@@ -113,6 +115,7 @@ function Main() {
   const isMainStarted = useSelector((state) => state.main.isMainStarted);
   const nearToilets = useSelector((state) => state.toilet.nearToilets);
   const selectedToilet = useSelector((state) => state.toilet.selectedToilet);
+  const userId = useSelector((state) => state.login.userId);
 
   const adjMap = map;
   const adjCurrentMarker = currentMarker;
@@ -373,6 +376,20 @@ function Main() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedToilet, adjPolyline]);
 
+  useEffect(() => {
+    async function checkLiveChatAndUpdateState() {
+      if (userId) {
+        const { myChatroom } = await getLiveChatroomByUserId(userId);
+
+        if (myChatroom) {
+          dispatch(userEnteredChatroom(myChatroom));
+        }
+      }
+    }
+    checkLiveChatAndUpdateState();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [userId]);
+
   async function getLocation() {
     setIsLoading(true);
     try {
@@ -399,7 +416,7 @@ function Main() {
 
   return (
     <StyledMain>
-      <HeaderMain onClick={toggleSidebar} />
+      <HeaderMain onClick={toggleSidebar} isMainStarted={!isMainStarted} />
       <div className="map-container">
         <div id="TMapApp" />
         <div className="full-button">
