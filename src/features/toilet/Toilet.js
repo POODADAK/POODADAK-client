@@ -97,6 +97,7 @@ const StyledToilet = styled.div`
     justify-content: center;
     align-items: center;
     margin: 4px 0;
+    white-space: pre;
   }
 `;
 
@@ -112,6 +113,7 @@ function Toilet() {
   const socketStatus = useSelector((state) => state.chat.socketStatus);
   const chatError = useSelector((state) => state.chat.error);
   const chatroomId = useSelector((state) => state.chat.chatroomId);
+  const chatroomToiletId = useSelector((state) => state.chat.nameSpace);
 
   const [reviewList, setReviewList] = useState([]);
   const [avgRating, setAvgRating] = useState(0);
@@ -125,6 +127,7 @@ function Toilet() {
   const isChatroomConnected = chatStatus === chatStatusOptions.connected;
   const isChatroomError = chatStatus === chatStatusOptions.error;
   const isSocketConnected = socketStatus === socketStatusOptions.connected;
+  const isMyChatroomInOtherToilet = chatroomToiletId !== toiletId;
 
   const lastToiletPaperCheckDate =
     dayjs(toilet.latestToiletPaperInfo.lastDate).format("YYYY/MM/DD") ===
@@ -332,16 +335,32 @@ function Toilet() {
         )}
       </div>
       <div className="fluid-button-container">
-        {isChatroomConnected && !isSocketConnected && (
-          <ButtonFluid
-            type="button"
-            icon={waitIcon}
-            color={COLOR.CYAN}
-            onClick={handleWaitingSaviorClick}
-          >
-            도와줄 사람 기다리기
-          </ButtonFluid>
-        )}
+        {isChatroomConnected &&
+          !isSocketConnected &&
+          !isMyChatroomInOtherToilet && (
+            <ButtonFluid
+              type="button"
+              icon={waitIcon}
+              color={COLOR.CYAN}
+              onClick={handleWaitingSaviorClick}
+            >
+              도와줄 사람 기다리기
+            </ButtonFluid>
+          )}
+      </div>
+      <div className="fluid-button-container">
+        {isChatroomConnected &&
+          !isSocketConnected &&
+          isMyChatroomInOtherToilet && (
+            <ButtonFluid
+              type="button"
+              icon={waitIcon}
+              color={COLOR.CARROT}
+              onClick={handleWaitingSaviorClick}
+            >
+              {"이미 다른 화장실에서 \n 참여중인 구조요청이 있습니다!"}
+            </ButtonFluid>
+          )}
       </div>
       <div className="rank-container">
         <div>청결도 평균 ( {avgRating} ) </div>

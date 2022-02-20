@@ -32,20 +32,21 @@ const StyledHeaderChat = styled.div`
 function HeaderChat() {
   const navigate = useNavigate();
   const socketStatus = useSelector((state) => state.chat.socketStatus);
-  const lastVisitedToilet = useSelector(
-    (state) => state.login.lastVisitedToilet
-  );
+  const toiletId = useSelector((state) => state.chat.nameSpace);
+  // const lastVisitedToilet = useSelector(
+  //   (state) => state.login.lastVisitedToilet
+  // );
   const dispatch = useDispatch();
 
   const isSocketOpen = socketStatus === socketStatusOptions.connected;
 
   function handleChatEndClick() {
     dispatch(socketDisconnected());
-    navigate(-1);
+    navigate(`/toilets/${toiletId}`);
   }
 
   function handleGoBackClick() {
-    navigate(`/toilets/${lastVisitedToilet}`);
+    navigate(`/toilets/${toiletId}`);
   }
 
   return (

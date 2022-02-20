@@ -70,7 +70,7 @@ function Login() {
         <LoginProcessContainer>
           <h1 className="title">로그인 실패</h1>
           <p className="message">
-            (이메일과 비밀번호 모두 동의 해야 이용이 가능합니다...)
+            (필수정보와 선택정보인 이메일을 모두 동의 해야 이용이 가능합니다...)
           </p>
           <p className="message">{`오류 메세지: ${errorMessage}`}</p>
           <Link to="/" className="redirection-link">
