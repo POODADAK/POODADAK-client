@@ -135,9 +135,9 @@ function Main() {
   // 초기 랜더링 시 티맵을 불러옵니다.
   useEffect(() => {
     async function makeMap() {
-      const location = gotUserLocation ? currentLocation : defaultLocation;
+      const startLocation = gotUserLocation ? currentLocation : defaultLocation;
       const tMap = await new Tmapv2.Map("TMapApp", {
-        center: new Tmapv2.LatLng(location[1], location[0]),
+        center: new Tmapv2.LatLng(startLocation[1], startLocation[0]),
         width: "100%",
         height: "100%",
         zoom: 17,
@@ -284,14 +284,14 @@ function Main() {
   // 화장실을 선택할 경우 해당 카드가 노출되고, 현재 위치부터 화장실까지 경로를 그려 안내해 줍니다.
   useEffect(() => {
     async function drawLine(arrPoint) {
-      setPolyline(
-        new Tmapv2.Polyline({
-          path: await arrPoint,
-          strokeColor: "#DD0000",
-          strokeWeight: 6,
-          map: adjMap,
-        })
-      );
+      const newPolyline = await new Tmapv2.Polyline({
+        path: await arrPoint,
+        strokeColor: "#DD0000",
+        strokeWeight: 6,
+        map: adjMap,
+        httpsMode: true,
+      });
+      setPolyline(newPolyline);
       setDrawPathResults((current) => [...current, adjPolyline]);
     }
     // async function drawLine(arrPoint) {
@@ -369,14 +369,6 @@ function Main() {
 
     makeDrawInfo();
 
-    // if (nearToilets && selectedToilet) {
-    //   for (const toilet of nearToilets) {
-    //     if (toilet._id === selectedToilet._id) {
-    //       makeDrawInfo();
-    //     }
-    //   }
-    // }
-
     // 중요 ** 티맵 Call 수량을 결정하는 중요한 세팅 입니다. 변경이 필요하다 싶으면 팀원소집 필수!!!
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedToilet, adjPolyline]);
@@ -392,7 +384,7 @@ function Main() {
       dispatch(mainStartUpdated());
     } catch (error) {
       setIsLoading(false);
-      const newChildren = `위치정보 제공 동의를 진행하지 않으면 정확한 거리정보를 제공받을 수 없습니다. 그래도 지도를 통해 화장실들을 볼 수는 있습니다. 위치정보 제공 동의를 다시 하시려면 페이지에 다시 접속해주시기 바랍니다.`;
+      const newChildren = `위치정보제공 동의를 진행하지 않으면 정확한 거리정보를 제공받을 수 없습니다. 그래도 지도를 통해 화장실들을 볼 수는 있습니다.\n\n위치정보제공 동의를 다시 하시려면 새로고침해서 다시 접속해주시기 바랍니다.`;
       setModal(newChildren);
       setOpenModal(true);
       dispatch(mainStartUpdated());

@@ -91,10 +91,10 @@ function ToiletCard({ toilet, distance, time }) {
     if (nearToilets) {
       for (const nearToilet of nearToilets) {
         if (nearToilet._id === toiletId) setIsNear(true);
+        if (nearToilet._id !== toiletId) setIsNear(false);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [nearToilets, toiletId]);
 
   function moveToiletDetail() {
     navigate(`/toilets/${toiletId}`);
