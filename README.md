@@ -6,7 +6,7 @@
 
 ## 접속방법
 
-- [poodadak.com](http://poodadak.com)
+- [poodadak.kr](http://poodadak.kr)
 - PC, 아이폰, 안드로이드 모두 접속 가능
 - 위치공유 동의 진행할 경우 전체기능 사용 가능 / 동의하지 않아도 조망 가능
 
@@ -62,7 +62,7 @@
 
 ## Installation
 POODADAK은 배포가 되어 사용가능합니다.
-[poodadak.com](http://poodadak.com)
+[poodadak.kr](http://poodadak.kr)
 
 ### env설정
 로컬에서 구동을 원하시는 경우 아래와 같이 .env 파일 설정이 필요합니다.
