@@ -4,6 +4,11 @@
 
 > 당신의 긴박한 급똥신호를 위해... 오늘도 화장실 푸다닥 찾아 드립니다. 대한민국 급똥 세이버, POODADAK!
 
+- Mockup: https://bit.ly/3JII0Fc
+- DB Schema Modeling: https://bit.ly/3IIUbQJ
+- 기술검증: https://bit.ly/3D85kcK
+- 칸반 스케줄: https://bit.ly/3NoPwHA
+
 ## 접속방법
 
 - [poodadak.kr](http://poodadak.kr)
