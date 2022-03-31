@@ -6,8 +6,8 @@
 
 - Mockup: https://bit.ly/3JII0Fc
 - DB Schema Modeling: https://bit.ly/3IIUbQJ
-- 기술검증: https://bit.ly/3D85kcK
-- 칸반 스케줄: https://bit.ly/3NoPwHA
+- 기술검증: https://bright-ogre-698.notion.site/c5a09badb6e44d039366164566b6dd76
+- 칸반 스케줄: https://bright-ogre-698.notion.site/e1b79a5d3a4f456ca465d476bfd67ef1?v=6ee28039595044a08eed45b90e8abaa9
 
 ## 접속방법
 
