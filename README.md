@@ -184,10 +184,13 @@ $ node getToiletInfoForDeploy.js
 ## 이슈 및 해결
 
 **auth & cookie**
-- [추후 작성 예정]
+- 개발 초반 사용자 인증 방식의경우 백엔드 서버에서 프론트 쪽으로 setcookie 헤더를 통해 JWT을 설정하도록 구현했으나 차후에는 서버가 response body로 JWT를 건내주고 프론트엔드에서 JWT를 local storage로 저장한뒤 필요할때 마다 Authorization 헤더를 통해 서버로 JWT를 넘겨주게 수정했습니다. 
+- 이와같은 변화의 이유로는 서버에서 setcookie 헤더를 통해 JWT를 넘겨줄 경우 server가 client가 브라우저라는 상황/가정에 종속되기 때문입니다. Restful API 디자인에서 server와 client가 decoupling이 되어야 하는데 그와 정 반대의 상황인 것이죠. 
 
 **geo data indexing**
-- [추후 작성 예정]
+- 지구상의 위도경도 좌표는 평면이 아닌 구체 위에 존재하는 데이터이기 때문에 피타고라스 정리를 이용해 거리값을 계산할 수 없습니다. 또한 사용자의 위치정보를 기반으로 인덱싱을 해줘야 하는데 이부분을 어떻게 해결할지 처음에 많이 막막했습니다. 
+- 다행히 몽고 DB에서 자체적으로 Geospatial 데이터를 지원해주어서 해당부분의 기능구현은 쉽게해결했습니다. 
+- 다만 저희 팀원 모두 몽고DB가 어떻게 내부적으로 해당 기술을 적용하는것인지 많이 궁금해서 프로젝트 완료 후 해당내용을 조사해서 별도의 블로그글로 남겨 두었습니다.https://lemonade-my-neck-was-drippin.tistory.com/113 
 
 **iPhone Browser geolocation**
 - https 통신 규격으로 서비스를 배포 후 PC와 Andoid에서는 문제없이 서비스를 사용할 수 있었으나 iOS 브라우저에서는 geolocation 활용 권한에 제약이 생겨 작동하지 않았습니다.
