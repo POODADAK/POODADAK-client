@@ -14,8 +14,10 @@ jobs:
                                # used in the specific "build.sh"
     steps:
       - uses: actions/checkout@v2
-      - name: creates output
-        run:  sh ./build.sh # some command from your repository that creates
+      - name: Copy output_temp/ to output/ using rsync (to exclude main.epub in this example)
+        run:  apk add rsync && rsync -arv --exclude="/.github/workflow/ci.yml" output_temp/ output/
+      #- name: creates output
+        #run:  sh ./build.sh # some command from your repository that creates
                             # output to "source-directory" ("output" in the example)
       - name: Pushes to another repository
         uses: cpina/github-action-push-to-another-repository@main
@@ -23,7 +25,7 @@ jobs:
           SSH_DEPLOY_KEY: ${{ secrets.SSH_DEPLOY_KEY }}
           API_TOKEN_GITHUB: ${{ secrets.API_TOKEN_GITHUB }}
         with:
-          source-directory: .
+          source-directory: output/
           destination-github-username: 'breezjin'
           destination-repository-name: 'POODADAK'
           user-email: breezjin@gmail.com
