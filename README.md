@@ -231,7 +231,7 @@ API 명세에는 CCTV, 비상벨, 기저귀 교환대 관련 필드가 있어 �
 
 - 김단
 <danbsns@gmail.com>
-- 윤진호
+- 윤진호 Mike
 <breezjin@gmail.com>
 - 이양우
 <ddonhlyw@gmail.com>
